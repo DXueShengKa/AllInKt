@@ -1,0 +1,18 @@
+server:
+    port: 8081
+    
+logging:
+    level:
+        root: debug
+
+spring:
+    application:
+        name: AllInServer
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        password: 123456
+        username: postgres
+        url: jdbc:postgresql://localhost:5432/mytest
+    exposed:
+        generate-ddl: true
+        show-sql: true
