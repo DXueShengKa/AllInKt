@@ -6,19 +6,16 @@ import cn.allin.vo.UserVO
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.springframework.http.MediaType
-import org.springframework.stereotype.Repository
 import org.springframework.web.bind.annotation.*
 
-@Repository
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 class UserController(
     private val userRepository: UserRepository
 ){
 
     @GetMapping(
-        produces = [MediaType.APPLICATION_PROTOBUF_VALUE]
+//        produces = [MediaType.APPLICATION_PROTOBUF_VALUE]
     )
     fun get(): List<UserVO> {
         return userRepository.getUserAll().map { it.toVo() }
@@ -32,7 +29,7 @@ class UserController(
     }
 
     @PostMapping(
-        consumes = [MediaType.APPLICATION_JSON_VALUE]
+//        consumes = [MediaType.APPLICATION_JSON_VALUE]
     )
     fun add(@RequestBody user: UserVO) {
         userRepository.add(user)

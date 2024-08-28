@@ -55,6 +55,10 @@ activity = "1.9.1"
 collection = "1.4.3"
 paging = "3.3.2"
 
+slf4j = "2.0.13"
+#https://github.com/jwtk/jjwt
+jjwt = "0.12.6"
+
 [plugins]
 
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
@@ -144,8 +148,10 @@ ktorClient-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.re
 
 
 spring-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache" }
 spring-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
-spring-starter-securityTest = { module = "org.springframework.boot:spring-boot-starter-security-test" }
+spring-starter-oauth2-resourceServer = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server" }
+spring-securityTest = { module = "org.springframework.security:spring-security-test" }
 spring-starter-dataJdbc = { module = "org.springframework.boot:spring-boot-starter-data-jdbc" }
 jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 spring-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
@@ -165,6 +171,9 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-collection = { group = "androidx.collection", name = "collection", version.ref = "collection" }
 androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
+
+slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
+jjwt = { module = "io.jsonwebtoken:jjwt", version.ref = "jjwt" }
 
 [bundles]
 netLibs = [

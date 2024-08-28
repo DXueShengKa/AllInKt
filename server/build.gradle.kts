@@ -9,7 +9,6 @@ plugins {
 
 application {
     mainClass.set("cn.allin.ApplicationKt")
-//    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=${extra["io.ktor.development"] ?: "false"}")
 }
 
 kotlin {
@@ -25,6 +24,8 @@ tasks.withType<Test> {
 dependencies {
     implementation(projects.shared)
     implementation(libs.spring.starter.web)
+    implementation(libs.spring.starter.security)
+    testImplementation(libs.spring.securityTest)
     implementation(libs.spring.session.core)
 
     implementation(libs.exposed.spring)

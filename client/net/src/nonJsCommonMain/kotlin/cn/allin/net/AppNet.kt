@@ -33,6 +33,7 @@ fun <T : HttpClientEngineConfig> HttpClientConfig<T>.appCommonConfig() {
     defaultRequest {
         url(APP_API_URL)
         headers {
+            HttpHeaders.Authorization
 //            WEKV.token.get().takeIf { it.isNotEmpty() }?.let {
 //                append(API_HEADER_TOKEN, it)
 //            }

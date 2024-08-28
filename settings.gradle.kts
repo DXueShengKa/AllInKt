@@ -37,6 +37,7 @@ include(
     ":server",
     ":shared",
     ":admin",
+    ":allKsp",
     ":client:net",
     ":client:ksp-annotation",
     ":client:data",
