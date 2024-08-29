@@ -3,6 +3,7 @@ package cn.allin.config.security
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import org.springframework.cache.CacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
@@ -12,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.core.Authentication
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
@@ -23,10 +23,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
-    companion object {
-        @JvmStatic
-        val map = hashMapOf<Int, Authentication>()
-    }
+
 
     private val scSuccessHandler = AuthenticationSuccessHandler { request, response, authentication ->
         response.status = HttpServletResponse.SC_OK
@@ -58,7 +55,7 @@ class SecurityConfig {
 //    }
 
     @Bean
-    fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain {
+    fun securityFilterChain(httpSecurity: HttpSecurity, cacheManager: CacheManager): SecurityFilterChain {
         httpSecurity {
             csrf { disable() }
 
@@ -87,21 +84,7 @@ class SecurityConfig {
                 authenticationEntryPoint = scEntryPoint
             }
 
-            addFilterBefore<BasicAuthenticationFilter>(AuthorizationFilter())
-
-//            addFilterAt<BasicAuthenticationFilter>(BasicAuthentication(authenticationConfiguration.authenticationManager).also {
-//                it.setAuthenticationConverter { request ->
-//                    val authorization = request.getHeaders(HttpHeaders.AUTHORIZATION)
-//                    val context = SecurityContextHolder.getContext()
-//                    if (authorization.hasMoreElements() && JwtUtil.validateToken(authorization.nextElement())) {
-//
-//                        val username = JwtUtil.extractUsername(authorization.nextElement())
-//
-//                        context.authentication = UsernamePasswordAuthenticationToken(username, null, null)
-//                    }
-//                    context.authentication
-//                }
-//            })
+            addFilterBefore<BasicAuthenticationFilter>(AuthorizationFilter(cacheManager))
 
         }
 

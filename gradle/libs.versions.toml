@@ -58,6 +58,8 @@ paging = "3.3.2"
 slf4j = "2.0.13"
 #https://github.com/jwtk/jjwt
 jjwt = "0.12.6"
+#https://github.com/ben-manes/caffeine
+caffeine = "3.1.8"
 
 [plugins]
 
@@ -174,6 +176,7 @@ androidx-paging-common = { group = "androidx.paging", name = "paging-common", ve
 
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 jjwt = { module = "io.jsonwebtoken:jjwt", version.ref = "jjwt" }
+caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
 
 [bundles]
 netLibs = [

@@ -25,6 +25,8 @@ dependencies {
     implementation(projects.shared)
     implementation(libs.spring.starter.web)
     implementation(libs.spring.starter.security)
+    implementation(libs.spring.starter.cache)
+    implementation(libs.caffeine)
     testImplementation(libs.spring.securityTest)
     implementation(libs.spring.session.core)
 

@@ -1,15 +1,13 @@
 package cn.allin.controller
 
-import cn.allin.config.security.SecurityConfig
+import cn.allin.config.security.JwtUtil
 import cn.allin.service.LoginService
-import cn.allin.utils.SpringUser
-import cn.allin.utils.id
 import cn.allin.vo.MsgVO
 import cn.allin.vo.UserVO
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 
 
@@ -20,16 +18,10 @@ class AuthController(
 ) {
 
     @DeleteMapping
-    fun delete(): MsgVO {
-        val context = SecurityContextHolder.getContext()
-        val authentication = context.authentication
-        val principal = authentication.principal
-        if (principal is SpringUser){
-            SecurityConfig.map.remove(principal.id)
-        } else if (principal is Int){
-            SecurityConfig.map.remove(principal)
-        }
-        context.authentication = null
+    fun delete(request: HttpServletRequest): MsgVO {
+        val auth = request.getHeader(HttpHeaders.AUTHORIZATION) ?: return MsgVO("未登录")
+        val userId = JwtUtil.extractUsername(auth).toInt()
+        loginService.logout(userId)
 
         return MsgVO("退出登录")
     }
@@ -37,12 +29,13 @@ class AuthController(
 
     @PostMapping
     fun post(@RequestBody userVO: UserVO, response: HttpServletResponse): MsgVO {
+        val userId = loginService.findUserId(userVO.name) ?: return MsgVO("没有这个用户")
 
-        val token = loginService.login(userVO.name, userVO.password ?: return MsgVO("请输入密码"))
+        loginService.login(userId, userVO.password ?: return MsgVO("请输入密码"))
 
         response.apply {
             contentType = MediaType.APPLICATION_JSON_VALUE
-            addHeader(HttpHeaders.AUTHORIZATION, token)
+            addHeader(HttpHeaders.AUTHORIZATION, JwtUtil.generateToken(userId.toString()))
         }
 
         return MsgVO("登录成功")

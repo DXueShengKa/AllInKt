@@ -41,6 +41,15 @@ class UserRepository {
         return User.wrapRow(row ?: return null)
     }
 
+    fun findIdByUsername(username: String): Int? {
+       val raw = UserTable.select(UserTable.id)
+            .where {
+                UserTable.name eq username
+            }.firstOrNull()
+
+        return raw?.get(UserTable.id)?.value
+    }
+
 
     fun findById(id: Int): User? {
         return User.findById(id)
