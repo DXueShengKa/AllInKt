@@ -15,7 +15,7 @@ kotlin {
 //            implementation(libs.junit)
 //        }
         jvmMain.dependencies {
-//            implementation(projects.kspAnnotation)
+            implementation(projects.client.kspAnnotation)
             implementation(libs.ksp)
             implementation(libs.kotlinpoet.ksp)
         }

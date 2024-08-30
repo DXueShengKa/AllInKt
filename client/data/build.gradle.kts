@@ -17,7 +17,7 @@ kotlin {
 }
 
 dependencies {
-    kspNoJsAll(libs.koin.compiler)
+    ksp(libs.koin.compiler)
 }
 
 android {

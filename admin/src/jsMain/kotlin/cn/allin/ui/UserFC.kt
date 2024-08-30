@@ -37,7 +37,7 @@ val UserFC = FC {
             dataSource = list.toTypedArray()
 
             val userVO = UserVO(
-                1, 2u, "n",
+                1, "2u", "n",
                 //Instant.DISTANT_PAST.getDateTime()
             )
 

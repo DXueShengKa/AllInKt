@@ -1,6 +1,6 @@
 package cn.allin.ksp
 
-import com.google.devtools.ksp.processing.Dependencies
+import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
@@ -14,21 +14,13 @@ class CodeProcessor (environment: SymbolProcessorEnvironment): SymbolProcessor {
     private var invoked = false
 
 
+    @OptIn(KspExperimental::class)
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if (invoked) return emptyList()
         invoked = true
+        val moduleName = resolver.getModuleName()
+        logger.warn(moduleName.asString())
 
-
-        val c = """
-            
-    fun a(){
-
-        println("sssssss")
-    }
-        """.trimIndent()
-        codeGenerator.createNewFile(Dependencies.ALL_FILES,"cn.allin","ksp").bufferedWriter().use {
-            it.write(c)
-        }
         return emptyList()
     }
 }

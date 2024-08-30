@@ -18,9 +18,11 @@ kotlin {
         jvmMain.dependencies {
             implementation(libs.ktorClient.java)
         }
-        iosMain.dependencies {
+
+        if (currentOs() == OperatingSystem.Mac) iosMain.dependencies {
             implementation(libs.ktorClient.darwin)
         }
+
         androidMain.dependencies {
             implementation(libs.ktorClient.okhttp)
         }

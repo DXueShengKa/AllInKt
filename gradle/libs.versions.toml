@@ -105,7 +105,9 @@ kotlin-wrappers-mui-icons = { module = "org.jetbrains.kotlin-wrappers:kotlin-mui
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp-aa = { group = "com.google.devtools.ksp", name = "symbol-processing-aa", version.ref = "ksp" }
 
+jetbrains-collection = { group = "org.jetbrains.compose.collection-internal", name = "collection", version.ref = "jetbrains-compose" }
 jetbrains-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "jetbrains-navigation" }
+jetbrains-navigation-runtime = { group = "org.jetbrains.androidx.navigation", name = "navigation-runtime", version.ref = "jetbrains-navigation" }
 jetbrains-lifecycle-viewmodelCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "jetbrains-lifecycle" }
 jetbrains-core-bundle = { group = "org.jetbrains.androidx.core", name = "core-bundle", version.ref = "jetbrains-core-bundle" }
 
@@ -170,7 +172,6 @@ postgresql = { module = "org.postgresql:postgresql" }
 
 android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
-androidx-collection = { group = "androidx.collection", name = "collection", version.ref = "collection" }
 androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
 

@@ -16,11 +16,11 @@ kotlin {
                 api(libs.kotlinx.serialization.json)
                 api(libs.kotlinx.serialization.protobuf)
                 api(libs.kotlinx.datetime)
+                api(libs.jetbrains.collection)
             }
         }
         
         nonJsCommonMain.dependencies {
-            api(libs.androidx.collection)
         }
 
         jsMain.dependencies {
