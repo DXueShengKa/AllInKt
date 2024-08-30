@@ -2,18 +2,18 @@
 android-compileSdk = "34"
 android-minSdk = "26"
 android-targetSdk = "34"
-android-gradle = "8.2.2"
+android-gradle = "8.4.2"
 
 #https://github.com/JetBrains/kotlin
 kotlin = "2.0.20"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "1.0.0-pre.795"
+kotlin-wrappers = "1.0.0-pre.799"
 #https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.8.1"
 #https://github.com/Kotlin/kotlinx.serialization
 kotlinx-serialization = "1.7.1"
 #https://github.com/Kotlin/kotlinx-datetime
-kotlinx-datetime = "0.6.0"
+kotlinx-datetime = "0.6.1"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.5.3"
 #https://github.com/google/ksp
@@ -52,7 +52,6 @@ seskar = "3.13.0"
 exposed = "0.53.0"
 
 activity = "1.9.1"
-collection = "1.4.3"
 paging = "3.3.2"
 
 slf4j = "2.0.13"

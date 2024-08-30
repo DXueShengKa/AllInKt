@@ -15,11 +15,12 @@ kotlin {
                 implementation(libs.ktorClient.serialization.json)
             }
         }
+
         jvmMain.dependencies {
             implementation(libs.ktorClient.java)
         }
 
-        if (currentOs() == OperatingSystem.Mac) iosMain.dependencies {
+        if (isMacOs) iosMain.dependencies {
             implementation(libs.ktorClient.darwin)
         }
 

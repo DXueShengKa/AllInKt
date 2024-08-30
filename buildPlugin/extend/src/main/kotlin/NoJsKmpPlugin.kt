@@ -33,7 +33,7 @@ class NoJsKmpPlugin : Plugin<Project> {
 
         jvm()
 
-        if (currentOs() == OperatingSystem.Mac) {
+        if (isMacOs) {
             iosX64()
             iosArm64()
             iosSimulatorArm64()

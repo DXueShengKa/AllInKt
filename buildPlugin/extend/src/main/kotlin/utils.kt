@@ -9,19 +9,9 @@ import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.getByType
 
 
-fun currentOs(): OperatingSystem {
-    val osName = System.getProperty("os.name")
-    return when {
-        osName == "Mac OS X" -> OperatingSystem.Mac
-        osName.startsWith("Win") -> OperatingSystem.Windows
-        osName.startsWith("Linux") -> OperatingSystem.Linux
-        else -> error("Unsupported OS: $osName")
-    }
-}
-
-enum class OperatingSystem {
-    Mac, Windows, Linux
-}
+val isMacOs = System.getProperty("os.name").startsWith("Mac OS")
+val isMacWindow = System.getProperty("os.name").startsWith("Window")
+val isMacLinux = System.getProperty("os.name").startsWith("Linux")
 
 
 fun DependencyHandler.kspAndroid(dependencyNotation: Any) {
@@ -37,9 +27,11 @@ fun DependencyHandler.kspJs(dependencyNotation: Any) {
 }
 
 fun DependencyHandler.kspIos(dependencyNotation: Any) {
-    add("kspIosSimulatorArm64", dependencyNotation)
-    add("kspIosArm64", dependencyNotation)
-    add("kspIosX64", dependencyNotation)
+    if (isMacOs) {
+        add("kspIosSimulatorArm64", dependencyNotation)
+        add("kspIosArm64", dependencyNotation)
+        add("kspIosX64", dependencyNotation)
+    }
 }
 
 fun DependencyHandler.kspAll(dependencyNotation: Any) {

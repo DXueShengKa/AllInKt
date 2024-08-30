@@ -1,13 +1,6 @@
 package cn.allin.utils
 
-import androidx.collection.IntList
-import androidx.collection.LongList
-import androidx.collection.MutableIntIntMap
-import androidx.collection.MutableLongLongMap
-import androidx.collection.intListOf
-import androidx.collection.longListOf
-import androidx.collection.mutableIntListOf
-import androidx.collection.mutableLongListOf
+import androidx.collection.*
 
 
 inline infix fun <T, reified R> Array<T>.map(transform: (T) -> R) = Array(size) { transform(this[it]) }
@@ -21,7 +14,7 @@ inline fun <T, reified R> List<T>.mapToArrayIndexed(transform: (index: Int, T) -
     Array(size) { transform(it, this[it]) }
 
 @Suppress("UNCHECKED_CAST")
-inline fun <T> Iterator<Any>.nextType(): T = next() as T
+fun <T> Iterator<Any>.nextType(): T = next() as T
 
 
 

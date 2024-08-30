@@ -38,7 +38,7 @@ class SharedKmpPlugin : Plugin<Project> {
             binaries.library()
         }
 
-        if (currentOs() == OperatingSystem.Mac) {
+        if (isMacOs) {
             iosX64()
             iosArm64()
             iosSimulatorArm64()

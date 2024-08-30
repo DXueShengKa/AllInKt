@@ -1,10 +1,10 @@
 package cn.allin
 
 import org.jetbrains.exposed.spring.autoconfigure.ExposedAutoConfiguration
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
-import org.springframework.boot.runApplication
 
 
 @SpringBootApplication
@@ -15,5 +15,5 @@ import org.springframework.boot.runApplication
 class Application
 
 fun main(args: Array<String>) {
-    runApplication<Application>(*args)
+    SpringApplication.run(Application::class.java, *args)
 }

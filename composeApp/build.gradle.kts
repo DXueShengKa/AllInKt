@@ -15,7 +15,7 @@ kotlin {
     jvm("desktop")
 
     val osName = System.getProperty("os.name")
-    if (osName == "Mac OS X") listOf(
+    if (osName.startsWith("Mac OS")) listOf(
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
