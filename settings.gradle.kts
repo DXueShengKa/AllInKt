@@ -42,4 +42,5 @@ include(
     ":client:ksp-annotation",
     ":client:data",
     ":client:ui",
+    ":client:navigation-react",
 )
