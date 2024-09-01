@@ -7,7 +7,7 @@ import androidx.navigation.Navigator
 import react.FC
 
 
-class ReactNavigator : Navigator<ReactNavigator.Destination>() {
+class ReactNavigator : Navigator<ReactNavigator.Destination>(NAME) {
 
     internal val transitionsInProgress
         get() = state.transitionsInProgress
@@ -50,5 +50,10 @@ class ReactNavigator : Navigator<ReactNavigator.Destination>() {
 
     override fun createDestination(): Destination {
         return Destination(this, FC { })
+    }
+
+
+    companion object {
+        internal const val NAME = "react"
     }
 }

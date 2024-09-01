@@ -2,7 +2,10 @@ package androidx.lifecycle.viewmodel.react
 
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.react.collectAsState
+import js.reflect.newInstance
 import react.StateInstance
 import react.createContext
 import react.useContext
@@ -35,17 +38,17 @@ fun <VM : ViewModel> useViewModel(
     } else {
         CreationExtras.Empty
     }
-): VM = viewModelStoreOwner.get(modelClass, key, factory, extras)
+): VM = viewModelStoreOwner.get(modelClass, key, factory?: viewModelFactory {
+    addInitializer(modelClass){ modelClass.js.newInstance() }
+}, extras)
 
 
 internal fun <VM : ViewModel> ViewModelStoreOwner.get(
     modelClass: KClass<VM>,
-    key: String? = null,
-    factory: ViewModelProvider.Factory? = null,
+    key: String?,
+    factory: ViewModelProvider.Factory?,
     extras: CreationExtras
 ): VM {
-    console.log(modelClass)
-    console.log(this)
     val provider = if (factory != null) {
         ViewModelProvider.create(this.viewModelStore, factory, extras)
     } else if (this is HasDefaultViewModelProviderFactory) {
@@ -53,7 +56,6 @@ internal fun <VM : ViewModel> ViewModelStoreOwner.get(
     } else {
         ViewModelProvider.create(this)
     }
-    console.log(provider)
     return if (key != null) {
         provider[key, modelClass]
     } else {
