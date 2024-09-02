@@ -1,7 +1,9 @@
 package cn.allin.service
 
 import cn.allin.config.CacheConfig
+import cn.allin.config.UserRole
 import cn.allin.exposed.UserRepository
+import cn.allin.exposed.entity.UserEntity
 import cn.allin.utils.newAuthenticationToken
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
@@ -16,8 +18,8 @@ class LoginService(
     private val authenticationManager: AuthenticationManager,
 ) {
 
-    fun findUserId(username: String): Int? {
-        return userRepository.findIdByUsername(username)
+    fun findUserId(username: String): UserEntity? {
+        return userRepository.findByUsername(username)
     }
 
 
@@ -29,8 +31,8 @@ class LoginService(
 
 
     @Cacheable(cacheNames = [CacheConfig.AUTH], key = "#userId")
-    fun login(userId: Int, password: String): Authentication {
-        val authenticate = authenticationManager.authenticate(newAuthenticationToken(userId, password))
+    fun login(userId: Int, password: String,userRole: UserRole): Authentication {
+        val authenticate = authenticationManager.authenticate(newAuthenticationToken(userId, password, listOf(userRole)))
         SecurityContextHolder.getContext().authentication = authenticate
         return authenticate
     }

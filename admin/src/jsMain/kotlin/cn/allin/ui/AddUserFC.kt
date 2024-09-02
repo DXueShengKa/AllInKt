@@ -1,12 +1,6 @@
 package cn.allin.ui
 
-import ant.Button
-import ant.ButtonType
-import ant.Form
-import ant.Input
-import ant.InputNumber
-import ant.form
-import ant.rule
+import ant.*
 import cn.allin.net.ReqUser
 import emotion.react.css
 import react.FC
@@ -18,12 +12,11 @@ import web.cssom.px
 
 val AddUserFC = FC {
 
-    val req = ReqUser()
-
     var r: AddUser? by useState(null)
+
     useEffect(r) {
         r?.also {
-            req.addUser(it)
+            ReqUser.addUser(it)
         }
     }
 

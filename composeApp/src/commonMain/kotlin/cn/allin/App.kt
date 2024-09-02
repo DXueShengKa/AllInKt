@@ -1,5 +1,6 @@
 package cn.allin
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +17,12 @@ import org.koin.compose.getKoin
 @Composable
 fun App() {
     MaterialTheme {
+        Column {
+
+        Text("")
+
+            Text("")
+        }
 
 //            AppTest()
         val get = getKoin().get<UserRepository>()

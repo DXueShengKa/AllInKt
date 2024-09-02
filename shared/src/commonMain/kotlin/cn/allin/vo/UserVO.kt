@@ -9,5 +9,5 @@ data class UserVO(
     val name: String,
     val password: String? = null,
     val birthday: LocalDate? = null,
-//    val updateTime: LocalDateTime
+    val role: String? = null
 )

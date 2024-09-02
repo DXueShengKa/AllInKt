@@ -1,11 +1,14 @@
 package cn.allin.exposed
 
-import cn.allin.exposed.entity.User
+import cn.allin.config.UserRole
+import cn.allin.exposed.entity.UserEntity
 import cn.allin.exposed.table.UserTable
 import cn.allin.vo.UserVO
 import kotlinx.datetime.toJavaLocalDate
+import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -13,11 +16,11 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 class UserRepository {
 
-    fun getUserAll(): List<User> {
+    fun getUserAll(): List<UserEntity> {
         return UserTable.selectAll()
             .asSequence()
             .map {
-                User.wrapRow(it)
+                UserEntity.wrapRow(it)
             }
             .toList()
     }
@@ -29,16 +32,19 @@ class UserRepository {
             userVO.password?.also { p ->
                 it[password] = p
             }
+            userVO.role?.also { r ->
+                it[role] = UserRole.valueOf(r)
+            }
         }
     }
 
-    fun findByUsername(username: String): User? {
+    fun findByUsername(username: String): UserEntity? {
         val row = UserTable.selectAll()
             .where {
                 UserTable.name eq username
             }.firstOrNull()
 
-        return User.wrapRow(row ?: return null)
+        return UserEntity.wrapRow(row ?: return null)
     }
 
     fun findIdByUsername(username: String): Int? {
@@ -51,7 +57,14 @@ class UserRepository {
     }
 
 
-    fun findById(id: Int): User? {
-        return User.findById(id)
+    fun findById(id: Int): UserEntity? {
+        return UserEntity.findById(id)
+    }
+
+    fun update(user: UserEntity){
+        UserEntity(id = EntityID(10,UserTable))
+        UserTable.update() {
+
+        }
     }
 }

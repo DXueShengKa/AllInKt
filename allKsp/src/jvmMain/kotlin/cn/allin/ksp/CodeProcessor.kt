@@ -6,7 +6,7 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.symbol.KSAnnotated
 
-class CodeProcessor (environment: SymbolProcessorEnvironment): SymbolProcessor {
+class CodeProcessor(environment: SymbolProcessorEnvironment) : SymbolProcessor {
     private val codeGenerator = environment.codeGenerator
     private val logger = environment.logger
     private val options = environment.options
@@ -18,8 +18,14 @@ class CodeProcessor (environment: SymbolProcessorEnvironment): SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if (invoked) return emptyList()
         invoked = true
-        val moduleName = resolver.getModuleName()
-        logger.warn(moduleName.asString())
+        val moduleName = resolver.getModuleName().asString()
+        logger.warn(moduleName)
+
+        when {
+            moduleName.contains(AllInProcessorProvider.MODULE_SERVER) -> {
+                genVo(resolver,logger)
+            }
+        }
 
         return emptyList()
     }

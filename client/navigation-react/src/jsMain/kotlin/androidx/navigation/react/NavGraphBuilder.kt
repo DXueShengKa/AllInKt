@@ -10,9 +10,9 @@ import react.ReactDsl
 
 fun NavGraphBuilder.react(
     route: String,
+    content: FC<NavProps>,
     arguments: List<NamedNavArgument> = emptyList(),
-    deepLinks: List<NavDeepLink> = emptyList(),
-    content: FC<NavProps>
+    deepLinks: List<NavDeepLink> = emptyList()
 ) {
     destination(
         ReactNavigatorDestinationBuilder(

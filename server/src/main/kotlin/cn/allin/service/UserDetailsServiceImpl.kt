@@ -20,6 +20,6 @@ class UserDetailsServiceImpl(
 
         val user = userRepository.findById(id.toInt()) ?: throw UsernameNotFoundException("没有账号")
 
-        return SpringUser(user.id.value.toString(), user.password, emptyList())
+        return SpringUser(user.id.value.toString(), user.password, listOf(user.role))
     }
 }

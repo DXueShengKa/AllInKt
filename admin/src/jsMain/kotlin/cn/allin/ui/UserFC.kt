@@ -4,30 +4,31 @@ import ant.Button
 import ant.Table
 import ant.keyName
 import ant.tableColumn
+import cn.allin.appNavController
 import cn.allin.net.ReqUser
 import cn.allin.vo.UserVO
 import js.date.Date
 import react.FC
 import react.create
 import react.dom.html.ReactHTML.div
-import react.router.useNavigate
 import react.useEffect
 import react.useState
 
-val UserFC = FC {
-    val userReq = ReqUser()
+
+const val RouteUserList = "UserList"
+
+val NavUserListFc = FC {
 
     var list: List<UserVO> by useState { emptyList() }
 
-    val n = useNavigate()
     div {
         useEffect(1) {
             println(Date())
-            list = userReq.getUserAll()
+            list = ReqUser.getUserAll()
         }
         Button {
             onClick = {
-                n(-1)
+                appNavController.navigateUp()
             }
             +"返回"
         }

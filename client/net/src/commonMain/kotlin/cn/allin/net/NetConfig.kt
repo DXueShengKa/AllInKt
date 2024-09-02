@@ -10,7 +10,7 @@ import kotlinx.serialization.protobuf.ProtoBuf
 
 val ContentTypeXProtobuf = ContentType("application", "x-protobuf")
 
-const val SERVER_BASE_URL = "http://localhost:8081/"
+const val SERVER_BASE_URL = "http://localhost:8017/"
 
 
 @OptIn(ExperimentalSerializationApi::class)

@@ -1,5 +1,6 @@
 package cn.allin.exposed.entity
 
+import cn.allin.config.UserRole
 import cn.allin.exposed.table.UserTable
 import cn.allin.vo.UserVO
 import kotlinx.datetime.toKotlinLocalDate
@@ -10,20 +11,22 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 
-class User(
+class UserEntity(
     id: EntityID<Int>
 ) : IntEntity(id) {
-    companion object : IntEntityClass<User>(UserTable)
+
+    companion object : IntEntityClass<UserEntity>(UserTable)
 
     val birthday: LocalDate? by UserTable.birthday
     val name: String by UserTable.name
     val password: String by UserTable.password
+    val role: UserRole by UserTable.role
     val updateTime: LocalDateTime by UserTable.updateTime
     val createTime: LocalDateTime by UserTable.createTime
 
     fun toVo(): UserVO {
         return UserVO(
-            id.value, name,null, birthday?.toKotlinLocalDate()
+            id.value, name, null, birthday?.toKotlinLocalDate()
         )
     }
 }

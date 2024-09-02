@@ -1,13 +1,19 @@
 package cn.allin.config.security
 
+import cn.allin.config.UserRole
+import cn.allin.vo.MsgVO
 import jakarta.servlet.http.HttpServletResponse
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.springframework.cache.CacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -16,6 +22,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 
@@ -37,22 +44,40 @@ class SecurityConfig {
         }
     }
 
-    private val scEntryPoint = AuthenticationEntryPoint { request, response, authentication ->
+    private val scEntryPoint = AuthenticationEntryPoint { request, response, authException ->
 
         response.status = HttpServletResponse.SC_UNAUTHORIZED
         response.contentType = MediaType.APPLICATION_JSON_VALUE
         response.characterEncoding = "UTF-8"
-        val j = buildJsonObject {
-            put("msg", "未登录")
+        val msgVO: MsgVO<String> = when (authException) {
+            is BadCredentialsException -> {
+                MsgVO(
+                    authException.message.toString(),
+                    MsgVO.USER_AUTH_ERR
+                )
+            }
+
+            else -> {
+                MsgVO("未登录", MsgVO.USER_AUTH_ERR)
+            }
         }
+
         response.writer.use {
-            it.write(j.toString())
+            it.write(Json.encodeToString(msgVO))
         }
     }
 
-//    private val accessDeniedHandler = AccessDeniedHandler { request, response, authentication ->
-//        authentication.toString()
-//    }
+    private val adHandler = AccessDeniedHandler { request, response, authException ->
+        val msgVO: MsgVO<String> = when (authException) {
+            else -> {
+                MsgVO(authException.message.toString(), MsgVO.USER_AUTH_ERR)
+            }
+        }
+
+        response.writer.use {
+            it.write(Json.encodeToString(msgVO))
+        }
+    }
 
     @Bean
     fun securityFilterChain(httpSecurity: HttpSecurity, cacheManager: CacheManager): SecurityFilterChain {
@@ -64,6 +89,7 @@ class SecurityConfig {
             authorizeHttpRequests {
                 authorize("/auth", permitAll)
 
+                authorize(HttpMethod.GET, "/user", hasAuthority(UserRole.ROLE_ADMIN.name))
                 authorize(anyRequest, authenticated)
             }
 
@@ -81,6 +107,7 @@ class SecurityConfig {
             }
 
             exceptionHandling {
+                accessDeniedHandler = adHandler
                 authenticationEntryPoint = scEntryPoint
             }
 

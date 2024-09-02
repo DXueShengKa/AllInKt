@@ -26,8 +26,8 @@ class ReactViewModelStoreOwner : ViewModelStoreOwner {
     }
 }
 
-fun <VM : ViewModel> useViewModel(
-    modelClass: KClass<VM>,
+
+inline fun <reified VM : ViewModel> useViewModel(
     viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(useContext(LocalViewModelStoreOwner)) {
         "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
     },
@@ -38,12 +38,15 @@ fun <VM : ViewModel> useViewModel(
     } else {
         CreationExtras.Empty
     }
-): VM = viewModelStoreOwner.get(modelClass, key, factory?: viewModelFactory {
-    addInitializer(modelClass){ modelClass.js.newInstance() }
-}, extras)
+): VM {
+    val modelClass: KClass<VM> = VM::class
+    return viewModelStoreOwner.get(modelClass, key, factory?: viewModelFactory {
+        addInitializer(modelClass){ modelClass.js.newInstance() }
+    }, extras)
+}
 
 
-internal fun <VM : ViewModel> ViewModelStoreOwner.get(
+fun <VM : ViewModel> ViewModelStoreOwner.get(
     modelClass: KClass<VM>,
     key: String?,
     factory: ViewModelProvider.Factory?,

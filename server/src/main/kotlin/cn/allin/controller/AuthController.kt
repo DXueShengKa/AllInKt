@@ -5,9 +5,7 @@ import cn.allin.service.LoginService
 import cn.allin.vo.MsgVO
 import cn.allin.vo.UserVO
 import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 
@@ -18,7 +16,7 @@ class AuthController(
 ) {
 
     @DeleteMapping
-    fun delete(request: HttpServletRequest): MsgVO {
+    fun delete(request: HttpServletRequest): MsgVO<Unit> {
         val auth = request.getHeader(HttpHeaders.AUTHORIZATION) ?: return MsgVO("未登录")
         val userId = JwtUtil.extractUsername(auth).toInt()
         loginService.logout(userId)
@@ -28,16 +26,11 @@ class AuthController(
 
 
     @PostMapping
-    fun post(@RequestBody userVO: UserVO, response: HttpServletResponse): MsgVO {
-        val userId = loginService.findUserId(userVO.name) ?: return MsgVO("没有这个用户")
+    fun post(@RequestBody userVO: UserVO): MsgVO<String> {
+        val user = loginService.findUserId(userVO.name) ?: return MsgVO("没有这个用户", MsgVO.USER_NOT_FOUND)
 
-        loginService.login(userId, userVO.password ?: return MsgVO("请输入密码"))
+        loginService.login(user.id.value, userVO.password ?: return MsgVO("请输入密码", 1),user.role)
 
-        response.apply {
-            contentType = MediaType.APPLICATION_JSON_VALUE
-            addHeader(HttpHeaders.AUTHORIZATION, JwtUtil.generateToken(userId.toString()))
-        }
-
-        return MsgVO("登录成功")
+        return MsgVO("登录成功", data = JwtUtil.generateToken(user.id.value.toString()))
     }
 }

@@ -14,9 +14,7 @@ class UserController(
     private val userRepository: UserRepository
 ){
 
-    @GetMapping(
-//        produces = [MediaType.APPLICATION_PROTOBUF_VALUE]
-    )
+    @GetMapping
     fun get(): List<UserVO> {
         return userRepository.getUserAll().map { it.toVo() }
     }
@@ -28,9 +26,7 @@ class UserController(
         }
     }
 
-    @PostMapping(
-//        consumes = [MediaType.APPLICATION_JSON_VALUE]
-    )
+    @PostMapping
     fun add(@RequestBody user: UserVO) {
         userRepository.add(user)
     }

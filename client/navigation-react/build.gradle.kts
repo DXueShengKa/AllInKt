@@ -19,8 +19,8 @@ kotlin {
             implementation(project.dependencies.platform(libs.kotlin.wrappers.bom))
             implementation(libs.kotlin.wrappers.react)
             implementation(libs.kotlin.wrappers.react.dom)
-            implementation(libs.jetbrains.navigation.runtime)
-            implementation(libs.jetbrains.lifecycle.vmSavedState)
+            api(libs.jetbrains.navigation.runtime)
+            api(libs.jetbrains.lifecycle.vmSavedState)
         }
 
     }

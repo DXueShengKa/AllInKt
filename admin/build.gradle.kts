@@ -28,11 +28,12 @@ kotlin {
             implementation(libs.kotlin.wrappers.emotion)
             implementation(libs.kotlin.wrappers.react)
             implementation(libs.kotlin.wrappers.react.dom)
-            implementation(libs.kotlin.wrappers.react.router)
-            implementation(libs.kotlin.wrappers.react.router.dom)
+//            implementation(libs.kotlin.wrappers.react.router)
+//            implementation(libs.kotlin.wrappers.react.router.dom)
             implementation(libs.ktorClient.js)
             implementation(projects.shared)
             implementation(projects.client.net)
+            implementation(projects.client.navigationReact)
             implementation(npm("antd","5.20.1"))
         }
 
