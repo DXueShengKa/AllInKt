@@ -7,7 +7,7 @@ import react.PropsWithChildren
 
 external interface FormProps<T> : PropsWithChildren, react.dom.html.HTMLAttributes<web.html.HTMLFormElement> {
     var name: String
-    var layout: FormLayout
+    var layout: LayoutDirection
     var labelAlign: LabelAlign
     var variant: Variant
     var onFinish: (T) -> Unit
@@ -19,7 +19,6 @@ external interface FormItemProps<T> : PropsWithChildren {
     var label: String
     var name: String
     var help: String
-
     var rules: Array<Rule>
 }
 

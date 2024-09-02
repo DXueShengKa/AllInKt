@@ -16,13 +16,13 @@ sealed external interface Variant {
 }
 
 
-sealed external interface FormLayout {
+sealed external interface LayoutDirection {
     companion object {
         @JsValue("horizontal")
-        val horizontal: FormLayout
+        val horizontal: LayoutDirection
 
         @JsValue("vertical")
-        val vertical: FormLayout
+        val vertical: LayoutDirection
     }
 }
 
@@ -58,5 +58,17 @@ sealed external interface ButtonType {
 }
 
 
+sealed external interface SpaceSize {
+    companion object {
+        @JsValue("small")
+        val small: SpaceSize
+
+        @JsValue("middle")
+        val middle: SpaceSize
+
+        @JsValue("large")
+        val large: SpaceSize
+    }
+}
 
 

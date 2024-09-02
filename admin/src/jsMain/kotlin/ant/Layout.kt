@@ -3,18 +3,23 @@
 package ant
 
 import react.FC
-import react.Props
-import react.PropsWithChildren
-import react.dom.html.HTMLAttributes
-import web.html.HTMLHtmlElement
 
 
 external interface LayoutProps : AntChildrenProps {
+    var hasSider: Boolean
 }
+
+external interface SiderProps : AntChildrenProps {
+    var collapsed: Boolean
+    var onCollapse: Boolean
+}
+
 
 external interface LayoutFC : FC<LayoutProps> {
     var Header: FC<AntChildrenProps>
     var Content: FC<AntChildrenProps>
+    var Footer: FC<AntChildrenProps>
+    var Sider: FC<SiderProps>
 }
 
 
