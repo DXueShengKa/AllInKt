@@ -1,6 +1,7 @@
 package cn.allin.controller
 
 import cn.allin.exposed.UserRepository
+import cn.allin.exposed.entity.toVo
 import cn.allin.exposed.table.UserTable
 import cn.allin.vo.UserVO
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -20,7 +21,7 @@ class UserController(
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable("id") userId: Int): Boolean {
+    fun delete(@PathVariable("id") userId: UInt): Boolean {
         return transaction {
             UserTable.deleteWhere { id eq userId } > 0
         }

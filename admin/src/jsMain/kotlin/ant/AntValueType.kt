@@ -72,3 +72,13 @@ sealed external interface SpaceSize {
 }
 
 
+sealed external interface MenuModel {
+    companion object {
+        @JsValue("vertical")
+        val vertical: MenuModel
+        @JsValue("horizontal")
+        val horizontal: MenuModel
+        @JsValue("inline")
+        val inline: MenuModel
+    }
+}

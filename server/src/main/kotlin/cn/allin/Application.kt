@@ -7,9 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
 
 
-@SpringBootApplication
+@SpringBootApplication(
+    exclude = [ExposedAutoConfiguration::class]
+)
 @ImportAutoConfiguration(
-    ExposedAutoConfiguration::class,
     exclude = [DataSourceTransactionManagerAutoConfiguration::class]
 )
 class Application

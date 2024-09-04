@@ -12,6 +12,9 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 
+/**
+ * 根据cn.allin.exposed.table包下的表创建实体类
+ */
 @OptIn(KspExperimental::class)
 fun generatorEntity(resolver: Resolver, codeGenerator: CodeGenerator, logger: KSPLogger) {
 
@@ -45,7 +48,15 @@ fun generatorEntity(resolver: Resolver, codeGenerator: CodeGenerator, logger: KS
                 .primaryConstructor(
                     FunSpec.constructorBuilder().addParameter(
                         "id",
-                        ClassName("$daoPackage.id", "EntityID").parameterizedBy(INT)
+                        ClassName("$daoPackage.id", "EntityID").parameterizedBy(
+                            when(idType){
+                                INT.simpleName -> INT
+                                U_INT.simpleName -> U_INT
+                                LONG.simpleName -> LONG
+                                U_LONG.simpleName -> U_LONG
+                                else -> error("未支持的类型")
+                            }
+                        )
                     ).build()
                 )
                 .addType(
@@ -61,16 +72,17 @@ fun generatorEntity(resolver: Resolver, codeGenerator: CodeGenerator, logger: KS
 
             d.getDeclaredProperties()
                 .forEach {
-                    val t = it.type.resolve().arguments.first().type!!.toTypeName()
                     val propertyName = it.simpleName.asString()
                     val propertySpec = PropertySpec.builder(
                         propertyName,
-                        t
-                    ).delegate("%T.$propertyName", tableClass)
+                        type = it.type.resolve().arguments.first().type!!.toTypeName()
+                    )
+                        .delegate("%T.$propertyName", tableClass)
+                        .mutable(true)
                     typeSpec.addProperty(propertySpec.build())
                 }
 
-           val file = FileSpec.builder(entityClassName)
+            val file = FileSpec.builder(entityClassName)
                 .addType(typeSpec.build())
                 .build()
 

@@ -4,5 +4,10 @@ spring:
     exposed:
         generate-ddl: true
         show-sql: true
+#    sql:
+#        init:
+#            schema-locations:
+#                - classpath:db.sql
+#            platform: postgresql
     profiles:
         active: dev

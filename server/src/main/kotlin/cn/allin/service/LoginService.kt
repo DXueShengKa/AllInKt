@@ -31,7 +31,7 @@ class LoginService(
 
 
     @Cacheable(cacheNames = [CacheConfig.AUTH], key = "#userId")
-    fun login(userId: Int, password: String,userRole: UserRole): Authentication {
+    fun login(userId: UInt, password: String,userRole: UserRole): Authentication {
         val authenticate = authenticationManager.authenticate(newAuthenticationToken(userId, password, listOf(userRole)))
         SecurityContextHolder.getContext().authentication = authenticate
         return authenticate

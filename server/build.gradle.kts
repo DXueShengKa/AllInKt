@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.spring)
     alias(libs.plugins.srpingDependencyManagement)
-//    alias(libs.plugins.ksp)
+    alias(libs.plugins.ksp)
     application
 }
 
@@ -23,7 +23,7 @@ tasks.withType<Test> {
 }
 
 dependencies {
-//    ksp(projects.allKsp)
+    ksp(projects.allKsp)
     implementation(projects.shared)
     implementation(libs.spring.starter.web)
     implementation(libs.spring.starter.security)

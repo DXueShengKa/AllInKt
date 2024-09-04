@@ -1,82 +1,113 @@
 package cn.allin
 
 
-import androidx.navigation.react.navController
-import androidx.navigation.react.navHost
-import androidx.navigation.react.react
-import ant.Layout
-import cn.allin.net.HeaderAuthorization
-import cn.allin.ui.NavAuth
+import ant.*
+import ant.icons.OutlinedBars
+import ant.icons.OutlinedBook
+import ant.icons.OutlinedUser
 import cn.allin.ui.NavUserListFc
-import cn.allin.ui.RouteAuth
 import cn.allin.ui.RouteUserList
 import js.objects.jso
+import react.CSSProperties
 import react.FC
-import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.h3
+import react.useState
 import web.cssom.*
 import kotlin.js.Date
 
 
-val appNavController = navController()
+private val SiderStyle: CSSProperties = jso {
+    height = 100.vh
+    overflow = Auto.auto
+}
 
-val App = navHost(
-    appNavController,
-    if (HeaderAuthorization == null) RouteAuth else RouteUserList
-) {
-    react(RouteAuth, NavAuth)
-    react(RouteUserList, NavUserListFc)
+private val HeaderStyle: CSSProperties = jso {
+    padding = 0.px
+    height = 64.px
+    paddingInline = 48.px
+    color = Color("#fff")
+}
 
+private val ContentStyle: CSSProperties = jso {
+    minHeight = 120.px
 }
 
 
+private val menuItems: Array<MenuItemType> = createMenuItems {
+    menu {
+        key = RouteUserList
+        icon { OutlinedUser() }
+        label { +"用户列表" }
+    }
 
-val App2 = FC {
+    repeat(30){
+        menu {
+            key = "it$it"
+            icon { OutlinedBook() }
+            label { + it.toString() }
+        }
+    }
+
+    subMenu {
+        key = "1"
+        icon { OutlinedBars() }
+        label {
+            +"用户"
+        }
+        items(
+            {
+                key = "3"
+                label { +"3333" }
+                children = createMenuItems {
+                    menu {
+                        key = "4"
+                        label { +"33322" }
+                    }
+                }
+            },
+            {
+                key = "5"
+                label { +"4443" }
+            }
+        )
+    }
+}
+
+
+val NavApp = FC {
     Layout {
         hasSider = true
+
+        var routePath by useState(RouteUserList)
+
         Layout.Sider {
-            style = jso {
-                overflow = Overflow.scroll
-                width = 20.pct
-                position = Position.fixed
+            style = SiderStyle
+
+            Menu {
+                defaultSelectedKeys = arrayOf(menuItems[0].key)
+                onClick = { item ->
+                    routePath = item.key
+                }
+                mode = MenuModel.inline
+                items = menuItems
             }
-
-//            Menu {
-//                items = a
-//            }
-
-//            repeat(50) {
-//                p {
-//                    key = it.toString()
-//                    +"----> $it"
-//                }
-//            }
         }
 
         Layout {
-            style = jso {
-                marginInlineStart = 20.pct
-            }
 
             Layout.Header {
-                style = jso {
-                    textAlign = TextAlign.start
-                }
+                style = HeaderStyle
                 +"Header"
             }
 
             Layout.Content {
-                style = jso {
-                    margin = Margin(20.px, 10.px)
-                }
-                div {
-                    style = jso {
-                        textAlign = TextAlign.start
-                        padding = 20.px
+                style = ContentStyle
+                when (routePath) {
+                    RouteUserList -> {
+                        NavUserListFc {
+                            key = RouteUserList
+                        }
                     }
-                    h3 {
-                        +"Content"
-                    }
+
                 }
             }
 

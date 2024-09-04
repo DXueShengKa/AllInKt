@@ -29,3 +29,22 @@ fun newAuthenticationToken(id: Int, password: String) =
 
 fun newAuthenticationToken(id: Int, password: String, authorities: Collection<GrantedAuthority>) =
     UsernamePasswordAuthenticationToken(id, password, authorities)
+
+
+fun newAuthenticationToken(id: UInt, password: String) =
+    UsernamePasswordAuthenticationToken(id, password)
+
+
+fun newAuthenticationToken(id: UInt, password: String, authorities: Collection<GrantedAuthority>) =
+    UsernamePasswordAuthenticationToken(id, password, authorities)
+
+
+
+fun createTriggerUpdateTimestamp(tableName: String) =
+    """
+         create trigger "${tableName}_update_timestamp"
+             before insert or update
+             on "$tableName"
+             for each row
+         execute procedure update_timestamp_column();
+    """.trimIndent()

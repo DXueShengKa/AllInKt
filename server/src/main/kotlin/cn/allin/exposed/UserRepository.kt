@@ -5,8 +5,6 @@ import cn.allin.exposed.entity.UserEntity
 import cn.allin.exposed.table.UserTable
 import cn.allin.vo.UserVO
 import kotlinx.datetime.toJavaLocalDate
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Repository
@@ -26,14 +24,12 @@ class UserRepository {
     }
 
     fun add(userVO: UserVO) {
-        UserTable.insert {
-            it[birthday] = userVO.birthday?.toJavaLocalDate()
-            it[name] = userVO.name
-            userVO.password?.also { p ->
-                it[password] = p
-            }
-            userVO.role?.also { r ->
-                it[role] = UserRole.valueOf(r)
+        UserEntity.new {
+            birthday = userVO.birthday?.toJavaLocalDate()
+            name = userVO.name
+            password = userVO.password?: error("密码不能为空")
+            userVO.role?.also {
+                role = UserRole.valueOf(it)
             }
         }
     }
@@ -47,7 +43,7 @@ class UserRepository {
         return UserEntity.wrapRow(row ?: return null)
     }
 
-    fun findIdByUsername(username: String): Int? {
+    fun findIdByUsername(username: String): UInt? {
        val raw = UserTable.select(UserTable.id)
             .where {
                 UserTable.name eq username
@@ -57,12 +53,11 @@ class UserRepository {
     }
 
 
-    fun findById(id: Int): UserEntity? {
+    fun findById(id: UInt): UserEntity? {
         return UserEntity.findById(id)
     }
 
     fun update(user: UserEntity){
-        UserEntity(id = EntityID(10,UserTable))
         UserTable.update() {
 
         }

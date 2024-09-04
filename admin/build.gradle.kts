@@ -1,17 +1,17 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.seskar)
 }
 
 kotlin {
-    
-    js(KotlinJsCompilerType.IR) {
+
+    js(IR) {
         moduleName = "admin"
         browser {
-            
             commonWebpackConfig {
+//                cssSupport {
+//                    enabled = true
+//                }
                 outputFileName = "admin.js"
             }
             useEsModules()
@@ -33,8 +33,8 @@ kotlin {
             implementation(libs.ktorClient.js)
             implementation(projects.shared)
             implementation(projects.client.net)
-            implementation(projects.client.navigationReact)
-            implementation(npm("antd","5.20.1"))
+            implementation(npm("antd", "5.20.1"))
+            implementation(npm("@ant-design/icons",""))
         }
 
     }
