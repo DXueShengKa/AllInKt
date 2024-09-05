@@ -3,6 +3,8 @@
 package cn.allin.net
 
 import cn.allin.ui.AddUser
+import cn.allin.utils.lastDayOfMonth
+import cn.allin.utils.toLocalDate
 import cn.allin.vo.MsgVO
 import cn.allin.vo.UserVO
 import io.ktor.client.*
@@ -11,9 +13,10 @@ import io.ktor.client.engine.js.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import kotlinx.datetime.LocalDate
 
 
-var HeaderAuthorization: String? = null
+var HeaderAuthorization: String? = ""
 
 
 private val http = HttpClient(Js) {
@@ -39,7 +42,12 @@ object ReqUser {
     @JsStatic
     suspend fun addUser(addUser: AddUser) {
         http.post("user") {
-            setBody(JSON.stringify(addUser))
+            LocalDate.parse("").lastDayOfMonth()
+            setBody(UserVO(
+                name = addUser.name,
+                password = addUser.password,
+                birthday = addUser.birthday.toLocalDate()
+            ))
         }.body<Unit>()
     }
 }

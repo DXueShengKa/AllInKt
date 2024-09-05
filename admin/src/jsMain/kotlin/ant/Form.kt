@@ -12,7 +12,7 @@ external interface FormProps<T> : PropsWithChildren, react.dom.html.HTMLAttribut
     var variant: Variant
     var onFinish: (T) -> Unit
     var onFinishFailed: (Error) -> Unit
-
+    var onValuesChange: (T,dynamic) -> Unit
 }
 
 external interface FormItemProps<T> : PropsWithChildren {

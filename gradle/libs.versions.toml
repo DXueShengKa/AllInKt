@@ -40,7 +40,7 @@ okio = "3.9.0"
 #https://github.com/coil-kt/coil
 coil3 = "3.0.0-alpha10"
 #https://github.com/InsertKoinIO/koin
-koin = "4.0.0-RC1"
+koin = "4.0.0-RC2"
 #https://github.com/InsertKoinIO/koin-annotations
 koin-annotations = "1.4.0-RC3"
 
@@ -99,6 +99,7 @@ kotlin-wrappers-react-dom = { module = "org.jetbrains.kotlin-wrappers:kotlin-rea
 kotlin-wrappers-react-router = { module = "org.jetbrains.kotlin-wrappers:kotlin-react-router" }
 kotlin-wrappers-react-router-dom = { module = "org.jetbrains.kotlin-wrappers:kotlin-react-router-dom" }
 kotlin-wrappers-mui-material = { module = "org.jetbrains.kotlin-wrappers:kotlin-mui-material" }
+kotlin-wrappers-mui-datePickers = { module = "org.jetbrains.kotlin-wrappers:kotlin-mui-date-pickers" }
 kotlin-wrappers-mui-icons = { module = "org.jetbrains.kotlin-wrappers:kotlin-mui-icons-material" }
 
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }

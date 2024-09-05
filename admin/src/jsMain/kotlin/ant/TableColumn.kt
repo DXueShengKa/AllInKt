@@ -17,8 +17,9 @@ fun <T> tableColumn(block: @JsoDsl TableColumn<T>.() -> Unit): TableColumn<T> = 
 
 fun <T : Any> T.keyName(block: (T) -> dynamic): String {
     Object.entries(this).forEach { (key, v) ->
-        if (v == block(this)) return key
+        println("$key: $v ${block(this)}")
+        if (v === block(this)) return key
     }
-    error("读取属性失败")
+    error("读取属性失败 ${block(this)}")
 }
 

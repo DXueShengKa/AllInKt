@@ -1,6 +1,10 @@
 package cn.allin.utils
 
-import kotlinx.datetime.*
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
+import kotlinx.datetime.toKotlinInstant
+import kotlin.js.Date
 
 actual enum class TimeTextStyle {
     SHORT_STANDALONE, NARROW, SHORT
@@ -35,4 +39,9 @@ actual fun LocalDate.withYear(year: Int): LocalDate {
 
 actual fun LocalDate.withMonth(month: Int): LocalDate {
     return LocalDate(year, month, dayOfMonth)
+}
+
+
+fun Date.toLocalDate(): LocalDate {
+    return toKotlinInstant().getDate()
 }

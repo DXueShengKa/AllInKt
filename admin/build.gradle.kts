@@ -1,3 +1,5 @@
+
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.seskar)
@@ -5,7 +7,7 @@ plugins {
 
 kotlin {
 
-    js(IR) {
+    js {
         moduleName = "admin"
         browser {
             commonWebpackConfig {
@@ -14,7 +16,8 @@ kotlin {
 //                }
                 outputFileName = "admin.js"
             }
-            useEsModules()
+//            useEsModules()
+            useCommonJs()
         }
 
         binaries.executable()
@@ -30,14 +33,13 @@ kotlin {
             implementation(libs.kotlin.wrappers.react.dom)
 //            implementation(libs.kotlin.wrappers.react.router)
 //            implementation(libs.kotlin.wrappers.react.router.dom)
+//            implementation(libs.kotlin.wrappers.mui.material)
             implementation(libs.ktorClient.js)
             implementation(projects.shared)
             implementation(projects.client.net)
             implementation(npm("antd", "5.20.1"))
-            implementation(npm("@ant-design/icons",""))
+            implementation(npm("@ant-design/icons", ""))
         }
 
     }
 }
-
-

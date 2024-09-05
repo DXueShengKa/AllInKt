@@ -3,9 +3,10 @@ package cn.allin
 
 import ant.*
 import ant.icons.OutlinedBars
-import ant.icons.OutlinedBook
 import ant.icons.OutlinedUser
+import cn.allin.ui.AddUserFC
 import cn.allin.ui.NavUserListFc
+import cn.allin.ui.RouteAddUser
 import cn.allin.ui.RouteUserList
 import js.objects.jso
 import react.CSSProperties
@@ -33,18 +34,21 @@ private val ContentStyle: CSSProperties = jso {
 
 
 private val menuItems: Array<MenuItemType> = createMenuItems {
-    menu {
-        key = RouteUserList
-        icon { OutlinedUser() }
-        label { +"用户列表" }
-    }
 
-    repeat(30){
-        menu {
-            key = "it$it"
-            icon { OutlinedBook() }
-            label { + it.toString() }
-        }
+    subMenu {
+        key = "user"
+        icon { OutlinedUser() }
+        label { +"用户" }
+        items(
+            {
+                key = RouteUserList
+                label { +"列表" }
+            },
+            {
+                key = RouteAddUser
+                label { +"添加用户" }
+            }
+        )
     }
 
     subMenu {
@@ -77,15 +81,17 @@ val NavApp = FC {
     Layout {
         hasSider = true
 
-        var routePath by useState(RouteUserList)
+        var routePath by useState("空")
 
         Layout.Sider {
             style = SiderStyle
 
             Menu {
-                defaultSelectedKeys = arrayOf(menuItems[0].key)
+//                defaultSelectedKeys = arrayOf(menuItems[0].key)
                 onClick = { item ->
+                    console.log(item)
                     routePath = item.key
+
                 }
                 mode = MenuModel.inline
                 items = menuItems
@@ -107,7 +113,14 @@ val NavApp = FC {
                             key = RouteUserList
                         }
                     }
-
+                    RouteAddUser -> {
+                        AddUserFC {
+                            key = RouteAddUser
+                        }
+                    }
+                    else -> {
+                        + routePath
+                    }
                 }
             }
 

@@ -14,6 +14,11 @@ import react.useState
 
 const val RouteUserList = "UserList"
 
+private val userVO = UserVO(
+    1u, "name", "p",
+    //Instant.DISTANT_PAST.getDateTime()
+)
+
 val NavUserListFc = FC {
 
     var list: List<UserVO> by useState { emptyList() }
@@ -24,13 +29,8 @@ val NavUserListFc = FC {
         }
 
         Table {
-
             dataSource = list.toTypedArray()
 
-            val userVO = UserVO(
-                1u, "2u", "n",
-                //Instant.DISTANT_PAST.getDateTime()
-            )
 
             columns = arrayOf(
                 tableColumn<String> {
@@ -41,13 +41,13 @@ val NavUserListFc = FC {
                             +i
                         }.create()
                     }
-                    key = dataIndex
+//                    key = dataIndex
                 },
-                tableColumn<Int> {
-                    title = "id"
-                    dataIndex = userVO.keyName(UserVO::userId)
-                    key = dataIndex
-                }
+//                tableColumn<UInt> {
+//                    title = "id"
+//                    dataIndex = userVO.keyName(UserVO::userId)
+////                    key = dataIndex
+//                }
             )
         }
     }

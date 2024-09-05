@@ -1,6 +1,5 @@
 package cn.allin.config.security
 
-import cn.allin.config.UserRole
 import cn.allin.vo.MsgVO
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.serialization.encodeToString
@@ -10,7 +9,6 @@ import kotlinx.serialization.json.put
 import org.springframework.cache.CacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
@@ -87,10 +85,11 @@ class SecurityConfig {
             sessionManagement { sessionCreationPolicy = SessionCreationPolicy.NEVER }
 
             authorizeHttpRequests {
-                authorize("/auth", permitAll)
-
-                authorize(HttpMethod.GET, "/user", hasAuthority(UserRole.ROLE_ADMIN.name))
-                authorize(anyRequest, authenticated)
+//                authorize("/auth", permitAll)
+//
+//                authorize(HttpMethod.GET, "/user", hasAuthority(UserRole.ROLE_ADMIN.name))
+//                authorize(anyRequest, authenticated)
+                authorize(anyRequest, permitAll)
             }
 
             formLogin {

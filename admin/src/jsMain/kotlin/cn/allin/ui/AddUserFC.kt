@@ -1,36 +1,42 @@
 package cn.allin.ui
 
 import ant.*
+import cn.allin.ViewModel
 import cn.allin.net.ReqUser
+import cn.allin.viewModelFc
 import emotion.react.css
-import react.FC
+import kotlinx.coroutines.launch
 import react.dom.html.ReactHTML.div
-import react.useEffect
-import react.useState
 import web.cssom.px
+import kotlin.String
 
 
-val AddUserFC = FC {
+const val RouteAddUser = "addUser"
 
-    var r: AddUser? by useState(null)
+private class AddUserVM : ViewModel() {
+    init {
+        println("addUserVM")
+    }
 
-    useEffect(r) {
-        r?.also {
-            ReqUser.addUser(it)
+    fun add(addUser: AddUser) {
+        viewModelScope.launch {
+            ReqUser.addUser(addUser)
+            message.info("+1")
         }
     }
+}
+
+val AddUserFC = viewModelFc<AddUserVM> { vm ->
 
 
     div {
-        form<AddUser> {
+        form {
             css {
                 width = 300.px
             }
 
-            onFinish = {
-                r = it
-                console.log(it)
-            }
+            onFinish = vm::add
+
             name = "user"
 
             Form.Item {
@@ -48,12 +54,20 @@ val AddUserFC = FC {
             }
 
             Form.Item {
-                label = "年龄"
-                name = "age"
+                label = "密码"
+                name = "password"
+                Input.Password()
+            }
 
-                InputNumber {
-                    max = 150
-                    min = 1
+            Form.Item {
+                label = "年龄"
+                name = "birthday"
+
+                DatePicker{
+                    onChange =  { date, s ->
+                        console.log(date)
+                        console.log(s)
+                    }
                 }
             }
 
@@ -71,5 +85,6 @@ val AddUserFC = FC {
 
 interface AddUser {
     var name: String
-    var age: Int
+    var password: String
+    var birthday: kotlin.js.Date
 }
