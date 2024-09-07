@@ -5,6 +5,7 @@ import ant.keyName
 import ant.tableColumn
 import cn.allin.net.ReqUser
 import cn.allin.vo.UserVO
+import kotlinx.datetime.LocalDate
 import react.FC
 import react.create
 import react.dom.html.ReactHTML.div
@@ -16,7 +17,6 @@ const val RouteUserList = "UserList"
 
 private val userVO = UserVO(
     1u, "name", "p",
-    //Instant.DISTANT_PAST.getDateTime()
 )
 
 val NavUserListFc = FC {
@@ -41,13 +41,18 @@ val NavUserListFc = FC {
                             +i
                         }.create()
                     }
-//                    key = dataIndex
+                    key = "0"
                 },
-//                tableColumn<UInt> {
-//                    title = "id"
-//                    dataIndex = userVO.keyName(UserVO::userId)
-////                    key = dataIndex
-//                }
+                tableColumn<UInt> {
+                    title = "id"
+                    dataIndex = userVO.keyName(UserVO::userId)
+                    key = "1"
+                },
+                tableColumn<LocalDate> {
+                    title = "生日"
+                    dataIndex = userVO.keyName(UserVO::birthday)
+                    key = "3"
+                }
             )
         }
     }

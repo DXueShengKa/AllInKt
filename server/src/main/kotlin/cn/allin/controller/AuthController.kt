@@ -18,7 +18,7 @@ class AuthController(
     @DeleteMapping
     fun delete(request: HttpServletRequest): MsgVO<Unit> {
         val auth = request.getHeader(HttpHeaders.AUTHORIZATION) ?: return MsgVO("未登录")
-        val userId = JwtUtil.extractUsername(auth).toInt()
+        val userId = JwtUtil.extractInt(auth)
         loginService.logout(userId)
 
         return MsgVO("退出登录")
@@ -31,6 +31,6 @@ class AuthController(
 
         loginService.login(user.id.value, userVO.password ?: return MsgVO("请输入密码", 1),user.role)
 
-        return MsgVO("登录成功", data = JwtUtil.generateToken(user.id.value.toString()))
+        return MsgVO("登录成功", data = JwtUtil.generateToken(user.id.value.toInt()))
     }
 }

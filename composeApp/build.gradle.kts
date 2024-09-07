@@ -105,6 +105,10 @@ compose.desktop {
             packageName = "cn.allin"
             packageVersion = "1.0.0"
         }
+
+        buildTypes.release.proguard {
+            version.set(libs.versions.proguard.get())
+        }
     }
 }
 

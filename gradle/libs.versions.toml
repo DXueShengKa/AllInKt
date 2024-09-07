@@ -2,7 +2,7 @@
 android-compileSdk = "34"
 android-minSdk = "26"
 android-targetSdk = "34"
-android-gradle = "8.4.2"
+android-gradle = "8.5.2"
 
 #https://github.com/JetBrains/kotlin
 kotlin = "2.0.10"
@@ -42,7 +42,7 @@ coil3 = "3.0.0-alpha10"
 #https://github.com/InsertKoinIO/koin
 koin = "4.0.0-RC2"
 #https://github.com/InsertKoinIO/koin-annotations
-koin-annotations = "1.4.0-RC3"
+koin-annotations = "1.4.0-RC4"
 
 spring-boot = "3.3.2"
 spring-dependencyManagement = "1.1.6"
@@ -59,6 +59,8 @@ slf4j = "2.0.13"
 jjwt = "0.12.6"
 #https://github.com/ben-manes/caffeine
 caffeine = "3.1.8"
+#https://github.com/Guardsquare/proguard
+proguard = "7.5.0"
 
 [plugins]
 

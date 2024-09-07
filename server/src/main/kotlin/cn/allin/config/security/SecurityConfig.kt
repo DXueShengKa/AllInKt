@@ -1,5 +1,6 @@
 package cn.allin.config.security
 
+import cn.allin.config.UserRole
 import cn.allin.vo.MsgVO
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.serialization.encodeToString
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.authentication.InsufficientAuthenticationException
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -54,7 +56,12 @@ class SecurityConfig {
                     MsgVO.USER_AUTH_ERR
                 )
             }
-
+            is InsufficientAuthenticationException -> {
+                MsgVO(
+                    authException.message.toString(),
+                    MsgVO.USER_AUTH_ERR
+                )
+            }
             else -> {
                 MsgVO("未登录", MsgVO.USER_AUTH_ERR)
             }
@@ -85,9 +92,9 @@ class SecurityConfig {
             sessionManagement { sessionCreationPolicy = SessionCreationPolicy.NEVER }
 
             authorizeHttpRequests {
-//                authorize("/auth", permitAll)
+                authorize("/auth", permitAll)
 //
-//                authorize(HttpMethod.GET, "/user", hasAuthority(UserRole.ROLE_ADMIN.name))
+                authorize("/user/*", hasAuthority(UserRole.ROLE_ADMIN.name))
 //                authorize(anyRequest, authenticated)
                 authorize(anyRequest, permitAll)
             }

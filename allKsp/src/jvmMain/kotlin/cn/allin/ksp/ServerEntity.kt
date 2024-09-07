@@ -21,10 +21,11 @@ fun generatorEntity(resolver: Resolver, codeGenerator: CodeGenerator, logger: KS
     resolver.getDeclarationsFromPackage("cn.allin.exposed.table")
         .mapNotNull { ksDeclaration ->
             logger.warn(ksDeclaration.simpleName.asString())
-            val classDeclaration = ksDeclaration.closestClassDeclaration()
-            if (classDeclaration?.superTypes?.any {
+            val classDeclaration = ksDeclaration.closestClassDeclaration()?:return@mapNotNull null
+            val fileNotNull = classDeclaration.containingFile != null
+            if (classDeclaration.superTypes.any {
                     it.resolve().declaration.simpleName.asString().endsWith("IdTable")
-                } == true) {
+                } && fileNotNull) {
                 classDeclaration
             } else {
                 null
@@ -49,7 +50,7 @@ fun generatorEntity(resolver: Resolver, codeGenerator: CodeGenerator, logger: KS
                     FunSpec.constructorBuilder().addParameter(
                         "id",
                         ClassName("$daoPackage.id", "EntityID").parameterizedBy(
-                            when(idType){
+                            when (idType) {
                                 INT.simpleName -> INT
                                 U_INT.simpleName -> U_INT
                                 LONG.simpleName -> LONG

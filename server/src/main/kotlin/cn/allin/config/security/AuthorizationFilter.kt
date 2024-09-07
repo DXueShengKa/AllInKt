@@ -23,7 +23,7 @@ class AuthorizationFilter(
 
             if (!token.isNullOrEmpty()) {
                 val securityContext = SecurityContextHolder.getContext()
-                val key = JwtUtil.extractUsername(token).toInt()
+                val key = JwtUtil.extractInt(token)
 
                 cacheManager.getCache(CacheConfig.AUTH)?.also { auth ->
                     securityContext.authentication = auth.getValue(key)

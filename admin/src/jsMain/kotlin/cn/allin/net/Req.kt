@@ -3,6 +3,7 @@
 package cn.allin.net
 
 import cn.allin.ui.AddUser
+import cn.allin.ui.RouteAuth
 import cn.allin.utils.lastDayOfMonth
 import cn.allin.utils.toLocalDate
 import cn.allin.vo.MsgVO
@@ -13,10 +14,13 @@ import io.ktor.client.engine.js.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import kotlinx.browser.localStorage
 import kotlinx.datetime.LocalDate
+import org.w3c.dom.get
+import org.w3c.dom.set
 
 
-var HeaderAuthorization: String? = ""
+var HeaderAuthorization: String? = localStorage[RouteAuth]
 
 
 private val http = HttpClient(Js) {
@@ -66,6 +70,7 @@ object ReqAuth {
         if (msgVO.code == MsgVO.OK){
 
             HeaderAuthorization = msgVO.data
+            localStorage[RouteAuth] = msgVO.data!!
 
             response.headers.forEach { s, strings ->
                 println("$s $strings")
