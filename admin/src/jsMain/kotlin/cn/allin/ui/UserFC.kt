@@ -16,7 +16,7 @@ import react.useState
 const val RouteUserList = "UserList"
 
 private val userVO = UserVO(
-    1u, "name", "p",
+    1u, "name", "p", LocalDate(1996, 1, 1)
 )
 
 val NavUserListFc = FC {
@@ -25,7 +25,9 @@ val NavUserListFc = FC {
 
     div {
         useEffect(1) {
-            list = ReqUser.getUserAll()
+            list = ReqUser.getUserAll().onEach {
+                it.asDynamic()["key"] = it.userId.toString()
+            }
         }
 
         Table {
@@ -36,22 +38,27 @@ val NavUserListFc = FC {
                 tableColumn<String> {
                     title = "mz"
                     dataIndex = userVO.keyName(UserVO::name)
-                    render = { i ->
+                    render = { y, _, _ ->
+                        console.log(y)
                         FC {
-                            +i
+                            +y
                         }.create()
                     }
-                    key = "0"
                 },
                 tableColumn<UInt> {
                     title = "id"
                     dataIndex = userVO.keyName(UserVO::userId)
-                    key = "1"
                 },
-                tableColumn<LocalDate> {
+                tableColumn {
                     title = "生日"
                     dataIndex = userVO.keyName(UserVO::birthday)
-                    key = "3"
+
+                    render = { localDate, p, i ->
+                        console.log(p, i)
+                        FC {
+                            +localDate.toString()
+                        }.create()
+                    }
                 }
             )
         }

@@ -89,7 +89,6 @@ val NavApp = FC {
             Menu {
 //                defaultSelectedKeys = arrayOf(menuItems[0].key)
                 onClick = { item ->
-                    console.log(item)
                     routePath = item.key
 
                 }

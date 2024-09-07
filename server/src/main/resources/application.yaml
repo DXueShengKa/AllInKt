@@ -4,6 +4,9 @@ spring:
     exposed:
         generate-ddl: true
         show-sql: true
+    threads:
+        virtual:
+            enabled: true
 #    sql:
 #        init:
 #            schema-locations:

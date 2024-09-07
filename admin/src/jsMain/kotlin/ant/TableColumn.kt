@@ -9,7 +9,7 @@ external interface TableColumn<T> {
     var title: String
     var key: String
     var dataIndex: String
-    var render: (T) -> ReactNode
+    var render: (T,dynamic,Int)->ReactNode
 }
 
 fun <T> tableColumn(block: @JsoDsl TableColumn<T>.() -> Unit): TableColumn<T> = jso(block)
