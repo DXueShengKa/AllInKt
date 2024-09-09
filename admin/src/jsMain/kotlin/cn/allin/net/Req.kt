@@ -2,6 +2,7 @@
 
 package cn.allin.net
 
+import cn.allin.ServerRoute
 import cn.allin.ui.AddUser
 import cn.allin.ui.RouteAuth
 import cn.allin.utils.lastDayOfMonth
@@ -40,12 +41,12 @@ object ReqUser {
 
     @JsStatic
     suspend fun getUserAll(): List<UserVO> {
-        return http.get("user").body()
+        return http.get(ServerRoute.USER).body()
     }
 
     @JsStatic
     suspend fun addUser(addUser: AddUser) {
-        http.post("user") {
+        http.post(ServerRoute.USER) {
             LocalDate.parse("").lastDayOfMonth()
             setBody(UserVO(
                 name = addUser.name,
@@ -61,7 +62,7 @@ object ReqAuth {
 
     @JsStatic
     suspend fun auth(baseVO: UserVO): MsgVO<String> {
-        val response = http.post("auth") {
+        val response = http.post(ServerRoute.AUTH) {
             setBody(baseVO)
         }.call.response
 

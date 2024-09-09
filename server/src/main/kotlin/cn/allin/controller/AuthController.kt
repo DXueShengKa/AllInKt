@@ -1,5 +1,6 @@
 package cn.allin.controller
 
+import cn.allin.ServerRoute
 import cn.allin.config.security.JwtUtil
 import cn.allin.service.LoginService
 import cn.allin.vo.MsgVO
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(ServerRoute.AUTH)
 class AuthController(
     private val loginService: LoginService,
 ) {

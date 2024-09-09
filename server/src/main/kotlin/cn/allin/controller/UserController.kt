@@ -1,5 +1,6 @@
 package cn.allin.controller
 
+import cn.allin.ServerRoute
 import cn.allin.exposed.UserRepository
 import cn.allin.exposed.entity.toVo
 import cn.allin.exposed.table.UserTable
@@ -10,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping(ServerRoute.USER)
 class UserController(
     private val userRepository: UserRepository
 ){

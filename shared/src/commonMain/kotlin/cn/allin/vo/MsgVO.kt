@@ -3,7 +3,7 @@ package cn.allin.vo
 import kotlinx.serialization.Serializable
 
 @Serializable
-class MsgVO<T>(
+data class MsgVO<T>(
     val message: String,
     val code: Int = OK,
     val data: T? = null

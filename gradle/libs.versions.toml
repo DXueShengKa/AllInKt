@@ -24,6 +24,7 @@ kotlinpoet = "1.18.1"
 kotlinx-collections-immutable = "0.3.7"
 #https://github.com/JetBrains/compose-multiplatform
 jetbrains-compose = "1.7.0-beta01"
+jetbrains-md3Adaptive = "1.0.0-alpha02"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/lifecycle/lifecycle-viewmodel-compose/
 jetbrains-lifecycle = "2.8.1"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/navigation/navigation-common/
@@ -107,6 +108,9 @@ kotlin-wrappers-mui-icons = { module = "org.jetbrains.kotlin-wrappers:kotlin-mui
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp-aa = { group = "com.google.devtools.ksp", name = "symbol-processing-aa", version.ref = "ksp" }
 
+
+jetbrains-adaptive-navigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "jetbrains-md3Adaptive" }
+jetbrains-adaptive-suite = { group = "org.jetbrains.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "jetbrains-md3Adaptive" }
 jetbrains-collection = { group = "org.jetbrains.compose.collection-internal", name = "collection", version.ref = "jetbrains-compose" }
 jetbrains-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "jetbrains-navigation" }
 jetbrains-navigation-runtime = { group = "org.jetbrains.androidx.navigation", name = "navigation-runtime", version.ref = "jetbrains-navigation" }

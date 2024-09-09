@@ -1,7 +1,7 @@
 package cn.allin.config
 
+import cn.allin.InJson
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,7 +15,7 @@ class SerializationConfig {
     @Bean
     fun jsonMessageConverter(): HttpMessageConverter<*> {
         return KotlinSerializationJsonHttpMessageConverter(
-            Json.Default
+            InJson
         )
     }
 
