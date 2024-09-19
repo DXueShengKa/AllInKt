@@ -1,8 +1,10 @@
 package cn.allin
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.navigation.compose.NavHost
@@ -29,21 +31,23 @@ fun main() = application {
                 }
                 composable("b"){ e ->
 
+                    Column {
 
-//                val current = LocalLifecycleOwner.current
-                    LaunchedEffect(Unit){
-                        e.lifecycle.currentStateFlow.collect{
-                            println(it)
+                        var s = remember { mutableStateOf("") }
+
+                        LazyTableSimpleScreen {
+
                         }
-                    }
 
-                    Button({
-                        navController.navigateUp()
-                    }){
-                        Text("to a")
+                        Button({
+                            navController.navigateUp()
+                        }){
+                            Text("to a")
+                        }
                     }
                 }
             }
         }
 //    }
 }
+

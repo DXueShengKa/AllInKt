@@ -5,45 +5,47 @@ android-targetSdk = "34"
 android-gradle = "8.5.2"
 
 #https://github.com/JetBrains/kotlin
-kotlin = "2.0.10"
+kotlin = "2.0.20"
 #https://github.com/JetBrains/kotlin-wrappers
 kotlin-wrappers = "1.0.0-pre.799"
 #https://github.com/Kotlin/kotlinx.coroutines
-kotlinx-coroutines = "1.8.1"
+kotlinx-coroutines = "1.9.0"
 #https://github.com/Kotlin/kotlinx.serialization
-kotlinx-serialization = "1.7.1"
+kotlinx-serialization = "1.7.2"
 #https://github.com/Kotlin/kotlinx-datetime
 kotlinx-datetime = "0.6.1"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.5.3"
 #https://github.com/google/ksp
-ksp = "2.0.10-1.0.24"
+ksp = "2.0.20-1.0.25"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "1.18.1"
 #https://github.com/Kotlin/kotlinx.collections.immutable
 kotlinx-collections-immutable = "0.3.7"
 #https://github.com/JetBrains/compose-multiplatform
-jetbrains-compose = "1.7.0-beta01"
+jetbrains-compose = "1.7.0-beta02"
 jetbrains-md3Adaptive = "1.0.0-alpha02"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/lifecycle/lifecycle-viewmodel-compose/
-jetbrains-lifecycle = "2.8.1"
+jetbrains-lifecycle = "2.8.2"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/navigation/navigation-common/
-jetbrains-navigation = "2.8.0-alpha09"
+jetbrains-navigation = "2.8.0-alpha10"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
 jetbrains-core-bundle = "1.0.1"
 #https://github.com/square/okhttp
 okhttp3 = "4.12.0"
 #https://github.com/ktorio/ktor
-ktor = "3.0.0-beta-2"
+ktor = "3.0.0-rc-1"
 javapoet = "1.13.0"
 #https://github.com/square/okio
 okio = "3.9.0"
 #https://github.com/coil-kt/coil
 coil3 = "3.0.0-alpha10"
 #https://github.com/InsertKoinIO/koin
-koin = "4.0.0-RC2"
+koin = "4.0.0"
 #https://github.com/InsertKoinIO/koin-annotations
 koin-annotations = "1.4.0-RC4"
+#https://github.com/oleksandrbalan/lazytable
+lazytable="1.9.0-beta01"
 
 spring-boot = "3.3.2"
 spring-dependencyManagement = "1.1.6"
@@ -62,6 +64,9 @@ jjwt = "0.12.6"
 caffeine = "3.1.8"
 #https://github.com/Guardsquare/proguard
 proguard = "7.5.0"
+
+junit = "4.13.2"
+
 
 [plugins]
 
@@ -133,6 +138,7 @@ koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin"
 koin-kmp-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-annotations" }
 koin-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-annotations" }
+lazytable = { module = "io.github.oleksandrbalan:lazytable", version.ref="lazytable"}
 
 coil3-bom = { module = "io.coil-kt.coil3:coil-bom", version.ref = "coil3" }
 coil3-core = { module = "io.coil-kt.coil3:coil-core" }
@@ -185,6 +191,7 @@ androidx-paging-common = { group = "androidx.paging", name = "paging-common", ve
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 jjwt = { module = "io.jsonwebtoken:jjwt", version.ref = "jjwt" }
 caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 [bundles]
 netLibs = [

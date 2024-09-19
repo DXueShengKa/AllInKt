@@ -42,6 +42,12 @@ kotlin {
             implementation(projects.shared)
             implementation(projects.client.ui)
             implementation(projects.client.data)
+            implementation(libs.lazytable)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+//            implementation(libs.koin.test)
         }
 
         desktopMain.dependencies {
