@@ -115,6 +115,7 @@ compose.desktop {
 
         buildTypes.release.proguard {
             version.set(libs.versions.proguard.get())
+            configurationFiles.from("jvmProguard.pro")
         }
     }
 }

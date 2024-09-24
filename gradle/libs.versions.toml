@@ -11,7 +11,7 @@ kotlin-wrappers = "1.0.0-pre.799"
 #https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.9.0"
 #https://github.com/Kotlin/kotlinx.serialization
-kotlinx-serialization = "1.7.2"
+kotlinx-serialization = "1.7.3"
 #https://github.com/Kotlin/kotlinx-datetime
 kotlinx-datetime = "0.6.1"
 #https://github.com/Kotlin/kotlinx-io
@@ -54,7 +54,7 @@ seskar = "3.13.0"
 #https://github.com/JetBrains/Exposed
 exposed = "0.53.0"
 
-activity = "1.9.1"
+activity = "1.9.2"
 paging = "3.3.2"
 
 slf4j = "2.0.13"
