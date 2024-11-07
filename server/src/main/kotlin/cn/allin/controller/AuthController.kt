@@ -30,8 +30,8 @@ class AuthController(
     fun post(@RequestBody userVO: UserVO): MsgVO<String> {
         val user = loginService.findUserId(userVO.name) ?: return MsgVO("没有这个用户", MsgVO.USER_NOT_FOUND)
 
-        loginService.login(user.id.value, userVO.password ?: return MsgVO("请输入密码", 1),user.role)
+        loginService.login(user.id, userVO.password ?: return MsgVO("请输入密码", 1),user.role)
 
-        return MsgVO("登录成功", data = JwtUtil.generateToken(user.id.value.toInt()))
+        return MsgVO("登录成功", data = JwtUtil.generateToken(user.id.toInt()))
     }
 }

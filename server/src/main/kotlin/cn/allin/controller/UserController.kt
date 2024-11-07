@@ -2,12 +2,7 @@ package cn.allin.controller
 
 import cn.allin.ServerRoute
 import cn.allin.exposed.UserRepository
-import cn.allin.exposed.entity.toVo
-import cn.allin.exposed.table.UserTable
 import cn.allin.vo.UserVO
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -18,14 +13,12 @@ class UserController(
 
     @GetMapping
     fun get(): List<UserVO> {
-        return userRepository.getUserAll().map { it.toVo() }
+        return userRepository.getUserAll()
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable("id") userId: UInt): Boolean {
-        return transaction {
-            UserTable.deleteWhere { id eq userId } > 0
-        }
+    fun delete(@PathVariable("id") userId: Long): Boolean {
+        return userRepository.delete(userId)
     }
 
     @PostMapping

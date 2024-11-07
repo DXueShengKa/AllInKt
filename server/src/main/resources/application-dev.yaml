@@ -11,6 +11,3 @@ spring:
         password: 123456
         username: postgres
         url: jdbc:postgresql://localhost:5432/mytest
-    exposed:
-        generate-ddl: true
-        show-sql: true

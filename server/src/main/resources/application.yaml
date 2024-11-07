@@ -1,9 +1,6 @@
 spring:
     application:
         name: AllInServer
-    exposed:
-        generate-ddl: true
-        show-sql: true
     threads:
         virtual:
             enabled: true
@@ -14,3 +11,11 @@ spring:
 #            platform: postgresql
     profiles:
         active: dev
+
+jimmer:
+    language: kotlin
+    dialect: org.babyfish.jimmer.sql.dialect.PostgresDialect
+    show-sql: true
+    pretty-sql: true
+    database-validation:
+        mode: error

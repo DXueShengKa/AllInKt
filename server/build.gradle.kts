@@ -24,6 +24,8 @@ tasks.withType<Test> {
 
 dependencies {
     ksp(projects.allKsp)
+    ksp(libs.jimmer.ksp)
+    implementation(libs.jimmer.spring)
     implementation(projects.shared)
     implementation(libs.spring.starter.web)
     implementation(libs.spring.starter.security)
@@ -32,8 +34,6 @@ dependencies {
     testImplementation(libs.spring.securityTest)
     implementation(libs.spring.session.core)
 
-    implementation(libs.exposed.spring)
-    implementation(libs.exposed.javaTime)
     developmentOnly(libs.spring.devtools)
     runtimeOnly(libs.postgresql)
 

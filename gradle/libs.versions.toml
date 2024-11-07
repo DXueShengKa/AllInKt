@@ -5,9 +5,9 @@ android-targetSdk = "34"
 android-gradle = "8.5.2"
 
 #https://github.com/JetBrains/kotlin
-kotlin = "2.0.20"
+kotlin = "2.0.21"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "1.0.0-pre.799"
+kotlin-wrappers = "1.0.0-pre.825"
 #https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.9.0"
 #https://github.com/Kotlin/kotlinx.serialization
@@ -15,18 +15,18 @@ kotlinx-serialization = "1.7.3"
 #https://github.com/Kotlin/kotlinx-datetime
 kotlinx-datetime = "0.6.1"
 #https://github.com/Kotlin/kotlinx-io
-kotlinx-io = "0.5.3"
+kotlinx-io = "0.5.4"
 #https://github.com/google/ksp
-ksp = "2.0.20-1.0.25"
+ksp = "2.0.21-1.0.26"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "1.18.1"
 #https://github.com/Kotlin/kotlinx.collections.immutable
 kotlinx-collections-immutable = "0.3.7"
 #https://github.com/JetBrains/compose-multiplatform
-jetbrains-compose = "1.7.0-beta02"
+jetbrains-compose = "1.7.0"
 jetbrains-md3Adaptive = "1.0.0-alpha02"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/lifecycle/lifecycle-viewmodel-compose/
-jetbrains-lifecycle = "2.8.2"
+jetbrains-lifecycle = "2.8.3"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/navigation/navigation-common/
 jetbrains-navigation = "2.8.0-alpha10"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
@@ -34,27 +34,29 @@ jetbrains-core-bundle = "1.0.1"
 #https://github.com/square/okhttp
 okhttp3 = "4.12.0"
 #https://github.com/ktorio/ktor
-ktor = "3.0.0-rc-1"
+ktor = "3.0.0"
 javapoet = "1.13.0"
 #https://github.com/square/okio
 okio = "3.9.0"
 #https://github.com/coil-kt/coil
-coil3 = "3.0.0-alpha10"
+coil3 = "3.0.0"
 #https://github.com/InsertKoinIO/koin
 koin = "4.0.0"
 #https://github.com/InsertKoinIO/koin-annotations
-koin-annotations = "1.4.0-RC4"
+koin-annotations = "1.4.0"
 #https://github.com/oleksandrbalan/lazytable
-lazytable="1.9.0-beta01"
+lazytable = "1.9.0-beta01"
 
-spring-boot = "3.3.2"
+spring-boot = "3.3.5"
 spring-dependencyManagement = "1.1.6"
 #https://github.com/turansky/seskar
 seskar = "3.13.0"
 #https://github.com/JetBrains/Exposed
 exposed = "0.53.0"
+#https://github.com/babyfish-ct/jimmer
+jimmer = "0.9.4"
 
-activity = "1.9.2"
+activity = "1.9.3"
 paging = "3.3.2"
 
 slf4j = "2.0.13"
@@ -138,7 +140,7 @@ koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin"
 koin-kmp-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-annotations" }
 koin-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-annotations" }
-lazytable = { module = "io.github.oleksandrbalan:lazytable", version.ref="lazytable"}
+lazytable = { module = "io.github.oleksandrbalan:lazytable", version.ref = "lazytable" }
 
 coil3-bom = { module = "io.coil-kt.coil3:coil-bom", version.ref = "coil3" }
 coil3-core = { module = "io.coil-kt.coil3:coil-core" }
@@ -181,6 +183,9 @@ exposed-kotlinTime = { module = "org.jetbrains.exposed:exposed-kotlin-time", ver
 exposed-money = { module = "org.jetbrains.exposed:exposed-money", version.ref = "exposed" }
 exposed-json = { module = "org.jetbrains.exposed:exposed-json", version.ref = "exposed" }
 postgresql = { module = "org.postgresql:postgresql" }
+
+jimmer-spring = { module = "org.babyfish.jimmer:jimmer-spring-boot-starter", version.ref = "jimmer" }
+jimmer-ksp = { module = "org.babyfish.jimmer:jimmer-ksp", version.ref = "jimmer" }
 
 
 android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }

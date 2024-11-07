@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserVO(
-    val userId: UInt = 0u,
+    val userId: Long = 0,
     val name: String,
     val password: String? = null,
     val birthday: LocalDate? = null,

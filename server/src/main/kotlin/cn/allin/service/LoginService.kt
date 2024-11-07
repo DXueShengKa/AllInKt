@@ -3,7 +3,7 @@ package cn.allin.service
 import cn.allin.config.CacheConfig
 import cn.allin.config.UserRole
 import cn.allin.exposed.UserRepository
-import cn.allin.exposed.entity.UserEntity
+import cn.allin.model.UserEntity
 import cn.allin.utils.newAuthenticationToken
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
@@ -31,7 +31,7 @@ class LoginService(
 
 
     @Cacheable(cacheNames = [CacheConfig.AUTH], key = "#userId")
-    fun login(userId: UInt, password: String,userRole: UserRole): Authentication {
+    fun login(userId: Long, password: String,userRole: UserRole): Authentication {
         val authenticate = authenticationManager.authenticate(newAuthenticationToken(userId, password, listOf(userRole)))
         SecurityContextHolder.getContext().authentication = authenticate
         return authenticate

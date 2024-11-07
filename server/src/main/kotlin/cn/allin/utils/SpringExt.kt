@@ -31,11 +31,11 @@ fun newAuthenticationToken(id: Int, password: String, authorities: Collection<Gr
     UsernamePasswordAuthenticationToken(id, password, authorities)
 
 
-fun newAuthenticationToken(id: UInt, password: String) =
+fun newAuthenticationToken(id: Long, password: String) =
     UsernamePasswordAuthenticationToken(id, password)
 
 
-fun newAuthenticationToken(id: UInt, password: String, authorities: Collection<GrantedAuthority>) =
+fun newAuthenticationToken(id: Long, password: String, authorities: Collection<GrantedAuthority>) =
     UsernamePasswordAuthenticationToken(id, password, authorities)
 
 

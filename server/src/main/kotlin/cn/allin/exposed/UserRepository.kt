@@ -1,65 +1,68 @@
 package cn.allin.exposed
 
 import cn.allin.config.UserRole
-import cn.allin.exposed.entity.UserEntity
-import cn.allin.exposed.table.UserTable
+import cn.allin.model.UserEntity
+import cn.allin.model.UserEntity.Companion.toVo
+import cn.allin.model.id
+import cn.allin.model.name
 import cn.allin.vo.UserVO
 import kotlinx.datetime.toJavaLocalDate
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.update
+import org.babyfish.jimmer.sql.kt.KSqlClient
+import org.babyfish.jimmer.sql.kt.ast.expression.eq
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
-@Transactional
 @Repository
-class UserRepository {
+class UserRepository(
+    private val sqlClient: KSqlClient,
+) {
 
-    fun getUserAll(): List<UserEntity> {
-        return UserTable.selectAll()
-            .asSequence()
-            .map {
-                UserEntity.wrapRow(it)
-            }
-            .toList()
+    fun getUserAll(): List<UserVO> {
+        return sqlClient.executeQuery(UserEntity::class) {
+            select(table)
+        }.map {
+            it.toVo()
+        }
     }
 
     fun add(userVO: UserVO) {
-        UserEntity.new {
+        sqlClient.save(UserEntity {
             birthday = userVO.birthday?.toJavaLocalDate()
             name = userVO.name
             password = userVO.password?: error("密码不能为空")
+
             userVO.role?.also {
                 role = UserRole.valueOf(it)
             }
-        }
+        })
     }
 
     fun findByUsername(username: String): UserEntity? {
-        val row = UserTable.selectAll()
-            .where {
-                UserTable.name eq username
-            }.firstOrNull()
-
-        return UserEntity.wrapRow(row ?: return null)
+        return sqlClient.executeQuery(UserEntity::class, limit = 1) {
+            where(table.name eq username)
+            select(table)
+        }.firstOrNull()
     }
 
-    fun findIdByUsername(username: String): UInt? {
-       val raw = UserTable.select(UserTable.id)
-            .where {
-                UserTable.name eq username
-            }.firstOrNull()
-
-        return raw?.get(UserTable.id)?.value
+    fun findIdByUsername(username: String): Long? {
+        return sqlClient.executeQuery(UserEntity::class) {
+            where(table.name eq username)
+            select(table.id)
+        }.firstOrNull()
     }
 
 
-    fun findById(id: UInt): UserEntity? {
-        return UserEntity.findById(id)
+    fun findById(id: Long): UserEntity? {
+        return sqlClient.findById(UserEntity::class, id)
     }
 
-    fun update(user: UserEntity){
-        UserTable.update() {
-
+    fun update(user: UserVO) {
+        sqlClient.createUpdate(UserEntity::class) {
+            set(table.name, user.name)
+            where(table.id eq user.userId)
         }
+    }
+
+    fun delete(userId: Long): Boolean {
+        return sqlClient.deleteById(UserEntity::class, userId).totalAffectedRowCount > 0
     }
 }
