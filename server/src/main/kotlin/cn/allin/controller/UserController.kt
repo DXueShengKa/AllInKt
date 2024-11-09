@@ -1,7 +1,7 @@
 package cn.allin.controller
 
 import cn.allin.ServerRoute
-import cn.allin.exposed.UserRepository
+import cn.allin.repository.UserRepository
 import cn.allin.vo.UserVO
 import org.springframework.web.bind.annotation.*
 

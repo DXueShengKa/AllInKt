@@ -1,7 +1,7 @@
 package cn.allin.test
 
 import cn.allin.Application
-import cn.allin.exposed.UserRepository
+import cn.allin.repository.UserRepository
 import cn.allin.vo.UserVO
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -2,7 +2,7 @@ package cn.allin.service
 
 import cn.allin.config.CacheConfig
 import cn.allin.config.UserRole
-import cn.allin.exposed.UserRepository
+import cn.allin.repository.UserRepository
 import cn.allin.model.UserEntity
 import cn.allin.utils.newAuthenticationToken
 import org.springframework.cache.annotation.CacheEvict

@@ -1,6 +1,6 @@
 package cn.allin.service
 
-import cn.allin.exposed.UserRepository
+import cn.allin.repository.UserRepository
 import cn.allin.utils.SpringUser
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

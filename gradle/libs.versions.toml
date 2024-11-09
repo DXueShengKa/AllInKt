@@ -51,8 +51,6 @@ spring-boot = "3.3.5"
 spring-dependencyManagement = "1.1.6"
 #https://github.com/turansky/seskar
 seskar = "3.13.0"
-#https://github.com/JetBrains/Exposed
-exposed = "0.53.0"
 #https://github.com/babyfish-ct/jimmer
 jimmer = "0.9.4"
 
@@ -176,12 +174,8 @@ jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin"
 spring-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 spring-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-session-core = { module = "org.springframework.session:spring-session-core" }
+spring-integration-mqtt = { module = "org.springframework.integration:spring-integration-mqtt" }
 
-exposed-spring = { module = "org.jetbrains.exposed:exposed-spring-boot-starter", version.ref = "exposed" }
-exposed-javaTime = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
-exposed-kotlinTime = { module = "org.jetbrains.exposed:exposed-kotlin-time", version.ref = "exposed" }
-exposed-money = { module = "org.jetbrains.exposed:exposed-money", version.ref = "exposed" }
-exposed-json = { module = "org.jetbrains.exposed:exposed-json", version.ref = "exposed" }
 postgresql = { module = "org.postgresql:postgresql" }
 
 jimmer-spring = { module = "org.babyfish.jimmer:jimmer-spring-boot-starter", version.ref = "jimmer" }
