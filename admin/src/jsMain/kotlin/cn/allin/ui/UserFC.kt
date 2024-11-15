@@ -16,7 +16,7 @@ import react.useState
 const val RouteUserList = "UserList"
 
 private val userVO = UserVO(
-    1u, "name", "p", LocalDate(1996, 1, 1)
+    1, "name", "p", LocalDate(1996, 1, 1)
 )
 
 val NavUserListFc = FC {

@@ -7,7 +7,7 @@ plugins {
 
 kotlin {
 
-    js {
+    js(IR) {
         moduleName = "admin"
         browser {
             commonWebpackConfig {

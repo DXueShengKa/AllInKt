@@ -17,16 +17,16 @@ kotlinx-datetime = "0.6.1"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.5.4"
 #https://github.com/google/ksp
-ksp = "2.0.21-1.0.26"
+ksp = "2.0.21-1.0.27"
 #https://github.com/square/kotlinpoet
-kotlinpoet = "1.18.1"
+kotlinpoet = "2.0.0"
 #https://github.com/Kotlin/kotlinx.collections.immutable
 kotlinx-collections-immutable = "0.3.7"
 #https://github.com/JetBrains/compose-multiplatform
-jetbrains-compose = "1.7.0"
-jetbrains-md3Adaptive = "1.0.0-alpha02"
+jetbrains-compose = "1.7.1"
+jetbrains-md3Adaptive = "1.0.0"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/lifecycle/lifecycle-viewmodel-compose/
-jetbrains-lifecycle = "2.8.3"
+jetbrains-lifecycle = "2.8.4"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/navigation/navigation-common/
 jetbrains-navigation = "2.8.0-alpha10"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
@@ -34,12 +34,11 @@ jetbrains-core-bundle = "1.0.1"
 #https://github.com/square/okhttp
 okhttp3 = "4.12.0"
 #https://github.com/ktorio/ktor
-ktor = "3.0.0"
-javapoet = "1.13.0"
+ktor = "3.0.1"
 #https://github.com/square/okio
 okio = "3.9.0"
 #https://github.com/coil-kt/coil
-coil3 = "3.0.0"
+coil3 = "3.0.2"
 #https://github.com/InsertKoinIO/koin
 koin = "4.0.0"
 #https://github.com/InsertKoinIO/koin-annotations
@@ -52,7 +51,7 @@ spring-dependencyManagement = "1.1.6"
 #https://github.com/turansky/seskar
 seskar = "3.13.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.4"
+jimmer = "0.9.12"
 
 activity = "1.9.3"
 paging = "3.3.2"
@@ -92,6 +91,7 @@ kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-reactor = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactor", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
@@ -128,6 +128,7 @@ kotlinpoet-jvm = { module = "com.squareup:kotlinpoet-jvm", version.ref = "kotlin
 squareup-okhttp3-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp3" }
 squareup-okhttp3-loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
 
+reactor-test = { module = "io.projectreactor:reactor-test" }
 junit-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
@@ -165,6 +166,7 @@ ktorClient-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.re
 
 
 spring-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
 spring-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache" }
 spring-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
 spring-starter-oauth2-resourceServer = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server" }

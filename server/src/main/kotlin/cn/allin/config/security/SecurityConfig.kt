@@ -1,8 +1,9 @@
 package cn.allin.config.security
 
+import cn.allin.InJson
 import cn.allin.config.UserRole
+import cn.allin.service.UserService
 import cn.allin.vo.MsgVO
-import jakarta.servlet.http.HttpServletResponse
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
@@ -10,45 +11,53 @@ import kotlinx.serialization.json.put
 import org.springframework.cache.CacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.InsufficientAuthenticationException
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
-import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.invoke
-import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.authentication.ReactiveAuthenticationManager
+import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder
+import org.springframework.security.config.web.server.ServerHttpSecurity
+import org.springframework.security.config.web.server.invoke
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.AuthenticationEntryPoint
-import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.access.AccessDeniedHandler
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.ServerAuthenticationEntryPoint
+import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler
+import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler
+import reactor.core.publisher.Mono
 
 
 @Configuration
-@EnableWebSecurity
+@EnableWebFluxSecurity
+@EnableReactiveMethodSecurity(useAuthorizationManager = true)
 class SecurityConfig {
 
 
-    private val scSuccessHandler = AuthenticationSuccessHandler { request, response, authentication ->
-        response.status = HttpServletResponse.SC_OK
-        response.contentType = MediaType.APPLICATION_JSON_VALUE
-        response.characterEncoding = "UTF-8"
-        val j = buildJsonObject {
+    private val scSuccessHandler = ServerAuthenticationSuccessHandler { exchange, authentication ->
+        val response = exchange.exchange.response
+        response.statusCode = HttpStatus.OK
+        response.headers.contentType = MediaType.APPLICATION_JSON
+        response.headers.acceptCharset = listOf(Charsets.UTF_8)
+
+        val string = InJson.encodeToString(buildJsonObject {
             put("msg", "成功")
-        }
-        response.writer.use {
-            it.write(j.toString())
-        }
+        })
+
+        val dataBuffer = response.bufferFactory().wrap(string.encodeToByteArray())
+
+        response.writeWith(Mono.just(dataBuffer))
     }
 
-    private val scEntryPoint = AuthenticationEntryPoint { request, response, authException ->
+    private val failureHandler = ServerAuthenticationFailureHandler { exchange, authException ->
 
-        response.status = HttpServletResponse.SC_UNAUTHORIZED
-        response.contentType = MediaType.APPLICATION_JSON_VALUE
-        response.characterEncoding = "UTF-8"
+        val response = exchange.exchange.response
+        response.statusCode = HttpStatus.UNAUTHORIZED
+        response.headers.contentType = MediaType.APPLICATION_JSON
+        response.headers.acceptCharset = listOf(Charsets.UTF_8)
+
         val msgVO: MsgVO<String> = when (authException) {
             is BadCredentialsException -> {
                 MsgVO(
@@ -56,79 +65,91 @@ class SecurityConfig {
                     MsgVO.USER_AUTH_ERR
                 )
             }
+
             is InsufficientAuthenticationException -> {
                 MsgVO(
                     authException.message.toString(),
                     MsgVO.USER_AUTH_ERR
                 )
             }
+
             else -> {
                 MsgVO("未登录", MsgVO.USER_AUTH_ERR)
             }
         }
 
-        response.writer.use {
-            it.write(Json.encodeToString(msgVO))
-        }
+        val buffer = response.bufferFactory().wrap(InJson.encodeToString(msgVO).encodeToByteArray())
+        response.writeWith(Mono.just(buffer))
     }
 
-    private val adHandler = AccessDeniedHandler { request, response, authException ->
+    private val entryPoint = ServerAuthenticationEntryPoint { exchange, authException ->
         val msgVO: MsgVO<String> = when (authException) {
             else -> {
                 MsgVO(authException.message.toString(), MsgVO.USER_AUTH_ERR)
             }
         }
 
-        response.writer.use {
-            it.write(Json.encodeToString(msgVO))
+        exchange.response.run {
+
+            val buffer = bufferFactory().wrap(Json.encodeToString(msgVO).encodeToByteArray())
+            writeWith(Mono.just(buffer))
         }
     }
 
     @Bean
-    fun securityFilterChain(httpSecurity: HttpSecurity, cacheManager: CacheManager): SecurityFilterChain {
-        httpSecurity {
+    fun securityFilterChain(serverHttpSecurity: ServerHttpSecurity, cacheManager: CacheManager): SecurityWebFilterChain {
+        return serverHttpSecurity {
             csrf { disable() }
 
-            sessionManagement { sessionCreationPolicy = SessionCreationPolicy.NEVER }
+//            sessionManagement {
+//                sessionCreationPolicy = SessionCreationPolicy.NEVER
+//            }
 
-            authorizeHttpRequests {
+            authorizeExchange {
                 authorize("/auth", permitAll)
 //
                 authorize("/user/*", hasAuthority(UserRole.ROLE_ADMIN.name))
-//                authorize(anyRequest, authenticated)
-                authorize(anyRequest, permitAll)
+                authorize(anyExchange, authenticated)
+//                authorize(anyExchange, permitAll)
             }
 
             formLogin {
                 loginPage = "/auth"
+
                 authenticationSuccessHandler = scSuccessHandler
-                permitAll()
+//                permitAll()
+                authenticationFailureHandler = failureHandler
+
+
+//                authenticationEntryPoint = entryPoint
                 disable()
             }
 
             logout {
                 logoutUrl = "/auth"
-                permitAll()
+//                permitAll()
                 disable()
             }
 
             exceptionHandling {
-                accessDeniedHandler = adHandler
-                authenticationEntryPoint = scEntryPoint
+//                accessDeniedHandler = adHandler
+                authenticationEntryPoint = entryPoint
             }
 
-            addFilterBefore<BasicAuthenticationFilter>(AuthorizationFilter(cacheManager))
-
+            addFilterBefore(AuthorizationFilter(cacheManager), SecurityWebFiltersOrder.AUTHENTICATION)
         }
 
-        return httpSecurity.build()
     }
 
     @Bean
-    fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager {
-        return authenticationConfiguration.authenticationManager
+    fun authenticationManager(userService: UserService): ReactiveAuthenticationManager {
+        return UserDetailsRepositoryReactiveAuthenticationManager(userService)
     }
 
+
+
+
+    //todo web flux中未生效
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return object : PasswordEncoder {

@@ -39,12 +39,12 @@ private val http = HttpClient(Js) {
 
 object ReqUser {
 
-    @JsStatic
+//    @JsStatic
     suspend fun getUserAll(): List<UserVO> {
         return http.get(ServerRoute.USER).body()
     }
 
-    @JsStatic
+//    @JsStatic
     suspend fun addUser(addUser: AddUser) {
         http.post(ServerRoute.USER) {
             LocalDate.parse("").lastDayOfMonth()
@@ -60,7 +60,7 @@ object ReqUser {
 
 object ReqAuth {
 
-    @JsStatic
+//    @JsStatic
     suspend fun auth(baseVO: UserVO): MsgVO<String> {
         val response = http.post(ServerRoute.AUTH) {
             setBody(baseVO)

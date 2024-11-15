@@ -11,6 +11,8 @@ spring:
 #            platform: postgresql
     profiles:
         active: dev
+    main:
+        web-application-type: reactive
 
 jimmer:
     language: kotlin
@@ -20,3 +22,10 @@ jimmer:
     pretty-sql: true
     database-validation:
         mode: error
+#    client:
+#        openapi:
+#            path: /openapi.yml
+#            ui-path: /openapi.html
+#            properties:
+#              info:
+#                  title: 项目api文档

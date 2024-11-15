@@ -17,6 +17,7 @@ class UserRepository(
 ) {
 
     fun getUserAll(): List<UserVO> {
+
         return sqlClient.executeQuery(UserEntity::class) {
             select(table)
         }.map {

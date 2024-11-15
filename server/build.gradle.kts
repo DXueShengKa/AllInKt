@@ -23,11 +23,12 @@ tasks.withType<Test> {
 }
 
 dependencies {
+    testImplementation(libs.reactor.test)
     ksp(projects.allKsp)
     ksp(libs.jimmer.ksp)
     implementation(libs.jimmer.spring)
     implementation(projects.shared)
-    implementation(libs.spring.starter.web)
+    implementation(libs.spring.starter.webflux)
     implementation(libs.spring.starter.security)
     implementation(libs.spring.starter.cache)
     implementation(libs.caffeine)
@@ -38,6 +39,7 @@ dependencies {
     runtimeOnly(libs.postgresql)
 
     implementation(libs.kotlin.reflect)
+    implementation(libs.kotlinx.coroutines.reactor)
     testImplementation(libs.kotlin.test.junit5)
 
     testImplementation(libs.spring.starter.test)

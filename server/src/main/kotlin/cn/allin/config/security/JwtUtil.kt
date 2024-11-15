@@ -17,7 +17,7 @@ object JwtUtil {
     private val decrypt = Cipher.getInstance("DES/ECB/PKCS5Padding").apply {
         init(Cipher.DECRYPT_MODE, secretKeyFactory)
     }
-    private val INT_BUFFER = ByteBuffer.allocate(4)
+    private val INT_BUFFER = ByteBuffer.allocate(8)
 
 //    private val key = Jwts.SIG.HS256.key()
 //        .build()
@@ -26,6 +26,14 @@ object JwtUtil {
     fun generateToken(user: Int): String {
         INT_BUFFER.clear()
         INT_BUFFER.putInt(user)
+
+        val e = encrypt.doFinal(INT_BUFFER.array())
+        return Base64.getEncoder().encodeToString(e)
+    }
+
+    fun generateToken(user: Long): String {
+        INT_BUFFER.clear()
+        INT_BUFFER.putLong(user)
 
         val e = encrypt.doFinal(INT_BUFFER.array())
         return Base64.getEncoder().encodeToString(e)
@@ -56,6 +64,13 @@ object JwtUtil {
 //        return Jwts.parser().verifyWith(key).build().parseSignedContent(token).payload.let { String(it) }
     }
 
+    fun extractLong(token: String): Long {
+        val d = Base64.getDecoder().decode(token)
+
+        INT_BUFFER.clear()
+        INT_BUFFER.put(decrypt.doFinal(d))
+        return INT_BUFFER.getLong(0)
+    }
     fun validateToken(token: String): Boolean {
         return token.startsWith("user")
     }

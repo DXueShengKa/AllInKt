@@ -15,15 +15,19 @@ class CacheConfig {
         const val AUTH = "auth"
     }
 
+    private lateinit var cacheManager: CacheManager
+
     @Bean
     fun cacheManager(): CacheManager {
         val cacheManager = CaffeineCacheManager()
+        cacheManager.setAsyncCacheMode(true)
         cacheManager.setCaffeine(
             Caffeine.newBuilder()
                 .initialCapacity(50)
                 .maximumSize(1024)
                 .expireAfterAccess(48, TimeUnit.HOURS)
         )
+        this.cacheManager = cacheManager
         return cacheManager
     }
 
