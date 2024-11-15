@@ -39,6 +39,7 @@ kotlin {
             implementation(libs.koin.kmp.compose.viewmodel)
             implementation(compose.material3)
             implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
             implementation(projects.shared)
             implementation(projects.client.ui)
             implementation(projects.client.data)

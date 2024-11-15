@@ -177,6 +177,7 @@ spring-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 spring-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-session-core = { module = "org.springframework.session:spring-session-core" }
 spring-integration-mqtt = { module = "org.springframework.integration:spring-integration-mqtt" }
+spring-integration-ip = { module = "org.springframework.integration:spring-integration-ip" }
 
 postgresql = { module = "org.postgresql:postgresql" }
 
