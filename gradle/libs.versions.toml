@@ -7,7 +7,7 @@ android-gradle = "8.5.2"
 #https://github.com/JetBrains/kotlin
 kotlin = "2.0.21"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "1.0.0-pre.825"
+kotlin-wrappers = "1.0.0-pre.839"
 #https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.9.0"
 #https://github.com/Kotlin/kotlinx.serialization
@@ -17,7 +17,7 @@ kotlinx-datetime = "0.6.1"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.5.4"
 #https://github.com/google/ksp
-ksp = "2.0.21-1.0.27"
+ksp = "2.0.21-1.0.28"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "2.0.0"
 #https://github.com/Kotlin/kotlinx.collections.immutable
@@ -38,7 +38,7 @@ ktor = "3.0.1"
 #https://github.com/square/okio
 okio = "3.9.0"
 #https://github.com/coil-kt/coil
-coil3 = "3.0.2"
+coil3 = "3.0.4"
 #https://github.com/InsertKoinIO/koin
 koin = "4.0.0"
 #https://github.com/InsertKoinIO/koin-annotations
@@ -46,15 +46,15 @@ koin-annotations = "1.4.0"
 #https://github.com/oleksandrbalan/lazytable
 lazytable = "1.9.0-beta01"
 
-spring-boot = "3.3.5"
+spring-boot = "3.4.0"
 spring-dependencyManagement = "1.1.6"
 #https://github.com/turansky/seskar
-seskar = "3.13.0"
+seskar = "3.60.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.12"
+jimmer = "0.9.21"
 
 activity = "1.9.3"
-paging = "3.3.2"
+paging = "3.3.4"
 
 slf4j = "2.0.13"
 #https://github.com/jwtk/jjwt
@@ -62,7 +62,7 @@ jjwt = "0.12.6"
 #https://github.com/ben-manes/caffeine
 caffeine = "3.1.8"
 #https://github.com/Guardsquare/proguard
-proguard = "7.5.0"
+proguard = "7.6.0"
 
 junit = "4.13.2"
 

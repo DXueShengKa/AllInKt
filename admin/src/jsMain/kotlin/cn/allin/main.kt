@@ -9,18 +9,19 @@ import react.create
 import react.dom.client.createRoot
 import react.useState
 import web.dom.document
+import web.html.HTML.div
 
 
 fun main() {
-    val container = document.getElementById("root") ?: error("Couldn't find root container!")
-
-    createRoot(container)
-        .render(mainFc.create())
+    val root = document.createElement(div)
+    document.body.append(root)
+    createRoot(root)
+        .render(MainUI.create())
 
 }
 
 
-private val mainFc = FC {
+private val MainUI = FC {
     ConfigProvider {
         locale = localeZhCN
 

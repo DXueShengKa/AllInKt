@@ -15,6 +15,9 @@ kotlin {
             }
         }
 
+        jsMain.dependencies {
+            api(libs.ktorClient.js)
+        }
         jvmMain.dependencies {
             implementation(libs.ktorClient.java)
         }

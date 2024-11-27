@@ -5,7 +5,6 @@ import cn.allin.config.UserRole
 import cn.allin.service.UserService
 import cn.allin.vo.MsgVO
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.springframework.cache.CacheManager
@@ -27,6 +26,9 @@ import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.ServerAuthenticationEntryPoint
 import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.reactive.CorsWebFilter
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Mono
 
 
@@ -36,7 +38,7 @@ import reactor.core.publisher.Mono
 class SecurityConfig {
 
 
-    private val scSuccessHandler = ServerAuthenticationSuccessHandler { exchange, authentication ->
+    private val successHandler = ServerAuthenticationSuccessHandler { exchange, authentication ->
         val response = exchange.exchange.response
         response.statusCode = HttpStatus.OK
         response.headers.contentType = MediaType.APPLICATION_JSON
@@ -90,16 +92,37 @@ class SecurityConfig {
         }
 
         exchange.response.run {
-
-            val buffer = bufferFactory().wrap(Json.encodeToString(msgVO).encodeToByteArray())
+            headers.contentType = MediaType.APPLICATION_JSON
+            val buffer = bufferFactory().wrap(InJson.encodeToString(msgVO).encodeToByteArray())
             writeWith(Mono.just(buffer))
         }
+    }
+
+    /**
+     * 跨域配置
+     */
+    private val corsConfigurationSource = UrlBasedCorsConfigurationSource().also {
+        val config = CorsConfiguration().apply {
+            addAllowedMethod("*")
+            addAllowedHeader("*")
+            addAllowedOrigin("*")
+        }
+        it.registerCorsConfiguration("/**", config)
+    }
+
+
+    @Bean
+    fun corsWebFilter(): CorsWebFilter {
+        return CorsWebFilter(corsConfigurationSource)
     }
 
     @Bean
     fun securityFilterChain(serverHttpSecurity: ServerHttpSecurity, cacheManager: CacheManager): SecurityWebFilterChain {
         return serverHttpSecurity {
             csrf { disable() }
+            cors {
+                configurationSource = corsConfigurationSource
+            }
 
 //            sessionManagement {
 //                sessionCreationPolicy = SessionCreationPolicy.NEVER
@@ -107,7 +130,6 @@ class SecurityConfig {
 
             authorizeExchange {
                 authorize("/auth", permitAll)
-//
                 authorize("/user/*", hasAuthority(UserRole.ROLE_ADMIN.name))
                 authorize(anyExchange, authenticated)
 //                authorize(anyExchange, permitAll)
@@ -116,8 +138,7 @@ class SecurityConfig {
             formLogin {
                 loginPage = "/auth"
 
-                authenticationSuccessHandler = scSuccessHandler
-//                permitAll()
+                authenticationSuccessHandler = successHandler
                 authenticationFailureHandler = failureHandler
 
 
@@ -127,7 +148,6 @@ class SecurityConfig {
 
             logout {
                 logoutUrl = "/auth"
-//                permitAll()
                 disable()
             }
 
