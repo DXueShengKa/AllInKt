@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 
 plugins {
@@ -7,14 +8,23 @@ plugins {
 
 kotlin {
 
-    js(IR) {
+    js {
         moduleName = "admin"
         browser {
+            val rootDirPath = project.rootDir.path
+            val projectDirPath = project.projectDir.path
             commonWebpackConfig {
-//                cssSupport {
-//                    enabled = true
-//                }
+                cssSupport {
+                    enabled = true
+                }
                 outputFileName = "admin.js"
+                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+                    static = (static ?: mutableListOf()).apply {
+                        // Serve sources to debug inside browser
+                        add(rootDirPath)
+                        add(projectDirPath)
+                    }
+                }
             }
 //            useEsModules()
             useCommonJs()
@@ -34,10 +44,9 @@ kotlin {
 //            implementation(libs.kotlin.wrappers.react.router)
 //            implementation(libs.kotlin.wrappers.react.router.dom)
 //            implementation(libs.kotlin.wrappers.mui.material)
-            implementation(libs.ktorClient.js)
             implementation(projects.shared)
             implementation(projects.client.net)
-            implementation(npm("antd", "5.20.1"))
+            implementation(npm("antd", "5.22.2"))
             implementation(npm("@ant-design/icons", ""))
         }
 

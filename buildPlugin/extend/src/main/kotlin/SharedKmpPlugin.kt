@@ -33,7 +33,7 @@ class SharedKmpPlugin : Plugin<Project> {
 
         jvm()
 
-        js(IR) {
+        js {
             browser()
             binaries.library()
         }
