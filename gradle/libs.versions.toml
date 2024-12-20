@@ -1,15 +1,15 @@
 [versions]
-android-compileSdk = "34"
+android-compileSdk = "35"
 android-minSdk = "26"
-android-targetSdk = "34"
-android-gradle = "8.5.2"
+android-targetSdk = "35"
+android-gradle = "8.7.3"
 
 #https://github.com/JetBrains/kotlin
 kotlin = "2.1.0"
 #https://github.com/JetBrains/kotlin-wrappers
 kotlin-wrappers = "1.0.0-pre.839"
 #https://github.com/Kotlin/kotlinx.coroutines
-kotlinx-coroutines = "1.9.0"
+kotlinx-coroutines = "1.10.0"
 #https://github.com/Kotlin/kotlinx.serialization
 kotlinx-serialization = "1.7.3"
 #https://github.com/Kotlin/kotlinx-datetime
@@ -23,18 +23,18 @@ kotlinpoet = "2.0.0"
 #https://github.com/Kotlin/kotlinx.collections.immutable
 kotlinx-collections-immutable = "0.3.7"
 #https://github.com/JetBrains/compose-multiplatform
-jetbrains-compose = "1.7.1"
-jetbrains-md3Adaptive = "1.0.0"
+jetbrains-compose = "1.7.3"
+jetbrains-md3Adaptive = "1.0.1"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/lifecycle/lifecycle-viewmodel-compose/
 jetbrains-lifecycle = "2.8.4"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/navigation/navigation-common/
-jetbrains-navigation = "2.8.0-alpha10"
+jetbrains-navigation = "2.8.0-alpha11"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
 jetbrains-core-bundle = "1.0.1"
 #https://github.com/square/okhttp
 okhttp3 = "4.12.0"
 #https://github.com/ktorio/ktor
-ktor = "3.0.1"
+ktor = "3.0.3"
 #https://github.com/coil-kt/coil
 coil3 = "3.0.4"
 #https://github.com/InsertKoinIO/koin
@@ -44,12 +44,12 @@ koin-annotations = "1.4.0"
 #https://github.com/oleksandrbalan/lazytable
 lazytable = "1.9.0-beta01"
 
-spring-boot = "3.4.0"
-spring-dependencyManagement = "1.1.6"
+spring-boot = "3.4.1"
+spring-dependencyManagement = "1.1.7"
 #https://github.com/turansky/seskar
-seskar = "3.60.0"
+seskar = "3.75.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.21"
+jimmer = "0.9.32"
 
 activity = "1.9.3"
 paging = "3.3.5"
@@ -63,6 +63,7 @@ caffeine = "3.1.8"
 proguard = "7.6.0"
 
 junit = "4.13.2"
+jsoup = "1.17.2"
 
 
 [plugins]
@@ -192,6 +193,7 @@ slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4
 jjwt = { module = "io.jsonwebtoken:jjwt", version.ref = "jjwt" }
 caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 
 [bundles]
 netLibs = [

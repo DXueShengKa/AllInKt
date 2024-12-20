@@ -43,6 +43,8 @@ kotlin {
             implementation(projects.shared)
             implementation(projects.client.ui)
             implementation(projects.client.data)
+            implementation(projects.client.components)
+
             implementation(libs.lazytable)
         }
 

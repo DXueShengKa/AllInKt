@@ -5,7 +5,6 @@ package cn.allin.net
 import cn.allin.ServerRoute
 import cn.allin.ui.AddUser
 import cn.allin.ui.RouteAuth
-import cn.allin.utils.lastDayOfMonth
 import cn.allin.utils.toLocalDate
 import cn.allin.vo.MsgVO
 import cn.allin.vo.UserVO
@@ -16,7 +15,6 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.browser.localStorage
-import kotlinx.datetime.LocalDate
 import org.w3c.dom.get
 import org.w3c.dom.set
 
@@ -49,7 +47,6 @@ object ReqUser {
 
     suspend fun addUser(addUser: AddUser) {
         http.post(ServerRoute.USER) {
-            LocalDate.parse("").lastDayOfMonth()
             setBody(UserVO(
                 name = addUser.name,
                 password = addUser.password,

@@ -7,10 +7,13 @@ import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import java.time.format.TextStyle
 import java.time.temporal.TemporalAdjusters
-import java.util.Locale
+import java.util.*
 
 actual typealias TimeTextStyle = TextStyle
 
+actual fun Month.length(isLeap: Boolean): Int {
+    return length(isLeap)
+}
 
 actual fun Month.getDisplayName(textStyle: TimeTextStyle): String {
     return getDisplayName(textStyle, Locale.getDefault())

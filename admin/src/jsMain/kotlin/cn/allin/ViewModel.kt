@@ -1,6 +1,5 @@
 package cn.allin
 
-import js.reflect.newInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import react.ChildrenBuilder
@@ -9,6 +8,7 @@ import react.Props
 import react.useEffectOnceWithCleanup
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.reflect.KClass
+import kotlin.reflect.createInstance
 
 abstract class ViewModel {
     val viewModelScope = CoroutineScope(EmptyCoroutineContext)
@@ -25,8 +25,9 @@ external interface ViewModelProps : Props {
 }
 
 
+@OptIn(ExperimentalJsReflectionCreateInstance::class)
 fun <VM : ViewModel> viewModelFc(clazz: KClass<VM>, fc: ChildrenBuilder.(VM) -> Unit): FC<Props> {
-    val vm: VM = clazz.js.newInstance()
+    val vm: VM = clazz.createInstance()
     return FC {
         useEffectOnceWithCleanup {
             onCleanup(vm::onCleared)
