@@ -7,18 +7,12 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.LinkInteractionListener
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.TextLinkStyles
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 
@@ -42,26 +36,26 @@ fun HtmlText(
 ){
     val uriHandler = LocalUriHandler.current
 
-    val (annotatedString, mergedStyle) = remember(text, color, style) {
-        text.htmlToAnnotatedString(urlStyle) {
+    val annotatedString = produceState(AnnotatedString(""), text){
+        value = text.htmlToAnnotatedString(urlStyle) {
             if (it is LinkAnnotation.Url){
                 uriHandler.openUri(it.url)
             }
-        } to style.copy(
-            color = style.color.takeOrElse { color }
-        )
+        }
     }
 
     BasicText(
         modifier = modifier,
-        text = annotatedString,
+        text = annotatedString.value,
         overflow = overflow,
         softWrap = softWrap,
         maxLines = maxLines,
         onTextLayout = {
             onTextLayout?.invoke(it)
         },
-        style = mergedStyle,
+        style = style.copy(
+            color = style.color.takeOrElse { color }
+        ),
         inlineContent = inlineContent
     )
 }

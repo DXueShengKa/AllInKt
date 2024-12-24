@@ -9,7 +9,7 @@ kotlin = "2.1.0"
 #https://github.com/JetBrains/kotlin-wrappers
 kotlin-wrappers = "1.0.0-pre.839"
 #https://github.com/Kotlin/kotlinx.coroutines
-kotlinx-coroutines = "1.10.0"
+kotlinx-coroutines = "1.9.0"
 #https://github.com/Kotlin/kotlinx.serialization
 kotlinx-serialization = "1.7.3"
 #https://github.com/Kotlin/kotlinx-datetime
@@ -38,7 +38,7 @@ ktor = "3.0.3"
 #https://github.com/coil-kt/coil
 coil3 = "3.0.4"
 #https://github.com/InsertKoinIO/koin
-koin = "4.0.0"
+koin = "4.0.1"
 #https://github.com/InsertKoinIO/koin-annotations
 koin-annotations = "1.4.0"
 #https://github.com/oleksandrbalan/lazytable

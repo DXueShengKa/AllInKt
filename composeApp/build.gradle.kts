@@ -56,7 +56,6 @@ kotlin {
         desktopMain.dependencies {
             implementation(libs.slf4j.simple)
             implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }
