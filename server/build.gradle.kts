@@ -31,6 +31,7 @@ dependencies {
     implementation(libs.spring.starter.webflux)
     implementation(libs.spring.starter.security)
     implementation(libs.spring.starter.cache)
+    implementation(libs.spring.starter.actuator)
     implementation(libs.caffeine)
     testImplementation(libs.spring.securityTest)
     implementation(libs.spring.session.core)

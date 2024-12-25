@@ -36,3 +36,23 @@ create trigger user_update_timestamp
     for each row
 execute procedure update_timestamp_column();
 -- 用户表 end
+
+
+-- 省市区表 start
+create table region
+(
+    id        integer     not null
+        constraint id primary key,
+    parent_id integer     not null,
+    name      varchar(20) not null
+);
+
+comment on table region is '省市县';
+
+alter table region
+    owner to postgres;
+
+create index parent_id
+    on region (parent_id);
+-- 省市区表 end
+

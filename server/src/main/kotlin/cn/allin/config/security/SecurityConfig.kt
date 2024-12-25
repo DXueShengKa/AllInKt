@@ -131,6 +131,7 @@ class SecurityConfig {
             authorizeExchange {
                 authorize("/auth", permitAll)
                 authorize("/user/*", hasAuthority(UserRole.ROLE_ADMIN.name))
+                authorize("/region/**", permitAll)
                 authorize(anyExchange, authenticated)
 //                authorize(anyExchange, permitAll)
             }

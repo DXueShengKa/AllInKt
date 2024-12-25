@@ -2,9 +2,9 @@ package cn.allin.repository
 
 import cn.allin.config.UserRole
 import cn.allin.model.UserEntity
-import cn.allin.model.UserEntity.Companion.toVo
 import cn.allin.model.id
 import cn.allin.model.name
+import cn.allin.utils.toVO
 import cn.allin.vo.UserVO
 import kotlinx.datetime.toJavaLocalDate
 import org.babyfish.jimmer.sql.kt.KSqlClient
@@ -21,7 +21,7 @@ class UserRepository(
         return sqlClient.executeQuery(UserEntity::class) {
             select(table)
         }.map {
-            it.toVo()
+            it.toVO()
         }
     }
 

@@ -1,9 +1,11 @@
 package cn.allin.model
 
 import cn.allin.config.UserRole
-import cn.allin.vo.UserVO
-import kotlinx.datetime.toKotlinLocalDate
-import org.babyfish.jimmer.sql.*
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.GeneratedValue
+import org.babyfish.jimmer.sql.GenerationType
+import org.babyfish.jimmer.sql.Id
+import org.babyfish.jimmer.sql.Table
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -21,15 +23,4 @@ interface UserEntity {
     val role: UserRole
     val updateTime: LocalDateTime
     val createTime: LocalDateTime
-
-    companion object {
-
-        @JvmStatic
-        fun UserEntity.toVo(): UserVO = UserVO(
-            userId = id,
-            name = name,
-            birthday = birthday?.toKotlinLocalDate(),
-            role = role.name
-        )
-    }
 }

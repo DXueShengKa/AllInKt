@@ -49,7 +49,7 @@ spring-dependencyManagement = "1.1.7"
 #https://github.com/turansky/seskar
 seskar = "3.75.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.32"
+jimmer = "0.9.37"
 
 activity = "1.9.3"
 paging = "3.3.5"
@@ -168,6 +168,7 @@ spring-starter-web = { module = "org.springframework.boot:spring-boot-starter-we
 spring-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
 spring-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache" }
 spring-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
+spring-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-starter-oauth2-resourceServer = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server" }
 spring-securityTest = { module = "org.springframework.security:spring-security-test" }
 spring-starter-dataJdbc = { module = "org.springframework.boot:spring-boot-starter-data-jdbc" }
