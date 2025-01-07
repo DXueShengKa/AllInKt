@@ -8,6 +8,8 @@ plugins {
     application
 }
 
+version = "1.0.0"
+
 application {
     mainClass.set("cn.allin.ApplicationKt")
 }
@@ -15,6 +17,24 @@ application {
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")
+    }
+}
+
+
+tasks.register<Copy>("copyLibs") {
+    into("build/libs/lib")
+    from(configurations.runtimeClasspath)
+}
+
+tasks.bootJar {
+    enabled = true
+    archiveClassifier = "exec"
+    setExcludes(listOf("*.jar"))
+    dependsOn("copyLibs")
+    manifest {
+        attributes["Class-Path"] = configurations.runtimeClasspath
+            .get().files
+            .joinToString(" ") { "lib/${it.name}" }
     }
 }
 
