@@ -7,7 +7,7 @@ android-gradle = "8.7.3"
 #https://github.com/JetBrains/kotlin
 kotlin = "2.1.0"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "1.0.0-pre.839"
+kotlin-wrappers = "2025.1.1"
 #https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.10.1"
 #https://github.com/Kotlin/kotlinx.serialization
@@ -47,9 +47,9 @@ lazytable = "1.9.0-beta01"
 spring-boot = "3.4.1"
 spring-dependencyManagement = "1.1.7"
 #https://github.com/turansky/seskar
-seskar = "3.75.0"
+seskar = "3.81.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.37"
+jimmer = "0.9.43"
 
 activity = "1.9.3"
 paging = "3.3.5"
