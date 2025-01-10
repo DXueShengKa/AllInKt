@@ -65,7 +65,7 @@ fun WheelP() {
     DateWheel(
         remember {
             DateWheelState(
-                Clock.System.now().getDate().minus(10,DateTimeUnit.DAY),
+                Clock.System.now().getDate().minus(10, DateTimeUnit.YEAR),
                 Clock.System.now().getDate()
             )
         },
@@ -330,8 +330,6 @@ class DateWheelState(
 }
 
 
-
-
 /**
  * @see AnchoredDraggableState
  */
@@ -459,13 +457,13 @@ fun Wheel(
                 }
             }
             .anchoredDraggable(
-                swipeableState,
-                Orientation.Vertical,
-//                reverseDirection = !reverse,
+                state = swipeableState,
+                orientation = Orientation.Vertical,
+                reverseDirection = reverse
             ),
         wheelState.lazy,
         userScrollEnabled = false,
-        reverseLayout = reverse,
+        reverseLayout = !reverse,
         flingBehavior = NoFlingBehavior,
         horizontalAlignment = horizontalAlignment
     ) {

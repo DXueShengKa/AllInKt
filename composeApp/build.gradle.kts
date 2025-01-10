@@ -44,6 +44,7 @@ kotlin {
             implementation(projects.client.ui)
             implementation(projects.client.data)
             implementation(projects.client.components)
+            implementation(projects.client.kspAnnotation)
 
             implementation(libs.lazytable)
         }
@@ -122,5 +123,5 @@ compose.desktop {
 }
 
 dependencies {
-//    ksp(projects.allKsp)
+    ksp(projects.allKsp)
 }

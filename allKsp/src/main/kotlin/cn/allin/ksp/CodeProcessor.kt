@@ -1,5 +1,6 @@
 package cn.allin.ksp
 
+import cn.allin.ksp.navigation.GenerateNav
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
@@ -24,6 +25,12 @@ class CodeProcessor(environment: SymbolProcessorEnvironment) : SymbolProcessor {
         when {
             moduleName.contains(AllInProcessorProvider.MODULE_SERVER) -> {
 //                generatorEntity(resolver,codeGenerator,logger)
+            }
+
+            moduleName.contains(AllInProcessorProvider.MODULE_COMPOSE_APP) -> {
+                val nav = GenerateNav(codeGenerator, resolver, logger, "App")
+                nav.generateNavGraphDsl()
+                nav.writeFile()
             }
         }
 

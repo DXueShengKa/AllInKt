@@ -30,7 +30,7 @@ import com.squareup.kotlinpoet.ksp.writeTo
 
 private const val PACKAGE_NAME = "cn.allin.navigation"
 
-private const val NavTypePackage = "com.allin.ksp.navigation"
+private const val NavTypePackage = "cn.allin.ksp.navigation"
 
 class GenerateNav(
     private val codeGenerator: CodeGenerator,

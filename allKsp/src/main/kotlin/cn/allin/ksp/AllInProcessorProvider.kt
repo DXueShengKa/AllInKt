@@ -7,6 +7,7 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 class AllInProcessorProvider : SymbolProcessorProvider {
     companion object{
         const val MODULE_SERVER = "server"
+        const val MODULE_COMPOSE_APP = "composeApp"
     }
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
         return CodeProcessor(environment)
