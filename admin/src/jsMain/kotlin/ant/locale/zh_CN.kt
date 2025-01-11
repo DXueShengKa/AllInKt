@@ -1,6 +1,6 @@
 @file:JsModule("antd/lib/locale/zh_CN")
 
-package ant
+package ant.locale
 
 @JsName("default")
-external val localeZhCN: Locale
+external val AntLocaleZhCN: Locale
