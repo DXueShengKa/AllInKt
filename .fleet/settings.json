@@ -1,3 +1,4 @@
 {
-    "gradle.autoImportOnSave": false
+    "gradle.autoImportOnSave": false,
+    "backend.enable.k2": true,
 }
