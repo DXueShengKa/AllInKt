@@ -1,11 +1,25 @@
-@file:JsModule("dayjs")
 
 package ant
 
 
-external class Dayjs {
-//    fun locale(locale: String): Dayjs
-    fun locale(): String
+/**
+ * @param date string | number | Date | Dayjs | LocalDate | LocalDateTime
+ */
+@JsModule("dayjs")
+external fun dayjs(date:dynamic = definedExternally): DayJs
+
+@JsModule("dayjs")
+external val dayjs: DayConfig
+
+@JsModule("dayjs/locale/zh-cn")
+@JsNonModule
+external val DayLocalZhCn: String
+
+external interface DayJs {
+    fun format(template: String): String
+    fun locale(locale: String)
 }
 
-external val dayjs: Dayjs
+external interface DayConfig{
+    fun locale(locale: String)
+}
