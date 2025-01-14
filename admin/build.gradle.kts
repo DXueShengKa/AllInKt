@@ -46,7 +46,7 @@ kotlin {
 //            implementation(libs.kotlin.wrappers.mui.material)
             implementation(projects.shared)
             implementation(projects.client.net)
-            implementation(npm("antd", "5.23.0"))
+            implementation(npm("antd", "5.23.1"))
             implementation(npm("@ant-design/icons", ""))
         }
 

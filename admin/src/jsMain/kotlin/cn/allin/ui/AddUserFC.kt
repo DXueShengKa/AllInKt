@@ -1,6 +1,12 @@
 package cn.allin.ui
 
-import ant.*
+import ant.Button
+import ant.ButtonType
+import ant.DatePicker
+import ant.Form
+import ant.Input
+import ant.form
+import ant.rule
 import cn.allin.ViewModel
 import cn.allin.net.ReqUser
 import cn.allin.viewModelFc
@@ -8,7 +14,6 @@ import emotion.react.css
 import kotlinx.coroutines.launch
 import react.dom.html.ReactHTML.div
 import web.cssom.px
-import kotlin.String
 
 
 const val RouteAddUser = "addUser"
@@ -21,7 +26,7 @@ private class AddUserVM : ViewModel() {
     fun add(addUser: AddUser) {
         viewModelScope.launch {
             ReqUser.addUser(addUser)
-            message.info("+1")
+//            message.info("+1")
         }
     }
 }

@@ -1,6 +1,11 @@
 package cn.allin.ui
 
-import ant.*
+import ant.Button
+import ant.ButtonType
+import ant.Form
+import ant.Input
+import ant.form
+import ant.rule
 import cn.allin.ViewModel
 import cn.allin.net.ReqAuth
 import cn.allin.viewModelFc
@@ -64,7 +69,8 @@ private class AuthViewModel : ViewModel() {
             if (msgVO.code == MsgVO.OK) {
                 onLogin()
             } else {
-                message.error(msgVO.message)
+                //todo
+//                message.error(msgVO.message)
             }
         }
     }

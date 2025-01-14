@@ -2,7 +2,13 @@ package ant
 
 import js.objects.JsoDsl
 import js.objects.jso
-import react.*
+import react.ChildrenBuilder
+import react.FC
+import react.Props
+import react.PropsWithChildren
+import react.ReactDsl
+import react.ReactElement
+import react.create
 import react.dom.html.HTMLAttributes
 import web.events.Event
 import web.html.HTMLHtmlElement
@@ -69,3 +75,14 @@ external interface MenuOnClick {
 external interface AntChildrenProps : PropsWithChildren, HTMLAttributes<HTMLHtmlElement>
 
 external interface AntProps : Props, HTMLAttributes<HTMLHtmlElement>
+
+
+typealias UseMessage = Array<dynamic>
+
+fun UseMessage.messageApi(): AntMessageApi = get(0)
+
+fun UseMessage.contextHolder(): ReactElement<PropsWithChildren> = get(1)
+
+
+
+
