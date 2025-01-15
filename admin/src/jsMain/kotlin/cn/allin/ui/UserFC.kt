@@ -2,6 +2,7 @@ package cn.allin.ui
 
 import ant.Table
 import ant.keyName
+import ant.renderKey
 import ant.tableColumn
 import cn.allin.net.ReqUser
 import cn.allin.vo.UserVO
@@ -15,46 +16,49 @@ import react.useState
 
 const val RouteUserList = "UserList"
 
-private val userVO = UserVO(
-    1, "name", "p", LocalDate(1996, 1, 1)
+private var _vo: UserVO? = UserVO(
+    1, "n", "p", LocalDate.fromEpochDays(1)
 )
 
+private val KeyName = _vo!!.keyName(UserVO::name)
+private val KeyId = _vo!!.keyName(UserVO::userId)
+private val KeyBirthday = _vo!!.keyName(UserVO::birthday)
+
+
 val NavUserListFc = FC {
+    _vo = null
 
     var list: List<UserVO> by useState { emptyList() }
 
-    div {
-        useEffect(1) {
-            list = ReqUser.getUserAll().onEach {
-                it.asDynamic()["key"] = it.userId.toString()
-            }
+    useEffect(1) {
+        list = ReqUser.getUserAll().onEach {
+            it.asDynamic()["key"] = it.userId.toString()
         }
+    }
+    div {
 
         Table {
             dataSource = list.toTypedArray()
 
 
+            console.log(UserVO)
             columns = arrayOf(
                 tableColumn<String> {
-                    title = "mz"
-                    dataIndex = userVO.keyName(UserVO::name)
-                    render = { y, _, _ ->
-                        console.log(y)
-                        FC {
-                            +y
-                        }.create()
-                    }
+                    title = "名字"
+                    dataIndex = KeyName
                 },
-                tableColumn<UInt> {
+                tableColumn<Long> {
                     title = "id"
-                    dataIndex = userVO.keyName(UserVO::userId)
+                    dataIndex = KeyId
+                    renderKey {
+                        +it.toString()
+                    }
                 },
                 tableColumn {
                     title = "生日"
-                    dataIndex = userVO.keyName(UserVO::birthday)
+                    dataIndex = KeyBirthday
 
                     render = { localDate, p, i ->
-                        console.log(p, i)
                         FC {
                             +localDate.toString()
                         }.create()

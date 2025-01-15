@@ -30,7 +30,7 @@ external interface AntMessageApi {
 
 
 external interface AntMessageConfigOptions {
-    var top: dynamic
+    var top: Number
     var duration: Number
     var prefixCls: String
     var getContainer: HTMLElement

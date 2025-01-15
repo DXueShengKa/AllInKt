@@ -1,7 +1,8 @@
 package cn.allin
 
+import ant.App
 import ant.ConfigProvider
-import ant.localeZhCN
+import ant.locale.AntLocaleZhCN
 import cn.allin.net.HeaderAuthorization
 import cn.allin.ui.NavAuth
 import react.FC
@@ -23,15 +24,17 @@ fun main() {
 
 private val MainUI = FC {
     ConfigProvider {
-        locale = localeZhCN
+        locale = AntLocaleZhCN
+        App {
 
-        var auth by useState(HeaderAuthorization != null)
-        if (auth) {
-            NavApp()
-        } else {
-            NavAuth {
-                auth = true
-            }.invoke()
+            var auth by useState(HeaderAuthorization != null)
+            if (auth) {
+                NavApp()
+            } else {
+                NavAuth {
+                    auth = true
+                }.invoke()
+            }
         }
     }
 }
