@@ -31,6 +31,10 @@ kotlin {
         }
 
         binaries.executable()
+
+        compilerOptions {
+            target = "es2015"
+        }
     }
 
 
@@ -46,7 +50,7 @@ kotlin {
 //            implementation(libs.kotlin.wrappers.mui.material)
             implementation(projects.shared)
             implementation(projects.client.net)
-            implementation(npm("antd", "5.23.1"))
+            implementation(npm("antd", libs.versions.antd.get()))
             implementation(npm("@ant-design/icons", ""))
         }
 
