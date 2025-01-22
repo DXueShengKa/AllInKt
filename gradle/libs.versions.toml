@@ -65,7 +65,7 @@ proguard = "7.6.0"
 
 junit = "4.13.2"
 jsoup = "1.17.2"
-
+jspecify = "1.0.0"
 
 [plugins]
 
@@ -196,6 +196,7 @@ jjwt = { module = "io.jsonwebtoken:jjwt", version.ref = "jjwt" }
 caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 
 [bundles]
 netLibs = [
