@@ -34,6 +34,8 @@ class UserRepository(
             userVO.role?.also {
                 role = UserRole.valueOf(it)
             }
+            address = userVO.address
+            gender = userVO.gender
         })
     }
 

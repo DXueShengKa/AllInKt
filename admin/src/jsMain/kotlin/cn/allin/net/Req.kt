@@ -50,7 +50,9 @@ object ReqUser {
             setBody(UserVO(
                 name = addUser.name,
                 password = addUser.password,
-                birthday = addUser.birthday.toLocalDate()
+                birthday = addUser.birthday.toLocalDate(),
+                gender = addUser.gender,
+                address = addUser.address
             ))
         }.body<Unit>()
     }

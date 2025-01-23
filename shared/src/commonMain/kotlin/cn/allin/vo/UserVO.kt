@@ -18,5 +18,7 @@ data class UserVO(
      */
     val password: String? = null,
     val birthday: LocalDate? = null,
-    val role: String? = null
+    val role: String? = null,
+    val address: String? = null,
+    val gender: Gender? = null
 )

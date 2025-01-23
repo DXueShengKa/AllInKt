@@ -2,12 +2,14 @@ package ant
 
 import js.objects.JsoDsl
 import js.objects.jso
+import org.w3c.dom.events.MouseEvent
 import react.ChildrenBuilder
 import react.FC
 import react.Props
 import react.PropsWithChildren
 import react.ReactDsl
 import react.ReactElement
+import react.ReactNode
 import react.create
 import react.dom.html.HTMLAttributes
 import web.events.Event
@@ -32,7 +34,7 @@ annotation class MenuDsl
 
 
 @MenuDsl
-class MenuBuilder<T: MenuItemType>() {
+class MenuBuilder<T : MenuItemType>() {
 
     val list = mutableListOf<T>()
 
@@ -60,7 +62,7 @@ class MenuBuilder<T: MenuItemType>() {
     }
 }
 
-fun <T:MenuItemType> createMenuItems(block: @MenuDsl MenuBuilder<T>.() -> Unit): Array<T> {
+fun <T : MenuItemType> createMenuItems(block: @MenuDsl MenuBuilder<T>.() -> Unit): Array<T> {
     return MenuBuilder<T>().apply(block).list.toTypedArray()
 }
 
@@ -83,6 +85,29 @@ fun UseMessage.messageApi(): AntMessageApi = get(0)
 
 fun UseMessage.contextHolder(): ReactElement<PropsWithChildren> = get(1)
 
+
+external interface RadioOptions<T> {
+    var value: T
+    var label: ReactNode
+}
+
+fun <T> radioOptions(value: T, label: @ReactDsl ChildrenBuilder.() -> Unit): RadioOptions<T> = jso {
+    this.value = value
+    this.label = FC(label).create()
+}
+
+
+external interface RadioChangeEvent<T> {
+    val target: CheckboxChangeEventTarget<T>
+    val stopPropagation: () -> Unit
+    val preventDefault: () -> Unit
+    val nativeEvent: MouseEvent
+}
+
+external interface CheckboxChangeEventTarget<T>{
+    val defaultValue:T?
+    val value:T?
+}
 
 
 

@@ -1,6 +1,7 @@
 package cn.allin.model
 
 import cn.allin.config.UserRole
+import cn.allin.vo.Gender
 import org.babyfish.jimmer.sql.Entity
 import org.babyfish.jimmer.sql.GeneratedValue
 import org.babyfish.jimmer.sql.GenerationType
@@ -21,6 +22,8 @@ interface UserEntity {
     val birthday: LocalDate?
     val password: String
     val role: UserRole
+    val address: String?
+    val gender: Gender?
     val updateTime: LocalDateTime
     val createTime: LocalDateTime
 }

@@ -2,6 +2,8 @@ package cn.allin
 
 import ant.App
 import ant.ConfigProvider
+import ant.DayLocalZhCn
+import ant.dayjs
 import ant.locale.AntLocaleZhCN
 import cn.allin.net.HeaderAuthorization
 import cn.allin.ui.NavAuth
@@ -16,6 +18,7 @@ import web.html.HTML.div
 fun main() {
     val root = document.createElement(div)
     document.body.append(root)
+    dayjs.locale(DayLocalZhCn)
     createRoot(root)
         .render(MainUI.create())
 

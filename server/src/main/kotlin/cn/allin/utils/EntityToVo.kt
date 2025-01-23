@@ -8,7 +8,9 @@ fun UserEntity.toVO(): cn.allin.vo.UserVO = cn.allin.vo.UserVO(
     userId = id,
     name = name,
     birthday = birthday?.toKotlinLocalDate(),
-    role = role.name
+    role = role.name,
+    gender = gender,
+    address = address
 )
 
 fun RegionEntity.toVO(): cn.allin.vo.RegionVO = cn.allin.vo.RegionVO(
