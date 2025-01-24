@@ -1,6 +1,8 @@
 
 package ant
 
+import kotlin.js.Date
+
 
 /**
  * @param date string | number | Date | Dayjs | LocalDate | LocalDateTime
@@ -16,6 +18,8 @@ external val dayjs: DayConfig
 external val DayLocalZhCn: String
 
 external interface DayJs {
+    fun millisecond(): Long
+    fun toDate(): Date
     fun format(template: String): String
     fun locale(locale: String)
 }

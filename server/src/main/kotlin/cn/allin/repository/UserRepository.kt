@@ -7,6 +7,7 @@ import cn.allin.model.name
 import cn.allin.utils.toVO
 import cn.allin.vo.UserVO
 import kotlinx.datetime.toJavaLocalDate
+import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
 import org.springframework.stereotype.Repository
@@ -36,7 +37,7 @@ class UserRepository(
             }
             address = userVO.address
             gender = userVO.gender
-        })
+        }, SaveMode.INSERT_ONLY)
     }
 
     fun findByUsername(username: String): UserEntity? {

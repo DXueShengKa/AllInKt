@@ -3,6 +3,7 @@ package cn.allin.ui
 import ant.Button
 import ant.ButtonType
 import ant.DatePicker
+import ant.DayJs
 import ant.Form
 import ant.Input
 import ant.Radio
@@ -28,9 +29,7 @@ private class AddUserVM : ViewModel() {
 
     fun add(addUser: AddUser) {
         viewModelScope.launch {
-            console.log(addUser)
             ReqUser.addUser(addUser)
-//            message.info("+1")
         }
     }
 }
@@ -111,10 +110,10 @@ val AddUserFC = viewModelFc<AddUserVM> { vm ->
     }
 }
 
-interface AddUser {
+external interface AddUser {
     var name: String
     var password: String
-    var birthday: kotlin.js.Date
-    var address: String
-    var gender: Gender
+    var birthday: DayJs?
+    var address: String?
+    var gender: Gender?
 }

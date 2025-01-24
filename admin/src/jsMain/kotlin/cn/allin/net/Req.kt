@@ -5,7 +5,6 @@ package cn.allin.net
 import cn.allin.ServerRoute
 import cn.allin.ui.AddUser
 import cn.allin.ui.RouteAuth
-import cn.allin.utils.toLocalDate
 import cn.allin.vo.MsgVO
 import cn.allin.vo.UserVO
 import io.ktor.client.*
@@ -39,22 +38,27 @@ object ReqUser {
 
     suspend fun getUserAll(): List<UserVO> {
         val response = http.get(ServerRoute.USER)
-        if (response.status == HttpStatusCode.Unauthorized){
+        if (response.status == HttpStatusCode.Unauthorized) {
             localStorage.removeItem(RouteAuth)
         }
         return response.body()
     }
 
     suspend fun addUser(addUser: AddUser) {
+
         http.post(ServerRoute.USER) {
-            setBody(UserVO(
-                name = addUser.name,
-                password = addUser.password,
-                birthday = addUser.birthday.toLocalDate(),
-                gender = addUser.gender,
-                address = addUser.address
-            ))
-        }.body<Unit>()
+            setBody(
+                UserVO(
+                    name = addUser.name,
+                    password = addUser.password,
+                    birthday = null,
+                    gender = addUser.gender,
+                    address = addUser.address
+                )
+            )
+        }.call.also {
+            console.log(it)
+        }
     }
 }
 
@@ -68,7 +72,7 @@ object ReqAuth {
 
         val msgVO = response.body<MsgVO<String>>()
 
-        if (msgVO.code == MsgVO.OK){
+        if (msgVO.code == MsgVO.OK) {
 
             HeaderAuthorization = msgVO.data
             localStorage[RouteAuth] = msgVO.data!!

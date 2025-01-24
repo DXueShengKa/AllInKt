@@ -3,6 +3,9 @@ server:
     
 logging:
     level:
+        sun.rmi.loader: warn
+        sun.rmi.transport.tcp: warn
+        javax.management.remote.rmi: warn
         root: debug
 
 spring:
