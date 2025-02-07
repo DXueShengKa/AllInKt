@@ -5,20 +5,21 @@ android-targetSdk = "35"
 android-gradle = "8.7.3"
 
 #https://github.com/JetBrains/kotlin
-kotlin = "2.1.0"
+kotlin = "2.1.10"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "2025.1.5"
+kotlin-wrappers = "2025.2.2"
+#https://ant-design.antgroup.com/changelog-cn
 antd = "5.23.2"
 #https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.10.1"
 #https://github.com/Kotlin/kotlinx.serialization
-kotlinx-serialization = "1.7.3"
+kotlinx-serialization = "1.8.0"
 #https://github.com/Kotlin/kotlinx-datetime
 kotlinx-datetime = "0.6.1"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.6.0"
 #https://github.com/google/ksp
-ksp = "2.1.0-1.0.29"
+ksp = "2.1.10-1.0.29"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "2.0.0"
 #https://github.com/Kotlin/kotlinx.collections.immutable
@@ -37,11 +38,11 @@ okhttp3 = "4.12.0"
 #https://github.com/ktorio/ktor
 ktor = "3.0.3"
 #https://github.com/coil-kt/coil
-coil3 = "3.0.4"
+coil3 = "3.1.0"
 #https://github.com/InsertKoinIO/koin
 koin = "4.0.2"
 #https://github.com/InsertKoinIO/koin-annotations
-koin-annotations = "2.0.0-Beta3"
+koin-annotations = "2.0.0-RC1"
 #https://github.com/oleksandrbalan/lazytable
 lazytable = "1.9.0-beta01"
 
@@ -50,7 +51,7 @@ spring-dependencyManagement = "1.1.7"
 #https://github.com/turansky/seskar
 seskar = "3.81.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.47"
+jimmer = "0.9.49"
 
 activity = "1.9.3"
 paging = "3.3.5"
