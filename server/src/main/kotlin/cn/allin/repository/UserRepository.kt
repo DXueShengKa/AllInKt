@@ -5,6 +5,7 @@ import cn.allin.model.UserEntity
 import cn.allin.model.id
 import cn.allin.model.name
 import cn.allin.utils.toVO
+import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
 import kotlinx.datetime.toJavaLocalDate
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
@@ -24,6 +25,15 @@ class UserRepository(
         }.map {
             it.toVO()
         }
+    }
+
+    fun getUsers(index: Int, size: Int): PageVO<UserVO> {
+        return sqlClient.createQuery(UserEntity::class) {
+            select(table)
+        }.fetchPage(pageIndex = index, pageSize = size)
+            .let { p ->
+                PageVO(p.rows.map { it.toVO() }, p.totalRowCount.toInt(), p.totalPageCount.toInt())
+            }
     }
 
     fun add(userVO: UserVO) {

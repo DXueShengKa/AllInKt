@@ -30,12 +30,16 @@ class UserTest {
 
     @Test
     fun add(){
-        userRepository.add(UserVO(
-            name = "name"+ Random.nextInt(),
-            address = Random.nextDouble().toString(),
-            gender = if (Random.nextBoolean()) Gender.Male else Gender.Female,
-            password = "1234",
-            birthday = LocalDate(2008,1,1)
-        ))
+        repeat(100) {
+            userRepository.add(
+                UserVO(
+                    name = "name" + Random.nextInt(),
+                    address = Random.nextDouble().toString(),
+                    gender = if (Random.nextBoolean()) Gender.Male else Gender.Female,
+                    password = "1234",
+                    birthday = LocalDate(2008, 1, 1)
+                )
+            )
+        }
     }
 }

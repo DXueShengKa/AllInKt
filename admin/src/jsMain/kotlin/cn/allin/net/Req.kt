@@ -2,10 +2,12 @@
 
 package cn.allin.net
 
+import cn.allin.ServerParams
 import cn.allin.ServerRoute
 import cn.allin.ui.AddUser
 import cn.allin.ui.RouteAuth
 import cn.allin.vo.MsgVO
+import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -34,13 +36,23 @@ private val http = HttpClient(Js) {
     contentConverter()
 }
 
+data class PageParams(
+    val size: Int = 10,
+    val index: Int = 0
+)
+
 object ReqUser {
 
-    suspend fun getUserAll(): List<UserVO> {
-        val response = http.get(ServerRoute.USER)
-        if (response.status == HttpStatusCode.Unauthorized) {
-            localStorage.removeItem(RouteAuth)
+
+    suspend fun getUserPage(pageParams: PageParams?): PageVO<UserVO> {
+        val response = http.get(ServerRoute.USER) {
+            parameter(ServerParams.PAGE_SIZE, pageParams?.size)
+            parameter(ServerParams.PAGE_INDEX, pageParams?.index)
         }
+
+//        if (response.status == HttpStatusCode.Unauthorized) {
+//            localStorage.removeItem(RouteAuth)
+//        }
         return response.body()
     }
 

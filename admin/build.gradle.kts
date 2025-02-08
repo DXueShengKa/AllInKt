@@ -45,14 +45,12 @@ kotlin {
             implementation(libs.kotlin.wrappers.emotion)
             implementation(libs.kotlin.wrappers.react)
             implementation(libs.kotlin.wrappers.react.dom)
-//            implementation(libs.kotlin.wrappers.react.router)
-//            implementation(libs.kotlin.wrappers.react.router.dom)
-//            implementation(libs.kotlin.wrappers.mui.material)
+            implementation(libs.kotlin.wrappers.react.router)
+            implementation(libs.kotlin.wrappers.mui.material)
+            implementation(libs.kotlin.wrappers.tanstack.table)
+            implementation(libs.kotlin.wrappers.tanstack.query)
             implementation(projects.shared)
             implementation(projects.client.net)
-            implementation(npm("antd", libs.versions.antd.get()))
-            implementation(npm("@ant-design/icons", ""))
         }
-
     }
 }

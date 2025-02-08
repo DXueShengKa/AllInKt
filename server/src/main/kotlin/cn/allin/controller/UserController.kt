@@ -1,7 +1,9 @@
 package cn.allin.controller
 
+import cn.allin.ServerParams
 import cn.allin.ServerRoute
 import cn.allin.repository.UserRepository
+import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
 import org.springframework.web.bind.annotation.*
 
@@ -12,14 +14,17 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping(ServerRoute.USER)
 class UserController(
     private val userRepository: UserRepository,
-){
+) {
 
     /**
      * 获取用户列表
      */
     @GetMapping
-    fun get(): List<UserVO> {
-        return userRepository.getUserAll()
+    fun get(
+        @RequestParam(ServerParams.PAGE_INDEX) pageIndex: Int?,
+        @RequestParam(ServerParams.PAGE_SIZE) pageSize: Int?
+    ): PageVO<UserVO> {
+        return userRepository.getUsers(pageIndex ?: 0, pageSize ?: 10)
     }
 
     /**

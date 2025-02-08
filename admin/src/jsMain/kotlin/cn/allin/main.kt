@@ -1,43 +1,37 @@
 package cn.allin
 
-import ant.App
-import ant.ConfigProvider
-import ant.DayLocalZhCn
-import ant.dayjs
-import ant.locale.AntLocaleZhCN
-import cn.allin.net.HeaderAuthorization
-import cn.allin.ui.NavAuth
-import react.FC
+import cn.allin.ui.RouteUserListFC
+import js.objects.jso
+import mui.material.PaletteMode
+import mui.material.styles.ThemeProvider
+import mui.material.styles.createTheme
 import react.create
 import react.dom.client.createRoot
-import react.useState
+import tanstack.query.core.QueryClient
+import tanstack.react.query.QueryClientProvider
 import web.dom.document
 import web.html.HTML.div
 
+private val queryClient = QueryClient()
 
 fun main() {
     val root = document.createElement(div)
     document.body.append(root)
-    dayjs.locale(DayLocalZhCn)
-    createRoot(root)
-        .render(MainUI.create())
-
-}
-
-
-private val MainUI = FC {
-    ConfigProvider {
-        locale = AntLocaleZhCN
-        App {
-
-            var auth by useState(HeaderAuthorization != null)
-            if (auth) {
-                NavApp()
-            } else {
-                NavAuth {
-                    auth = true
-                }.invoke()
-            }
+    val node = ThemeProvider.create {
+        theme = createTheme(
+            jso {
+                palette = jso {
+                    mode = PaletteMode.dark
+                }
+            },
+            muiLocal.zhCN
+        )
+        QueryClientProvider {
+            client = queryClient
+//        MainUI()
+            RouteUserListFC()
         }
     }
+    createRoot(root)
+        .render(node)
 }
