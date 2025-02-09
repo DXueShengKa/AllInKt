@@ -79,4 +79,9 @@ class UserRepository(
     fun delete(userId: Long): Boolean {
         return sqlClient.deleteById(UserEntity::class, userId).totalAffectedRowCount > 0
     }
+
+
+    fun delete(ids: List<Long>): Boolean {
+        return sqlClient.deleteByIds(UserEntity::class,ids).totalAffectedRowCount > 0
+    }
 }

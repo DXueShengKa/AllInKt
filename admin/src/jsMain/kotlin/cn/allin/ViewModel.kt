@@ -1,45 +1,56 @@
 package cn.allin
 
+import js.coroutines.internal.IsolatedCoroutineScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
-import react.ChildrenBuilder
-import react.FC
-import react.Props
-import react.useEffectOnceWithCleanup
-import kotlin.coroutines.EmptyCoroutineContext
+import react.RefObject
+import react.useEffectWithCleanup
+import react.useRef
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 import kotlin.reflect.createInstance
 
 abstract class ViewModel {
-    val viewModelScope = CoroutineScope(EmptyCoroutineContext)
-
+    val viewModelScope = IsolatedCoroutineScope()
 
     open fun onCleared() {
         viewModelScope.cancel()
     }
 }
 
+fun useCoroutineScope(): RefObject<CoroutineScope> {
+    val c = useRef<CoroutineScope>()
+    useEffectWithCleanup {
+        c.current = IsolatedCoroutineScope()
+        onCleanup {
+            c.current?.cancel()
+        }
+    }
+    return c
+}
 
-external interface ViewModelProps : Props {
-    var viewModel: ViewModel
+
+inline operator fun <T: Any>  RefObject<T>.getValue(
+    thisRef: Nothing?,
+    property: KProperty<*>,
+): T?{
+    return current
 }
 
 
 @OptIn(ExperimentalJsReflectionCreateInstance::class)
-fun <VM : ViewModel> viewModelFc(clazz: KClass<VM>, fc: ChildrenBuilder.(VM) -> Unit): FC<Props> {
-    val vm: VM = clazz.createInstance()
-    return FC {
-        useEffectOnceWithCleanup {
-            onCleanup(vm::onCleared)
+fun <VM : ViewModel> createViewModel(clazz: KClass<VM>): RefObject<VM> {
+    val v = useRef<VM>()
+    useEffectWithCleanup {
+        v.current = clazz.createInstance()
+        onCleanup {
+            v.current?.onCleared()
         }
-        fc(vm)
     }
+    return v
 }
 
 
-inline fun <reified VM : ViewModel> viewModelFc(noinline fc: ChildrenBuilder.(VM) -> Unit): FC<Props> {
-    return viewModelFc(VM::class,fc)
-}
-
+inline fun <reified VM : ViewModel> useViewModel() = createViewModel(VM::class)
 
 

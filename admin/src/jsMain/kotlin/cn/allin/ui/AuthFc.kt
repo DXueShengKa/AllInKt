@@ -2,7 +2,6 @@ package cn.allin.ui
 
 import cn.allin.ViewModel
 import cn.allin.net.ReqAuth
-import cn.allin.viewModelFc
 import cn.allin.vo.MsgVO
 import cn.allin.vo.UserVO
 import kotlinx.coroutines.launch
@@ -12,7 +11,7 @@ const val RouteAuth = "auth"
 
 
 fun NavAuth(onLogin: () -> Unit): FC<*> {
-    return viewModelFc<AuthViewModel> { vm ->
+    return FC {
 
     }
 }

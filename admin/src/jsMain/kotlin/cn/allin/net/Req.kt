@@ -56,6 +56,12 @@ object ReqUser {
         return response.body()
     }
 
+    suspend fun deleteUser(ids: List<Long>): Boolean{
+        return http.delete(ServerRoute.USER){
+            parameter("ids",ids.joinToString())
+        }.body()
+    }
+
     suspend fun addUser(addUser: AddUser) {
 
         http.post(ServerRoute.USER) {

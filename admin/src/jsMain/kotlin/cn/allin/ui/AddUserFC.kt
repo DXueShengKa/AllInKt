@@ -2,7 +2,6 @@ package cn.allin.ui
 
 import cn.allin.ViewModel
 import cn.allin.net.ReqUser
-import cn.allin.viewModelFc
 import cn.allin.vo.Gender
 import kotlinx.coroutines.launch
 import kotlin.js.Date
@@ -22,10 +21,7 @@ private class AddUserVM : ViewModel() {
     }
 }
 
-val AddUserFC = viewModelFc<AddUserVM> { vm ->
 
-
-}
 
 external interface AddUser {
     var name: String

@@ -4,18 +4,31 @@ import js.array.ReadonlyArray
 import js.coroutines.internal.IsolatedCoroutineScope
 import js.coroutines.promise
 import kotlinx.coroutines.cancel
-import mui.material.*
+import mui.material.TableBody
+import mui.material.TableCell
+import mui.material.TableHead
+import mui.material.TableProps
+import mui.material.TableRow
+import react.ChildrenBuilder
+import react.FC
+import react.ReactDsl
 import tanstack.query.core.MutationFunction
 import tanstack.query.core.QueryFunction
+import tanstack.query.core.QueryFunctionContext
 import tanstack.query.core.QueryKey
 import tanstack.react.table.renderCell
 import tanstack.react.table.renderHeader
+import tanstack.table.core.CellContext
+import tanstack.table.core.ColumnDefTemplate
+import tanstack.table.core.HeaderContext
 import tanstack.table.core.HeaderGroup
 import tanstack.table.core.Row
 import tanstack.table.core.RowData
 import web.events.addHandler
 
-fun <D> createQueryFunction(block: suspend () -> D): QueryFunction<D, QueryKey, Nothing> =
+fun <T, TQueryKey : QueryKey, TPageParam> queryFunction(
+    block: suspend (QueryFunctionContext<TQueryKey, TPageParam>) -> T
+): QueryFunction<T, TQueryKey, TPageParam> =
     QueryFunction { context ->
         val scope = IsolatedCoroutineScope()
 
@@ -23,13 +36,29 @@ fun <D> createQueryFunction(block: suspend () -> D): QueryFunction<D, QueryKey, 
             scope.cancel()
         }
 
-        scope.promise { block() }
+        scope.promise { block(context) }
     }
 
 
 fun <D, V> createMutationFunction(action: suspend (V) -> D): MutationFunction<D, V> = { variables ->
     IsolatedCoroutineScope()
         .promise { action(variables) }
+}
+
+fun queryKey(vararg key: Any): QueryKey {
+    return key.asDynamic()
+}
+
+fun <TData : RowData, TValue> columnDefCell(
+    block: @ReactDsl ChildrenBuilder.(props: CellContext<TData, TValue>) -> Unit
+): ColumnDefTemplate<CellContext<TData, TValue>> {
+    return tanstack.react.table.ColumnDefTemplate(FC(block))
+}
+
+fun <TData : RowData, TValue> columnDefHeader(
+    block: @ReactDsl ChildrenBuilder.(props: HeaderContext<TData, TValue>) -> Unit
+): ColumnDefTemplate<HeaderContext<TData, TValue>> {
+    return tanstack.react.table.ColumnDefTemplate(FC(block))
 }
 
 
