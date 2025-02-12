@@ -1,27 +1,95 @@
 package cn.allin
 
 
+import cn.allin.ui.RouteAddUser
+import cn.allin.ui.RouteAddUserFC
+import cn.allin.ui.RouteUserList
+import cn.allin.ui.RouteUserListFC
 import js.objects.jso
-import react.CSSProperties
-import web.cssom.Auto
-import web.cssom.Color
-import web.cssom.px
-import web.cssom.vh
+import mui.material.PaletteMode
+import mui.material.styles.createTheme
+import react.FC
+import react.create
+import react.router.Outlet
+import react.router.RouteObject
+import react.router.dom.createBrowserRouter
+import react.router.useRouteError
+import toolpad.core.DashboardLayout
+import toolpad.core.PageContainer
+import toolpad.core.react_router.ReactRouterAppProvider
 
 
-private val SiderStyle: CSSProperties = jso {
-    height = 100.vh
-    overflow = Auto.auto
+private val AppLayout = FC {
+    ReactRouterAppProvider {
+        theme = createTheme(
+            jso {
+                palette = jso {
+                    mode = PaletteMode.light
+                }
+            },
+            muiLocal.zhCN
+        )
+
+        navigation = arrayOf(
+            jso {
+                kind = "header"
+                title = "首页"
+//                icon = HomeMini.create()
+            },
+            jso {
+                title = "添加用户"
+                segment = RouteAddUser
+//                icon = PersonAdd.create()
+            },
+            jso {
+                title = "用户列表"
+                segment = RouteUserList
+//                icon = People.create()
+            }
+        )
+        branding = jso {
+            title = "后台管理"
+        }
+        Outlet()
+    }
 }
 
-private val HeaderStyle: CSSProperties = jso {
-    padding = 0.px
-    height = 64.px
-    paddingInline = 48.px
-    color = Color("#fff")
+private val RootLayout = FC {
+    DashboardLayout {
+        PageContainer {
+            Outlet()
+        }
+    }
 }
 
-private val ContentStyle: CSSProperties = jso {
-    minHeight = 120.px
-}
+private val RootRoutes = arrayOf<RouteObject>(
+    jso {
+        path = RouteAddUser
+        Component = RouteAddUserFC
+    },
+    jso {
+        path = RouteUserList
+        Component = RouteUserListFC
+    }
+)
 
+val AppBrowserRouter = createBrowserRouter(
+    arrayOf(jso {
+        Component = AppLayout
+
+        children = arrayOf(jso {
+            path = "/"
+            Component = RootLayout
+            children = RootRoutes
+            errorElement = FC {
+                +"/ 加载错误"
+            }.create()
+        })
+
+        errorElement = FC {
+            val a = useRouteError()
+            console.error(a)
+            +"App Error $a"
+        }.create()
+    })
+)
