@@ -4,10 +4,10 @@ package cn.allin.net
 
 import cn.allin.ServerParams
 import cn.allin.ServerRoute
-import cn.allin.ui.AddUser
 import cn.allin.ui.RouteAuth
 import cn.allin.vo.MsgVO
 import cn.allin.vo.PageVO
+import cn.allin.vo.RegionVO
 import cn.allin.vo.UserVO
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -56,27 +56,17 @@ object ReqUser {
         return response.body()
     }
 
-    suspend fun deleteUser(ids: List<Long>): Boolean{
-        return http.delete(ServerRoute.USER){
-            parameter("ids",ids.joinToString())
+    suspend fun deleteUser(ids: List<Long>): Boolean {
+        return http.delete(ServerRoute.USER) {
+            parameter("ids", ids.joinToString())
         }.body()
     }
 
-    suspend fun addUser(addUser: AddUser) {
+    suspend fun addUser(addUser: UserVO): Boolean {
 
-        http.post(ServerRoute.USER) {
-            setBody(
-                UserVO(
-                    name = addUser.name,
-                    password = addUser.password,
-                    birthday = null,
-                    gender = addUser.gender,
-                    address = addUser.address
-                )
-            )
-        }.call.also {
-            console.log(it)
-        }
+        return http.post(ServerRoute.USER) {
+            setBody(addUser)
+        }.call.response.status.isSuccess()
     }
 }
 
@@ -102,6 +92,21 @@ object ReqAuth {
         }
 
         return msgVO
+    }
+
+}
+
+object ReqRegion {
+    suspend fun province(): List<RegionVO> {
+        return http.get(ServerRoute.Region.ROUTE + ServerRoute.Region.PROVINCE).body()
+    }
+
+    suspend fun city(provinceId: Int): List<RegionVO> {
+        return http.get(ServerRoute.Region.ROUTE + ServerRoute.Region.CITY + "/$provinceId").body()
+    }
+
+    suspend fun county(cityId: Int): List<RegionVO> {
+        return http.get(ServerRoute.Region.ROUTE + ServerRoute.Region.COUNTY + "/$cityId").body()
     }
 
 }

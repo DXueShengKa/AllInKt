@@ -47,8 +47,11 @@ kotlin {
             implementation(libs.kotlin.wrappers.react.dom)
             implementation(libs.kotlin.wrappers.react.router)
             implementation(libs.kotlin.wrappers.mui.material)
+            implementation(libs.kotlin.wrappers.muix.treeView)
             implementation(libs.kotlin.wrappers.tanstack.table)
             implementation(libs.kotlin.wrappers.tanstack.query)
+            implementation(npm("@mui/x-date-pickers",""))
+            implementation(npm("dayjs",libs.versions.dayjs.get()))
             implementation(projects.shared)
             implementation(projects.client.net)
         }
