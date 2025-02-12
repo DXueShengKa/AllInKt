@@ -70,6 +70,12 @@ private val RootRoutes = arrayOf<RouteObject>(
     jso {
         path = RouteUserList
         Component = RouteUserListFC
+    },
+    jso {
+        path = "*"
+        Component = FC {
+            + "默认页面"
+        }
     }
 )
 
@@ -87,9 +93,8 @@ val AppBrowserRouter = createBrowserRouter(
         })
 
         errorElement = FC {
-            val a = useRouteError()
-            console.error(a)
-            +"App Error $a"
+            val e: Error = useRouteError().asDynamic().error
+            +"App Error ${e.message}"
         }.create()
     })
 )
