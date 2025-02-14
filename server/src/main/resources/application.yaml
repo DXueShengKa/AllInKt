@@ -29,3 +29,7 @@ jimmer:
 #            properties:
 #              info:
 #                  title: 项目api文档
+
+logging:
+    level:
+      org.springframework.boot.autoconfigure: error

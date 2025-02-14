@@ -7,10 +7,11 @@ import org.springframework.http.codec.json.KotlinSerializationJsonDecoder
 import org.springframework.http.codec.json.KotlinSerializationJsonEncoder
 import org.springframework.http.codec.protobuf.KotlinSerializationProtobufDecoder
 import org.springframework.http.codec.protobuf.KotlinSerializationProtobufEncoder
+import org.springframework.validation.Validator
 import org.springframework.web.reactive.config.WebFluxConfigurer
 
 @Configuration
-class AllInWebConfig: WebFluxConfigurer {
+class AllInWebConfig : WebFluxConfigurer {
 
     override fun configureHttpMessageCodecs(configurer: ServerCodecConfigurer) {
         val codecs: ServerCodecConfigurer.ServerDefaultCodecs = configurer.defaultCodecs()
@@ -20,6 +21,13 @@ class AllInWebConfig: WebFluxConfigurer {
 
         codecs.kotlinSerializationProtobufDecoder(KotlinSerializationProtobufDecoder())
         codecs.kotlinSerializationProtobufEncoder(KotlinSerializationProtobufEncoder())
+
+    }
+
+
+
+    override fun getValidator(): Validator? {
+        return SerializableValidator()
     }
 
 }

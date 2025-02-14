@@ -5,6 +5,7 @@ import cn.allin.ServerRoute
 import cn.allin.repository.UserRepository
 import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -56,7 +57,7 @@ class UserController(
      * 添加用户
      */
     @PostMapping
-    fun add(@RequestBody user: UserVO) {
+    fun add(@Validated @RequestBody user: UserVO) {
         userRepository.add(user)
     }
 }

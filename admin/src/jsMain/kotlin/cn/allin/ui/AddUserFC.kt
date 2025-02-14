@@ -1,7 +1,12 @@
 package cn.allin.ui
 
+import cn.allin.VoValidator
+import cn.allin.birthday
+import cn.allin.gender
 import cn.allin.getValue
+import cn.allin.name
 import cn.allin.net.ReqUser
+import cn.allin.password
 import cn.allin.useCoroutineScope
 import cn.allin.utils.dayjs
 import cn.allin.utils.reactNode
@@ -37,6 +42,7 @@ import web.cssom.Color
 import web.cssom.px
 import web.html.ButtonType
 import web.html.HTMLElement
+import web.html.InputType
 
 
 const val RouteAddUser = "addUser"
@@ -47,11 +53,13 @@ val RouteAddUserFC = FC {
     val cs by useCoroutineScope()
     var userForm: UserVO by useState { UserVO(name = "") }
     var addResult by useState(false)
+    var error: String? by useState(null)
+
     val handle: (FormEvent<HTMLElement>) -> Unit = {
         val t = it.target as HTMLInputElement
         when (t.name) {
-            "name" -> userForm = userForm.copy(name = t.value)
-            "password" -> userForm = userForm.copy(password = t.value)
+            UserVO.name -> userForm = userForm.copy(name = t.value)
+            UserVO.password -> userForm = userForm.copy(password = t.value)
         }
     }
 
@@ -67,8 +75,16 @@ val RouteAddUserFC = FC {
 
         component = form
 
-        onSubmit = {
+        onSubmit = submit@{
             it.preventDefault()
+            val v = VoValidator.user(userForm)
+            if (v != null) {
+                error = v.message
+                return@submit
+            } else {
+                error = null
+            }
+
             cs?.launch {
                 addResult = ReqUser.addUser(userForm)
                 delay(2000)
@@ -81,7 +97,7 @@ val RouteAddUserFC = FC {
                 label = reactNode {
                     +"姓名"
                 }
-                name = "name"
+                name = UserVO.name
                 onChange = handle
             }
         }
@@ -90,14 +106,15 @@ val RouteAddUserFC = FC {
                 label = reactNode {
                     +"密码"
                 }
-                name = "password"
+                name = UserVO.password
+                type = InputType.password
                 onChange = handle
             }
         }
         FormControl {
             DatePicker {
                 label = reactNode { +"生日" }
-                name = "birthday"
+                name = UserVO.birthday
                 minDate = dayjs("1900-1-1")
                 maxDate = dayjs()
                 onChange = {
@@ -113,7 +130,7 @@ val RouteAddUserFC = FC {
                 +"性别"
             }
             RadioGroup {
-                name = "gender"
+                name = UserVO.gender
                 row = true
                 value = userForm.gender
                 onChange = { _, g ->
@@ -153,6 +170,12 @@ val RouteAddUserFC = FC {
         if (addResult) Alert {
             severity = AlertColor.success.asDynamic()
             +"添加成功"
+        }
+        error?.also {
+            Alert {
+                severity = AlertColor.error.asDynamic()
+                +it
+            }
         }
     }
 

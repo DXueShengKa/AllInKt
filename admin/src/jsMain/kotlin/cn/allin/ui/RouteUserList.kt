@@ -1,7 +1,11 @@
 package cn.allin.ui
 
 import cn.allin.ServerRoute
+import cn.allin.address
+import cn.allin.birthday
+import cn.allin.gender
 import cn.allin.getValue
+import cn.allin.name
 import cn.allin.net.PageParams
 import cn.allin.net.ReqUser
 import cn.allin.useCoroutineScope
@@ -77,14 +81,14 @@ private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
         }
     },
     jso {
-        id = "name"
+        id = UserVO.name
         header = StringOrTemplateHeader("名字")
         accessorFn = { user, _ ->
             user.name
         }
     },
     jso {
-        id = "gender"
+        id = UserVO.gender
         header = StringOrTemplateHeader("性别")
         accessorFn = { user, _ ->
             when (user.gender) {
@@ -95,14 +99,14 @@ private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
         }
     },
     jso {
-        id = "birthday"
+        id = UserVO.birthday
         header = StringOrTemplateHeader("生日")
         accessorFn = { user, _ ->
             user.birthday?.toString()
         }
     },
     jso {
-        id = "address"
+        id = UserVO.address
         header = StringOrTemplateHeader("地址")
         accessorFn = { user, _ ->
             user.address

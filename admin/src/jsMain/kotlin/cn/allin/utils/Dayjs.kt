@@ -30,4 +30,4 @@ external interface DayConfig {
     fun locale(locale: String)
 }
 
-fun DayJs.toLocalDate(): LocalDate = millisecond().toLocalDateTime().date
+fun DayJs.toLocalDate(): LocalDate = toDate().toLocalDate()

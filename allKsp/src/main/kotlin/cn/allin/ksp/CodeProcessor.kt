@@ -32,6 +32,10 @@ class CodeProcessor(environment: SymbolProcessorEnvironment) : SymbolProcessor {
                 nav.generateNavGraphDsl()
                 nav.writeFile()
             }
+
+            moduleName.contains(AllInProcessorProvider.MODULE_SHARED) -> {
+                generatorSerializationField(resolver, codeGenerator, logger)
+            }
         }
 
         return emptyList()

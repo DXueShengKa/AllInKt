@@ -2,15 +2,28 @@ package cn.allin.ksp
 
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.closestClassDeclaration
+import com.google.devtools.ksp.containingFile
+import com.google.devtools.ksp.getConstructors
 import com.google.devtools.ksp.getDeclaredProperties
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
-import com.squareup.kotlinpoet.*
+import com.google.devtools.ksp.symbol.KSFile
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.INT
+import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.U_INT
+import com.squareup.kotlinpoet.U_LONG
+import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
+import com.squareup.kotlinpoet.ksp.writeTo
 
 /**
  * 根据cn.allin.exposed.table包下的表创建实体类
@@ -21,7 +34,7 @@ fun generatorEntity(resolver: Resolver, codeGenerator: CodeGenerator, logger: KS
     resolver.getDeclarationsFromPackage("cn.allin.exposed.table")
         .mapNotNull { ksDeclaration ->
             logger.warn(ksDeclaration.simpleName.asString())
-            val classDeclaration = ksDeclaration.closestClassDeclaration()?:return@mapNotNull null
+            val classDeclaration = ksDeclaration.closestClassDeclaration() ?: return@mapNotNull null
             val fileNotNull = classDeclaration.containingFile != null
             if (classDeclaration.superTypes.any {
                     it.resolve().declaration.simpleName.asString().endsWith("IdTable")
@@ -95,4 +108,43 @@ fun generatorEntity(resolver: Resolver, codeGenerator: CodeGenerator, logger: KS
                 file.writeTo(it)
             }
         }
+}
+
+fun generatorSerializationField(resolver: Resolver, codeGenerator: CodeGenerator, logger: KSPLogger) {
+    val fb = FileSpec.builder("cn.allin", "VoFieldName")
+    val d = mutableListOf<KSFile>()
+
+    resolver.getSymbolsWithAnnotation("kotlinx.serialization.Serializable")
+        .flatMap { a ->
+            a.containingFile?.declarations?.mapNotNull {
+                it.closestClassDeclaration()
+            } ?: emptySequence()
+        }
+        .forEach { d ->
+
+            if (d.typeParameters.isNotEmpty())
+                return@forEach
+
+            val stringType = String::class.asTypeName()
+            val receiverType = ClassName(d.packageName.asString(), d.simpleName.asString(), "Companion")
+
+            var fieldIndex = 0
+            val constructor = d.getConstructors().first()
+            for (p in constructor.parameters) {
+                val name = p.name?.asString() ?: continue
+
+                val propertySpec = PropertySpec.builder(name, stringType)
+                    .receiver(receiverType)
+                    .getter(
+                        FunSpec.getterBuilder()
+                            .addCode("return serializer().descriptor.getElementName(${fieldIndex++})")
+                            .build()
+                    )
+                    .build()
+                fb.addProperty(propertySpec)
+            }
+        }
+
+    fb.build().writeTo(codeGenerator, Dependencies(false, *d.toTypedArray()))
+
 }
