@@ -39,7 +39,7 @@ class UserRepository(
     fun add(userVO: UserVO) {
         sqlClient.save(UserEntity {
             birthday = userVO.birthday?.toJavaLocalDate()
-            name = userVO.name
+            name = userVO.name!!
             password = userVO.password ?: error("密码不能为空")
 
             userVO.role?.also {
@@ -69,12 +69,12 @@ class UserRepository(
         return sqlClient.findById(UserEntity::class, id)
     }
 
-    fun update(user: UserVO) {
-        sqlClient.createUpdate(UserEntity::class) {
-            set(table.name, user.name)
-            where(table.id eq user.userId)
-        }
-    }
+//    fun update(user: UserVO) {
+//        sqlClient.createUpdate(UserEntity::class) {
+//            set(table.name, user.name)
+//            where(table.id eq user.userId)
+//        }
+//    }
 
     fun delete(userId: Long): Boolean {
         return sqlClient.deleteById(UserEntity::class, userId).totalAffectedRowCount > 0

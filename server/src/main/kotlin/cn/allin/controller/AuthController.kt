@@ -7,7 +7,11 @@ import cn.allin.vo.MsgVO
 import cn.allin.vo.UserVO
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 
 
@@ -29,7 +33,7 @@ class AuthController(
 
     @PostMapping
     fun post(@RequestBody userVO: UserVO): Mono<MsgVO<String>> {
-        val user = loginService.findUserId(userVO.name) ?: return Mono.just(MsgVO("没有这个用户", MsgVO.USER_NOT_FOUND))
+        val user = userVO.name?.let(loginService::findUserId) ?: return Mono.just(MsgVO("没有这个用户", MsgVO.USER_NOT_FOUND))
 
         return loginService.login(
             user.id,

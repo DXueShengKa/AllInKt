@@ -14,6 +14,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.INT
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
@@ -111,7 +112,10 @@ fun generatorEntity(resolver: Resolver, codeGenerator: CodeGenerator, logger: KS
 }
 
 fun generatorSerializationField(resolver: Resolver, codeGenerator: CodeGenerator, logger: KSPLogger) {
-    val fb = FileSpec.builder("cn.allin", "VoFieldName")
+
+    val typeSpec = TypeSpec.objectBuilder("VoFieldName")
+        .addKdoc("vo类的字段名")
+
     val d = mutableListOf<KSFile>()
 
     resolver.getSymbolsWithAnnotation("kotlinx.serialization.Serializable")
@@ -125,26 +129,36 @@ fun generatorSerializationField(resolver: Resolver, codeGenerator: CodeGenerator
             if (d.typeParameters.isNotEmpty())
                 return@forEach
 
+            val className = d.simpleName.asString()
             val stringType = String::class.asTypeName()
-            val receiverType = ClassName(d.packageName.asString(), d.simpleName.asString(), "Companion")
+//            val receiverType = ClassName(d.packageName.asString(), className, "Companion")
 
-            var fieldIndex = 0
             val constructor = d.getConstructors().first()
             for (p in constructor.parameters) {
                 val name = p.name?.asString() ?: continue
+                val constName = "${className}_$name"
+                typeSpec.addProperty(
+                    PropertySpec.builder(constName, stringType, KModifier.CONST)
+                        .initializer("\"$name\"")
+                        .build()
+                )
 
-                val propertySpec = PropertySpec.builder(name, stringType)
-                    .receiver(receiverType)
-                    .getter(
-                        FunSpec.getterBuilder()
-                            .addCode("return serializer().descriptor.getElementName(${fieldIndex++})")
-                            .build()
-                    )
-                    .build()
-                fb.addProperty(propertySpec)
+//                val propertySpec = PropertySpec.builder(name, stringType)
+//                    .receiver(receiverType)
+//                    .getter(
+//                        FunSpec.getterBuilder()
+//                            .addModifiers(KModifier.INLINE)
+//                            .addCode("return $constName")
+//                            .build()
+//                    )
+//                    .build()
+//                typeSpec.addProperty(propertySpec)
             }
         }
 
-    fb.build().writeTo(codeGenerator, Dependencies(false, *d.toTypedArray()))
+    FileSpec.builder("cn.allin", "VoFieldName")
+        .addType(typeSpec.build())
+        .build()
+        .writeTo(codeGenerator, Dependencies(false, *d.toTypedArray()))
 
 }

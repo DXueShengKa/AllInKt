@@ -12,7 +12,7 @@ data class UserVO(
     /**
      * 名字
      */
-    val name: String,
+    val name: String? = null,
     /**
      * 生日
      */

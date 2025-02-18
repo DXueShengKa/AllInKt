@@ -1,12 +1,9 @@
 package cn.allin.ui
 
+import cn.allin.VoFieldName
 import cn.allin.VoValidator
-import cn.allin.birthday
-import cn.allin.gender
 import cn.allin.getValue
-import cn.allin.name
 import cn.allin.net.ReqUser
-import cn.allin.password
 import cn.allin.useCoroutineScope
 import cn.allin.utils.dayjs
 import cn.allin.utils.reactNode
@@ -51,15 +48,19 @@ const val RouteAddUser = "addUser"
 val RouteAddUserFC = FC {
     val theme = useTheme<Theme>()
     val cs by useCoroutineScope()
-    var userForm: UserVO by useState { UserVO(name = "") }
-    var addResult by useState(false)
-    var error: String? by useState(null)
+    var userForm: UserVO by useState { UserVO() }
+    var addResult: Pair<AlertColor, String>? by useState()
+    var errorHelperText: VoValidator? by useState()
 
     val handle: (FormEvent<HTMLElement>) -> Unit = {
         val t = it.target as HTMLInputElement
         when (t.name) {
-            UserVO.name -> userForm = userForm.copy(name = t.value)
-            UserVO.password -> userForm = userForm.copy(password = t.value)
+            VoFieldName.UserVO_name -> {
+                userForm = userForm.copy(name = t.value).also {
+                    errorHelperText = VoValidator.user(it, VoFieldName.UserVO_name)
+                }
+            }
+            VoFieldName.UserVO_password -> userForm = userForm.copy(password = t.value)
         }
     }
 
@@ -79,16 +80,21 @@ val RouteAddUserFC = FC {
             it.preventDefault()
             val v = VoValidator.user(userForm)
             if (v != null) {
-                error = v.message
+                errorHelperText = v
                 return@submit
             } else {
-                error = null
+                errorHelperText = null
             }
 
             cs?.launch {
-                addResult = ReqUser.addUser(userForm)
+
+                addResult = if (ReqUser.addUser(userForm))
+                    AlertColor.success to "已添加"
+                else
+                    AlertColor.error to "添加失败"
+
                 delay(2000)
-                addResult = false
+                addResult = null
             }
         }
 
@@ -97,24 +103,31 @@ val RouteAddUserFC = FC {
                 label = reactNode {
                     +"姓名"
                 }
-                name = UserVO.name
+                name = VoFieldName.UserVO_name
                 onChange = handle
+
+                errorHelperText?.also {
+                    error = it.field == name
+                    helperText = reactNode("${it.code},${it.message}")
+                }
             }
         }
+
         FormControl {
             TextField {
                 label = reactNode {
                     +"密码"
                 }
-                name = UserVO.password
+                name = VoFieldName.UserVO_password
                 type = InputType.password
                 onChange = handle
             }
         }
+
         FormControl {
             DatePicker {
                 label = reactNode { +"生日" }
-                name = UserVO.birthday
+                name = VoFieldName.UserVO_birthday
                 minDate = dayjs("1900-1-1")
                 maxDate = dayjs()
                 onChange = {
@@ -130,7 +143,7 @@ val RouteAddUserFC = FC {
                 +"性别"
             }
             RadioGroup {
-                name = UserVO.gender
+                name = VoFieldName.UserVO_gender
                 row = true
                 value = userForm.gender
                 onChange = { _, g ->
@@ -156,7 +169,6 @@ val RouteAddUserFC = FC {
         FormControl {
             SelectAddress {
                 onValue = {
-                    println(it)
                     userForm = userForm.copy(address = it)
                 }
             }
@@ -167,14 +179,10 @@ val RouteAddUserFC = FC {
             +"添加"
         }
 
-        if (addResult) Alert {
-            severity = AlertColor.success.asDynamic()
-            +"添加成功"
-        }
-        error?.also {
+        addResult?.let { (color, str) ->
             Alert {
-                severity = AlertColor.error.asDynamic()
-                +it
+                severity = color.asDynamic()
+                +str
             }
         }
     }

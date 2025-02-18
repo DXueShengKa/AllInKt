@@ -5,6 +5,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlin.js.ExperimentalJsStatic
 import kotlin.js.JsStatic
 import kotlin.jvm.JvmStatic
@@ -30,17 +31,37 @@ class VoValidator(
         @JvmStatic
         @JsStatic
         fun user(userVO: UserVO): VoValidator? {
-            if (userVO.name.isEmpty())
-                return VoValidator(UserVO.name, "不可空", "名字不能为空")
-
-            if (userVO.name.length in 1..15)
-                return VoValidator(UserVO.name, "超出范围", "长度1-15")
-
-
-            val now = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
-            if (userVO.birthday != null && userVO.birthday !in LocalDate(1900, 1, 1)..now) {
-                return VoValidator(UserVO.birthday, "超出范围", "生日范围超过1900到今天")
+            val descriptor: SerialDescriptor = UserVO.serializer().descriptor
+            for (i in 0..<descriptor.elementsCount) {
+                val validator = user(userVO, descriptor.getElementName(i))
+                if (validator != null)
+                    return validator
             }
+
+            return null
+        }
+
+        @JvmStatic
+        @JsStatic
+        fun user(userVO: UserVO, field: String): VoValidator? {
+
+            when (field) {
+                VoFieldName.UserVO_name -> {
+                    if (userVO.name.isNullOrEmpty())
+                        return VoValidator(VoFieldName.UserVO_name, "不能为空", "名字")
+
+                    if (userVO.name.length !in 1..15)
+                        return VoValidator(VoFieldName.UserVO_name, "超出范围", "长度1-15")
+                }
+
+                VoFieldName.UserVO_birthday -> {
+                    val now = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
+                    if (userVO.birthday != null && userVO.birthday !in LocalDate(1900, 1, 1)..now) {
+                        return VoValidator(VoFieldName.UserVO_birthday, "超出范围", "生日范围超过1900到今天")
+                    }
+                }
+            }
+
 
             return null
         }
