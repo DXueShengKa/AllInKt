@@ -74,7 +74,7 @@ private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
         id = "id"
         header = StringOrTemplateHeader("ID")
         accessorFn = { user, _ ->
-            user.userId.toString()
+            user.id.toString()
         }
     },
     jso {
@@ -166,7 +166,7 @@ val RouteUserListFC = FC {
         Button {
             onClick = {
                 cs?.launch {
-                    val ids = table.getSelectedRowModel().flatRows.map { it.original.userId }
+                    val ids = table.getSelectedRowModel().flatRows.map { it.original.id }
                     if (ReqUser.deleteUser(ids)) {
                         showMessage = true
                         query.refetch(jso())

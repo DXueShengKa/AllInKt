@@ -44,7 +44,7 @@ kotlin {
             implementation(projects.client.ui)
             implementation(projects.client.data)
             implementation(projects.client.components)
-            implementation(projects.client.kspAnnotation)
+            implementation(projects.kspAnnotation)
 
             implementation(libs.lazytable)
         }

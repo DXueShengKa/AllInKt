@@ -62,11 +62,10 @@ object ReqUser {
         }.body()
     }
 
-    suspend fun addUser(addUser: UserVO): Boolean {
-
-        return http.post(ServerRoute.USER) {
+    suspend fun addUser(addUser: UserVO) {
+        http.post(ServerRoute.USER) {
             setBody(addUser)
-        }.call.response.status.isSuccess()
+        }
     }
 }
 

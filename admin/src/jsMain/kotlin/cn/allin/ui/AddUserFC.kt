@@ -1,7 +1,8 @@
 package cn.allin.ui
 
+import cn.allin.ValidatorError
 import cn.allin.VoFieldName
-import cn.allin.VoValidator
+import cn.allin.VoValidatorMessage
 import cn.allin.getValue
 import cn.allin.net.ReqUser
 import cn.allin.useCoroutineScope
@@ -11,6 +12,7 @@ import cn.allin.utils.toLocalDate
 import cn.allin.vo.Gender
 import cn.allin.vo.UserVO
 import js.objects.jso
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mui.material.Alert
@@ -50,16 +52,23 @@ val RouteAddUserFC = FC {
     val cs by useCoroutineScope()
     var userForm: UserVO by useState { UserVO() }
     var addResult: Pair<AlertColor, String>? by useState()
-    var errorHelperText: VoValidator? by useState()
+    var errorHelperText: VoValidatorMessage? by useState()
 
     val handle: (FormEvent<HTMLElement>) -> Unit = {
         val t = it.target as HTMLInputElement
         when (t.name) {
             VoFieldName.UserVO_name -> {
                 userForm = userForm.copy(name = t.value).also {
-                    errorHelperText = VoValidator.user(it, VoFieldName.UserVO_name)
+                    errorHelperText = VoValidatorMessage.user(it, VoFieldName.UserVO_name, true)
                 }
             }
+
+            VoFieldName.UserVO_email -> {
+                userForm = userForm.copy(email = t.value).also {
+                    errorHelperText = VoValidatorMessage.user(it, VoFieldName.UserVO_email, true)
+                }
+            }
+
             VoFieldName.UserVO_password -> userForm = userForm.copy(password = t.value)
         }
     }
@@ -78,7 +87,7 @@ val RouteAddUserFC = FC {
 
         onSubmit = submit@{
             it.preventDefault()
-            val v = VoValidator.user(userForm)
+            val v = VoValidatorMessage.validator(userForm)
             if (v != null) {
                 errorHelperText = v
                 return@submit
@@ -86,13 +95,14 @@ val RouteAddUserFC = FC {
                 errorHelperText = null
             }
 
-            cs?.launch {
+            cs?.launch(CoroutineExceptionHandler { _, t ->
+                if (t is ValidatorError)
+                    errorHelperText = t.validatorMessage
 
-                addResult = if (ReqUser.addUser(userForm))
-                    AlertColor.success to "已添加"
-                else
-                    AlertColor.error to "添加失败"
-
+                addResult = AlertColor.error to "添加失败"
+            }) {
+                ReqUser.addUser(userForm)
+                addResult = AlertColor.success to "已添加"
                 delay(2000)
                 addResult = null
             }
@@ -107,8 +117,31 @@ val RouteAddUserFC = FC {
                 onChange = handle
 
                 errorHelperText?.also {
-                    error = it.field == name
-                    helperText = reactNode("${it.code},${it.message}")
+                    if (it.field == VoFieldName.UserVO_name) {
+                        error = true
+                        helperText = reactNode("${it.code},${it.message}")
+                    } else {
+                        error = false
+                    }
+                }
+            }
+        }
+
+        FormControl {
+            TextField {
+                label = reactNode {
+                    +"邮箱"
+                }
+                name = VoFieldName.UserVO_email
+                onChange = handle
+
+                errorHelperText?.also {
+                    if (it.field == VoFieldName.UserVO_email) {
+                        error = true
+                        helperText = reactNode("${it.code},${it.message}")
+                    } else {
+                        error = false
+                    }
                 }
             }
         }

@@ -24,6 +24,7 @@ create table users
     password    varchar(128)                                       not null,
     gender      smallint,
     address     varchar(50),
+    email       varchar(128),
     update_time timestamp                                          not null,
     create_time timestamp default CURRENT_TIMESTAMP                not null,
     role        user_role default 'Admin'::user_role               not null

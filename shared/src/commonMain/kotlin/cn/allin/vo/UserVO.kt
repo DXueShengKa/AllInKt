@@ -8,11 +8,12 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class UserVO(
-    val userId: Long = 0,
+    val id: Long = 0,
     /**
      * 名字
      */
     val name: String? = null,
+    val email: String? = null,
     /**
      * 生日
      */

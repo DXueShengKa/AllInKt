@@ -1,5 +1,7 @@
 package cn.allin.controller
 
+import cn.allin.PostUserValidator
+import cn.allin.PutUserValidator
 import cn.allin.ServerParams
 import cn.allin.ServerRoute
 import cn.allin.repository.UserRepository
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -57,7 +60,13 @@ class UserController(
      * 添加用户
      */
     @PostMapping
-    fun add(@Validated @RequestBody user: UserVO) {
+    fun add(@Validated(PostUserValidator::class) @RequestBody user: UserVO) {
         userRepository.add(user)
+    }
+
+
+    @PutMapping
+    fun update(@Validated(PutUserValidator::class) @RequestBody user: UserVO) {
+        userRepository.update(user)
     }
 }

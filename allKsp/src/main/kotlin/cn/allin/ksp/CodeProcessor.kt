@@ -24,7 +24,7 @@ class CodeProcessor(environment: SymbolProcessorEnvironment) : SymbolProcessor {
 
         when {
             moduleName.contains(AllInProcessorProvider.MODULE_SERVER) -> {
-//                generatorEntity(resolver,codeGenerator,logger)
+                generatorEntityToVo(resolver,codeGenerator,logger)
             }
 
             moduleName.contains(AllInProcessorProvider.MODULE_COMPOSE_APP) -> {

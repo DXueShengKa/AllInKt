@@ -2,9 +2,13 @@ package cn.allin.repository
 
 import cn.allin.config.UserRole
 import cn.allin.model.UserEntity
+import cn.allin.model.birthday
+import cn.allin.model.email
+import cn.allin.model.gender
 import cn.allin.model.id
 import cn.allin.model.name
-import cn.allin.utils.toVO
+import cn.allin.model.password
+import cn.allin.utils.toUserVO
 import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
 import kotlinx.datetime.toJavaLocalDate
@@ -23,7 +27,7 @@ class UserRepository(
         return sqlClient.executeQuery(UserEntity::class) {
             select(table)
         }.map {
-            it.toVO()
+            it.toUserVO()
         }
     }
 
@@ -32,7 +36,7 @@ class UserRepository(
             select(table)
         }.fetchPage(pageIndex = index, pageSize = size)
             .let { p ->
-                PageVO(p.rows.map { it.toVO() }, p.totalRowCount.toInt(), p.totalPageCount.toInt())
+                PageVO(p.rows.map { it.toUserVO() }, p.totalRowCount.toInt(), p.totalPageCount.toInt())
             }
     }
 
@@ -40,7 +44,7 @@ class UserRepository(
         sqlClient.save(UserEntity {
             birthday = userVO.birthday?.toJavaLocalDate()
             name = userVO.name!!
-            password = userVO.password ?: error("密码不能为空")
+            password = userVO.password!!
 
             userVO.role?.also {
                 role = UserRole.valueOf(it)
@@ -69,12 +73,20 @@ class UserRepository(
         return sqlClient.findById(UserEntity::class, id)
     }
 
-//    fun update(user: UserVO) {
-//        sqlClient.createUpdate(UserEntity::class) {
-//            set(table.name, user.name)
-//            where(table.id eq user.userId)
-//        }
-//    }
+    fun update(user: UserVO) {
+        sqlClient.createUpdate(UserEntity::class) {
+            user.name?.also {
+                set(table.name,it)
+            }
+            set(table.email,user.email)
+            user.password?.also {
+                set(table.password,it)
+            }
+            set(table.birthday,user.birthday?.toJavaLocalDate())
+            set(table.gender,user.gender)
+            where(table.id eq user.id)
+        }
+    }
 
     fun delete(userId: Long): Boolean {
         return sqlClient.deleteById(UserEntity::class, userId).totalAffectedRowCount > 0
