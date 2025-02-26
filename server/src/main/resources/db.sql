@@ -17,7 +17,7 @@ alter type user_role owner to postgres;
 -- 用户表 start
 create table users
 (
-    id          bigint    default nextval('user_id_seq'::regclass) not null
+    id          bigserial                                          not null
         constraint user_pkey primary key,
     name        varchar(30)                                        not null,
     birthday    date,

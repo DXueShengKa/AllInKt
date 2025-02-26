@@ -55,7 +55,7 @@ dependencies {
     implementation(libs.caffeine)
 
     developmentOnly(libs.spring.devtools)
-    runtimeOnly(libs.postgresql)
+    implementation(libs.postgresql)
 
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.coroutines.reactor)

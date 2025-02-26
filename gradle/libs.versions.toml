@@ -20,9 +20,9 @@ kotlinx-datetime = "0.6.1"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.6.0"
 #https://github.com/google/ksp
-ksp = "2.1.10-1.0.29"
+ksp = "2.1.10-1.0.30"
 #https://github.com/square/kotlinpoet
-kotlinpoet = "2.0.0"
+kotlinpoet = "2.1.0"
 #https://github.com/Kotlin/kotlinx.collections.immutable
 kotlinx-collections-immutable = "0.3.7"
 #https://github.com/JetBrains/compose-multiplatform
@@ -37,13 +37,13 @@ jetbrains-core-bundle = "1.0.1"
 #https://github.com/square/okhttp
 okhttp3 = "4.12.0"
 #https://github.com/ktorio/ktor
-ktor = "3.0.3"
+ktor = "3.1.1"
 #https://github.com/coil-kt/coil
 coil3 = "3.1.0"
 #https://github.com/InsertKoinIO/koin
 koin = "4.0.2"
 #https://github.com/InsertKoinIO/koin-annotations
-koin-annotations = "2.0.0-RC1"
+koin-annotations = "2.0.0"
 #https://github.com/oleksandrbalan/lazytable
 lazytable = "1.9.0-beta01"
 
@@ -52,10 +52,10 @@ spring-dependencyManagement = "1.1.7"
 #https://github.com/turansky/seskar
 seskar = "3.81.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.49"
+jimmer = "0.9.59"
 
 activity = "1.10.0"
-paging = "3.3.5"
+paging = "3.3.6"
 
 slf4j = "2.0.13"
 #https://github.com/jwtk/jjwt
