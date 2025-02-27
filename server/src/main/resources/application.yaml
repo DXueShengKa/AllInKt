@@ -10,7 +10,7 @@ spring:
 #                - classpath:db.sql
 #            platform: postgresql
     profiles:
-        active: dev
+        active: prod
     main:
         web-application-type: reactive
 
@@ -20,8 +20,7 @@ jimmer:
     dialect: org.babyfish.jimmer.sql.dialect.PostgresDialect
     show-sql: true
     pretty-sql: true
-    database-validation:
-        mode: error
+    database-validation-mode: error
 #    client:
 #        openapi:
 #            path: /openapi.yml

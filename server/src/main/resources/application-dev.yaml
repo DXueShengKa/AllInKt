@@ -1,6 +1,6 @@
 server:
-    port: 8017
-    
+    port: 8020
+
 logging:
     level:
         sun.rmi.loader: warn
@@ -8,9 +8,16 @@ logging:
         javax.management.remote.rmi: warn
         root: debug
 
+
 spring:
     datasource:
         driver-class-name: org.postgresql.Driver
         password: 123456
         username: postgres
-        url: jdbc:postgresql://localhost:5432/mytest
+        url: jdbc:postgresql://localhost:5432/postgres
+
+    data:
+        redis:
+            host: localhost
+            password: qwerdf
+            database: 0

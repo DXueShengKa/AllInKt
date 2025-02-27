@@ -1,34 +1,29 @@
 package cn.allin.config
 
-import com.github.benmanes.caffeine.cache.Caffeine
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.EnableCaching
-import org.springframework.cache.caffeine.CaffeineCacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.util.concurrent.TimeUnit
+import org.springframework.data.redis.cache.RedisCacheConfiguration
+import org.springframework.data.redis.cache.RedisCacheManager
+import org.springframework.data.redis.connection.RedisConnectionFactory
 
 @Configuration
 @EnableCaching
 class CacheConfig {
+
     companion object {
         const val AUTH = "auth"
     }
 
-    private lateinit var cacheManager: CacheManager
 
     @Bean
-    fun cacheManager(): CacheManager {
-        val cacheManager = CaffeineCacheManager()
-        cacheManager.setAsyncCacheMode(true)
-        cacheManager.setCaffeine(
-            Caffeine.newBuilder()
-                .initialCapacity(50)
-                .maximumSize(1024)
-                .expireAfterAccess(48, TimeUnit.HOURS)
-        )
-        this.cacheManager = cacheManager
-        return cacheManager
+    fun cacheManager(redisConnectionFactory: RedisConnectionFactory): CacheManager {
+        val config = RedisCacheConfiguration.defaultCacheConfig()
+
+        return RedisCacheManager.builder(redisConnectionFactory)
+            .cacheDefaults(config)
+            .build()
     }
 
 }

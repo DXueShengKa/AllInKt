@@ -170,18 +170,21 @@ ktorClient-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.re
 ktorClient-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
 
 
-spring-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
 spring-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache" }
 spring-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
 spring-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-starter-oauth2-resourceServer = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server" }
+spring-starter-data-redis = { module="org.springframework.boot:spring-boot-starter-data-redis-reactive" }
+
 spring-securityTest = { module = "org.springframework.security:spring-security-test" }
 spring-starter-dataJdbc = { module = "org.springframework.boot:spring-boot-starter-data-jdbc" }
 jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 spring-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 spring-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-session-core = { module = "org.springframework.session:spring-session-core" }
+spring-session-data-redis = { module="org.springframework.session:spring-session-data-redis" }
+
 spring-integration-mqtt = { module = "org.springframework.integration:spring-integration-mqtt" }
 spring-integration-ip = { module = "org.springframework.integration:spring-integration-ip" }
 

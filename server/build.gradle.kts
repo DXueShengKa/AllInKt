@@ -28,7 +28,7 @@ tasks.register<Copy>("copyLibs") {
 
 tasks.bootJar {
     enabled = true
-    archiveClassifier = "exec"
+//    archiveClassifier = "exec"
     setExcludes(listOf("*.jar"))
     dependsOn("copyLibs")
     manifest {
@@ -51,8 +51,10 @@ dependencies {
     implementation(libs.spring.starter.security)
     implementation(libs.spring.starter.cache)
     implementation(libs.spring.starter.actuator)
+    implementation(libs.spring.starter.data.redis)
+    implementation(libs.spring.session.data.redis)
     implementation(libs.spring.session.core)
-    implementation(libs.caffeine)
+//    implementation(libs.caffeine)
 
     developmentOnly(libs.spring.devtools)
     implementation(libs.postgresql)
