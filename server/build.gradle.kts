@@ -36,6 +36,10 @@ tasks.bootJar {
             .get().files
             .joinToString(" ") { "lib/${it.name}" }
     }
+
+    from(projectDir.parent + "/admin/build/dist/js/productionExecutable") {
+        into("BOOT-INF/classes/static/admin")
+    }
 }
 
 tasks.withType<Test> {
