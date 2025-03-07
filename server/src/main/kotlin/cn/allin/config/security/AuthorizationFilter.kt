@@ -1,9 +1,9 @@
 package cn.allin.config.security
 
 import cn.allin.config.CacheConfig
+import cn.allin.utils.UserAuthenticationToken
 import org.springframework.cache.CacheManager
 import org.springframework.http.HttpHeaders
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
@@ -39,18 +39,21 @@ class AuthorizationFilter(
         val filter = chain.filter(exchange)
         val token = exchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION)
 
-        if (!token.isNullOrEmpty()) {
-            val key = JwtUtil.extractLong(token)
-
-            cacheManager.getCache(CacheConfig.AUTH)?.also { auth ->
-                val authentication: Authentication? = auth.get(key, Authentication::class.java)
-                if (authentication != null)
-                    return filter.contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication))
+        return filter.contextWrite {
+//            val c = ReactiveSecurityContextHolder.getContext()
+            if (!token.isNullOrEmpty()) {
+                val key = JwtUtil.extractLong(token)
+                cacheManager.getCache(CacheConfig.AUTH)?.also { auth ->
+                    val authentication = auth.get(key, UserAuthenticationToken::class.java)
+                    if (authentication != null)
+                        return@contextWrite ReactiveSecurityContextHolder.withAuthentication(
+                            authentication
+                        )
+                }
             }
-
+            it
         }
 
-        return filter
     }
 
 }

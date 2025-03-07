@@ -1,6 +1,7 @@
 package cn.allin.config.security
 
 import cn.allin.InJson
+import cn.allin.config.UserRole
 import cn.allin.service.UserService
 import cn.allin.vo.MsgVO
 import kotlinx.serialization.encodeToString
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.InsufficientAuthenticationException
 import org.springframework.security.authentication.ReactiveAuthenticationManager
@@ -20,11 +22,11 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.config.web.server.invoke
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.ServerAuthenticationEntryPoint
 import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler
+import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
@@ -83,8 +85,22 @@ class SecurityConfig {
         response.writeWith(Mono.just(buffer))
     }
 
+    private val adHandler = ServerAccessDeniedHandler { exchange, authException ->
+        val msgVO: MsgVO<String> = MsgVO("权限不足", MsgVO.USER_AUTH_ERR)
+
+        exchange.response.run {
+            headers.contentType = MediaType.APPLICATION_JSON
+            val buffer = bufferFactory().wrap(InJson.encodeToString(msgVO).encodeToByteArray())
+            writeWith(Mono.just(buffer))
+        }
+    }
+
     private val entryPoint = ServerAuthenticationEntryPoint { exchange, authException ->
         val msgVO: MsgVO<String> = when (authException) {
+            is AuthenticationCredentialsNotFoundException -> {
+                MsgVO(authException.message.toString(), MsgVO.USER_AUTH_ERR)
+            }
+
             else -> {
                 MsgVO(authException.message.toString(), MsgVO.USER_AUTH_ERR)
             }
@@ -129,10 +145,11 @@ class SecurityConfig {
 
             authorizeExchange {
                 authorize("/admin/**", permitAll)
-//                authorize("/auth", permitAll)
-//                authorize("/user/*", hasAuthority(UserRole.ROLE_ADMIN.name))
-//                authorize("/region/**", permitAll)
-                authorize(anyExchange, permitAll)
+                authorize("/auth", permitAll)
+                authorize("/user/page", hasAuthority(UserRole.ROLE_ADMIN.name))
+                authorize("/user/*", hasAnyAuthority(UserRole.ROLE_USER.name, UserRole.ROLE_ADMIN.name))
+                authorize("/region/**", permitAll)
+                authorize(anyExchange, authenticated)
             }
 
             formLogin {
@@ -141,8 +158,6 @@ class SecurityConfig {
                 authenticationSuccessHandler = successHandler
                 authenticationFailureHandler = failureHandler
 
-
-//                authenticationEntryPoint = entryPoint
                 disable()
             }
 
@@ -152,7 +167,7 @@ class SecurityConfig {
             }
 
             exceptionHandling {
-//                accessDeniedHandler = adHandler
+                accessDeniedHandler = adHandler
                 authenticationEntryPoint = entryPoint
             }
 
@@ -163,44 +178,25 @@ class SecurityConfig {
 
     @Bean
     fun authenticationManager(userService: UserService): ReactiveAuthenticationManager {
-        return UserDetailsRepositoryReactiveAuthenticationManager(userService)
+        val authenticationManager = UserDetailsRepositoryReactiveAuthenticationManager(userService)
+//        authenticationManager.setPasswordEncoder()
+        return authenticationManager
     }
-
-
 
 
     //todo web flux中未生效
-    @Bean
-    fun passwordEncoder(): PasswordEncoder {
-        return object : PasswordEncoder {
-            override fun encode(rawPassword: CharSequence?): String {
-                return rawPassword.toString()
-            }
-
-            override fun matches(rawPassword: CharSequence?, encodedPassword: String?): Boolean {
-                return rawPassword != null && rawPassword == encodedPassword
-            }
-
-        }
-    }
-
-
-    //    @Bean
-//    fun authenticationConverter(): AuthenticationConverter = AuthenticationConverter { request ->
-//        val authorization = request.getHeaders(HttpHeaders.AUTHORIZATION)
-//        if (!authorization.hasMoreElements())
-//            return@AuthenticationConverter SecurityContextHolder.getContext().authentication
+//    @Bean
+//    fun passwordEncoder(): PasswordEncoder {
+//        return object : PasswordEncoder {
+//            override fun encode(rawPassword: CharSequence?): String {
+//                return rawPassword.toString()
+//            }
 //
-//        if (JwtUtil.validateToken(authorization.nextElement())) {
-//            val username = JwtUtil.extractUsername(authorization.nextElement())
-//            return@AuthenticationConverter UsernamePasswordAuthenticationToken.authenticated(
-//                username,
-//                null,
-//                emptyList()
-//            )
+//            override fun matches(rawPassword: CharSequence?, encodedPassword: String?): Boolean {
+//                return rawPassword != null && rawPassword == encodedPassword
+//            }
+//
 //        }
-//
-//        SecurityContextHolder.getContext().authentication
 //    }
 
 //    fun jwtD(): JwtDecoder {

@@ -1,6 +1,13 @@
 package cn.allin.utils
 
-import androidx.collection.*
+import androidx.collection.IntList
+import androidx.collection.LongList
+import androidx.collection.MutableIntIntMap
+import androidx.collection.MutableLongLongMap
+import androidx.collection.intListOf
+import androidx.collection.longListOf
+import androidx.collection.mutableIntListOf
+import androidx.collection.mutableLongListOf
 
 
 inline infix fun <T, reified R> Array<T>.map(transform: (T) -> R) = Array(size) { transform(this[it]) }
@@ -9,6 +16,10 @@ inline infix fun <T, reified R> Array<T>.mapIndexed(transform: (index: Int, T) -
     Array(size) { transform(it, this[it]) }
 
 inline infix fun <T, reified R> List<T>.mapToArray(transform: (T) -> R) = Array(size) { transform(this[it]) }
+
+
+inline infix fun <T> List<T>.mapToIntArray(transform: (T) -> Int) = IntArray(size) { transform(this[it]) }
+
 
 inline fun <T, reified R> List<T>.mapToArrayIndexed(transform: (index: Int, T) -> R) =
     Array(size) { transform(it, this[it]) }

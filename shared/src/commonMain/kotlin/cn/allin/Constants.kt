@@ -8,6 +8,8 @@ object ServerRoute {
 
     const val USER = "user"
 
+    const val PAGE = "page"
+
     const val AUTH = "auth"
 
     object Region {
