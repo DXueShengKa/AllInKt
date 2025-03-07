@@ -35,6 +35,7 @@ class CodeProcessor(environment: SymbolProcessorEnvironment) : SymbolProcessor {
 
             moduleName.contains(AllInProcessorProvider.MODULE_SHARED) -> {
                 generatorSerializationField(resolver, codeGenerator, logger)
+                generateBuildConfig(codeGenerator,options, moduleName)
             }
         }
 

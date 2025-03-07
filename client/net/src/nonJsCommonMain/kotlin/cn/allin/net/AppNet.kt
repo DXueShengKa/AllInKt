@@ -8,7 +8,6 @@ import io.ktor.http.*
 
 const val APP_API_URL:String = SERVER_BASE_URL
 
-expect val ktorEngineFactory: HttpClientEngineFactory<*>
 
 fun <T : HttpClientEngineConfig> HttpClientConfig<T>.appCommonConfig() {
 

@@ -4,36 +4,17 @@ package cn.allin.net
 
 import cn.allin.ServerParams
 import cn.allin.ServerRoute
-import cn.allin.ui.RouteAuth
 import cn.allin.vo.MsgVO
 import cn.allin.vo.PageVO
 import cn.allin.vo.RegionVO
 import cn.allin.vo.UserVO
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.engine.js.*
-import io.ktor.client.plugins.*
 import io.ktor.client.request.*
-import io.ktor.http.*
-import kotlinx.browser.localStorage
-import org.w3c.dom.get
-import org.w3c.dom.set
 
 
-var HeaderAuthorization: String? = localStorage[RouteAuth]
-
-
-private val http = HttpClient(Js) {
-    defaultRequest {
-        url(SERVER_BASE_URL)
-        if (contentType() == null)
-            contentType(ContentType.Application.Json)
-//            contentType(ContentTypeXProtobuf)
-
-        header(HttpHeaders.Authorization, HeaderAuthorization)
-    }
-
-    contentConverter()
+private val http = HttpClient(ktorEngineFactory) {
+    commonConfig()
 }
 
 data class PageParams(
@@ -81,8 +62,7 @@ object ReqAuth {
 
         if (msgVO.code == MsgVO.OK) {
 
-            HeaderAuthorization = msgVO.data
-            localStorage[RouteAuth] = msgVO.data!!
+            WEKV.authorization.set(msgVO.data!!)
 
             response.headers.forEach { s, strings ->
                 println("$s $strings")

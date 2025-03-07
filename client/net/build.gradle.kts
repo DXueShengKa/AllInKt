@@ -15,6 +15,10 @@ kotlin {
             }
         }
 
+        nonJsCommonMain.dependencies {
+            implementation(libs.androidx.datastore.preferences)
+        }
+
         jsMain.dependencies {
             api(libs.ktorClient.js)
         }

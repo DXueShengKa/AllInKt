@@ -21,7 +21,6 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.INT
-import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
@@ -29,7 +28,6 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.U_INT
 import com.squareup.kotlinpoet.U_LONG
 import com.squareup.kotlinpoet.asClassName
-import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.writeTo
@@ -230,57 +228,5 @@ private class GenerateToVo(private val logger: KSPLogger, private val voTypes: S
     ) {
 
     }
-
-}
-
-fun generatorSerializationField(resolver: Resolver, codeGenerator: CodeGenerator, logger: KSPLogger) {
-
-    val typeSpec = TypeSpec.objectBuilder("VoFieldName")
-        .addKdoc("vo类的字段名")
-
-    val d = mutableListOf<KSFile>()
-
-    resolver.getSymbolsWithAnnotation("kotlinx.serialization.Serializable")
-        .flatMap { a ->
-            a.containingFile?.declarations?.mapNotNull {
-                it.closestClassDeclaration()
-            } ?: emptySequence()
-        }
-        .forEach { d ->
-
-            if (d.typeParameters.isNotEmpty())
-                return@forEach
-
-            val className = d.simpleName.asString()
-            val stringType = String::class.asTypeName()
-//            val receiverType = ClassName(d.packageName.asString(), className, "Companion")
-
-            val constructor = d.getConstructors().first()
-            for (p in constructor.parameters) {
-                val name = p.name?.asString() ?: continue
-                val constName = "${className}_$name"
-                typeSpec.addProperty(
-                    PropertySpec.builder(constName, stringType, KModifier.CONST)
-                        .initializer("\"$name\"")
-                        .build()
-                )
-
-//                val propertySpec = PropertySpec.builder(name, stringType)
-//                    .receiver(receiverType)
-//                    .getter(
-//                        FunSpec.getterBuilder()
-//                            .addModifiers(KModifier.INLINE)
-//                            .addCode("return $constName")
-//                            .build()
-//                    )
-//                    .build()
-//                typeSpec.addProperty(propertySpec)
-            }
-        }
-
-    FileSpec.builder("cn.allin", "VoFieldName")
-        .addType(typeSpec.build())
-        .build()
-        .writeTo(codeGenerator, Dependencies(false, *d.toTypedArray()))
 
 }

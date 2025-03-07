@@ -34,6 +34,9 @@ jetbrains-lifecycle = "2.8.4"
 jetbrains-navigation = "2.8.0-alpha11"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
 jetbrains-core-bundle = "1.0.1"
+
+datastore = "1.1.2"
+
 #https://github.com/square/okhttp
 okhttp3 = "4.12.0"
 #https://github.com/ktorio/ktor
@@ -127,6 +130,8 @@ jetbrains-navigation-runtime = { group = "org.jetbrains.androidx.navigation", na
 jetbrains-lifecycle-viewmodelCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "jetbrains-lifecycle" }
 jetbrains-lifecycle-vmSavedState = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "jetbrains-lifecycle" }
 jetbrains-core-bundle = { group = "org.jetbrains.androidx.core", name = "core-bundle", version.ref = "jetbrains-core-bundle" }
+
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 kotlinpoet-ksp = { module = "com.squareup:kotlinpoet-ksp", version.ref = "kotlinpoet" }
 kotlinpoet-jvm = { module = "com.squareup:kotlinpoet-jvm", version.ref = "kotlinpoet" }

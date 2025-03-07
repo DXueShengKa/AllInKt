@@ -156,6 +156,10 @@ private class GenerateNavDsl(private val logger: KSPLogger) : KSEmptyVisitor<Cod
                         it.name!!.asString() + " = it"
                     }
 
+                    paramType.canonicalName() == "androidx.compose.animation.AnimatedContentScope" -> {
+                        "this"
+                    }
+
                     else -> null
                 }
             }.joinToString()

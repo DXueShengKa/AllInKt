@@ -3,6 +3,7 @@ package cn.allin.net
 import cn.allin.ValidatorError
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.engine.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.*
@@ -14,19 +15,34 @@ val ContentTypeXProtobuf = ContentType("application", "x-protobuf")
 
 const val SERVER_BASE_URL = "http://localhost:8020"
 
+expect val ktorEngineFactory: HttpClientEngineFactory<*>
 
 @OptIn(ExperimentalSerializationApi::class)
-fun HttpClientConfig<*>.contentConverter() {
+fun HttpClientConfig<*>.commonConfig() {
     HttpResponseValidator {
         validateResponse {
-            if (it.status == HttpStatusCode.BadRequest) {
-                throw ValidatorError(it.body())
+            when(it.status) {
+                HttpStatusCode.Unauthorized -> {
+                    WEKV.authorization.remove()
+                }
+                HttpStatusCode.BadRequest -> {
+                    throw ValidatorError(it.body())
+                }
             }
         }
     }
 
+    defaultRequest {
+        url(SERVER_BASE_URL)
+        headers {
+            WEKV.authorization.getOrNull()?.also { append(HttpHeaders.Authorization, it) }
+        }
+        if (contentType() == null)
+            contentType(ContentType.Application.Json)
+    }
+
     install(ContentNegotiation) {
-        register(ContentType.Application.Json, KotlinxSerializationConverter(cn.allin.InJson))
-        register(ContentTypeXProtobuf, KotlinxSerializationConverter(ProtoBuf))
+        serialization(ContentTypeXProtobuf, ProtoBuf)
+        serialization(ContentType.Application.Json, cn.allin.InJson)
     }
 }

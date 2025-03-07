@@ -5,6 +5,8 @@ import cn.allin.ui.RouteAddUser
 import cn.allin.ui.RouteAddUserFC
 import cn.allin.ui.RouteUserList
 import cn.allin.ui.RouteUserListFC
+import colorSchemes
+import cssVariables
 import js.objects.jso
 import mui.material.PaletteMode
 import mui.material.styles.createTheme
@@ -26,6 +28,10 @@ private val AppLayout = FC {
                 palette = jso {
                     mode = PaletteMode.light
                 }
+                cssVariables(
+                    colorSchemeSelector = "data-toolpad-color-scheme"
+                )
+                colorSchemes(true, true)
             },
             muiLocal.zhCN
         )
@@ -74,7 +80,7 @@ private val RootRoutes = arrayOf<RouteObject>(
     jso {
         path = "*"
         Component = FC {
-            + "默认页面"
+            +"默认页面"
         }
     }
 )

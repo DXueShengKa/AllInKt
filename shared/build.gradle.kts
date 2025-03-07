@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+val isTest: String by project
+
 kotlin {
     sourceSets {
 
@@ -19,7 +21,7 @@ kotlin {
                 api(libs.jetbrains.collection)
             }
         }
-        
+
         nonJsCommonMain.dependencies {
         }
 
@@ -27,6 +29,10 @@ kotlin {
             implementation(npm("@js-joda/timezone", "2.21.1"))
         }
     }
+}
+
+ksp {
+    arg("isTest", isTest)
 }
 
 android {
