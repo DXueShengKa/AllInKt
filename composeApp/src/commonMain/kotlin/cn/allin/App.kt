@@ -3,50 +3,25 @@ package cn.allin
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import cn.allin.data.repository.UserRepository
-import cn.allin.vo.UserVO
+import androidx.navigation.NavController
 import eu.wewox.lazytable.LazyTable
 import eu.wewox.lazytable.LazyTableItem
-import org.koin.compose.getKoin
+
+val LocalNavController = staticCompositionLocalOf<NavController> { error("未初始化导航") }
 
 
 @Composable
 fun App() {
-    MaterialTheme {
-        Column {
 
-
-//            AppTest()
-            val get = getKoin().get<UserRepository>()
-            val list = remember { mutableStateListOf<UserVO>() }
-            LaunchedEffect(Unit) {
-                list.addAll(get.getUser())
-            }
-
-            LazyColumn {
-                item {
-                    Text("--->")
-                }
-                items(list) {
-                    Text(it.toString())
-                }
-            }
-
-        }
-    }
 }
 
 

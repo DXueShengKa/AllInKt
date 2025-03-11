@@ -99,9 +99,6 @@ android {
         compose = true
     }
 
-    dependencies {
-        debugImplementation(compose.uiTooling)
-    }
 }
 
 compose.desktop {

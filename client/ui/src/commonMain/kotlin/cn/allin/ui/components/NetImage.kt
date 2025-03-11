@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import cn.allin.BuildConfig
 import coil3.ComponentRegistry
@@ -119,7 +120,9 @@ fun NetImage(
     colorFilter: ColorFilter? = null,
     filterQuality: FilterQuality = DrawScope.DefaultFilterQuality,
 ) {
-    if (imageUrl.data is DrawableResource) {
+    if (imageUrl.data is ImageVector) {
+        Image(imageUrl.data, contentDescription, modifier, alignment, contentScale, alpha, colorFilter)
+    } else if (imageUrl.data is DrawableResource) {
         Image(painterResource(imageUrl.data), contentDescription, modifier, alignment, contentScale, alpha, colorFilter)
     } else {
         val context = LocalPlatformContext.current
