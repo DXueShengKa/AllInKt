@@ -9,7 +9,7 @@ import androidx.compose.foundation.gestures.calculatePan
 import androidx.compose.foundation.gestures.calculateRotation
 import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
@@ -40,7 +40,7 @@ import kotlin.coroutines.coroutineContext
 fun CropImage(
     state: CropImageState,
     modifier: Modifier = Modifier,
-    borderColor: Color = MaterialTheme.colors.primary
+    borderColor: Color = MaterialTheme.colorScheme.primary
 ) {
 
     Canvas(

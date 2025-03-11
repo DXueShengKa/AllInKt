@@ -21,9 +21,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
@@ -70,7 +70,7 @@ fun WheelP() {
             )
         },
         Modifier.size(300.dp),
-        selectedBackgroundColor = MaterialTheme.colors.error
+        selectedBackgroundColor = MaterialTheme.colorScheme.error
     )
 }
 
@@ -86,7 +86,7 @@ fun DateWheel(
     selectedItemHeight: Dp = 60.dp,
     selectedContentColor: Color = LocalContentColor.current,
     unselectedContentColor: Color = selectedContentColor.copy(alpha = 0.4f),
-    selectedBackgroundColor: Color = MaterialTheme.colors.surface,
+    selectedBackgroundColor: Color = MaterialTheme.colorScheme.surface,
 ) {
     LaunchedEffect(Unit) {
         dateWheel.coroutineScope = this
@@ -106,7 +106,7 @@ fun DateWheel(
                     .height(height)
                     .wrapContentHeight(),
                 color = selectedContentColor,
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.headlineSmall
             )
         }
 

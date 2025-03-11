@@ -8,12 +8,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.ScrollableTabRow
-import androidx.compose.material.TabPosition
-import androidx.compose.material.TabRow
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.TabPosition
+import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,8 +59,8 @@ fun HorizontalPagerIndicator(
     pagerState: androidx.compose.foundation.pager.PagerState,
     modifier: Modifier = Modifier,
     pageIndexMapping: (Int) -> Int = { it },
-    activeColor: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
-    inactiveColor: Color = activeColor.copy(ContentAlpha.disabled),
+    activeColor: Color = LocalContentColor.current,
+    inactiveColor: Color = activeColor.copy(0.5f),
     indicatorWidth: Dp = 8.dp,
     indicatorHeight: Dp = indicatorWidth,
     spacing: Dp = indicatorWidth,
@@ -151,8 +149,8 @@ fun VerticalPagerIndicator(
     pagerState: androidx.compose.foundation.pager.PagerState,
     modifier: Modifier = Modifier,
     pageIndexMapping: (Int) -> Int = { it },
-    activeColor: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
-    inactiveColor: Color = activeColor.copy(ContentAlpha.disabled),
+    activeColor: Color = LocalContentColor.current,
+    inactiveColor: Color = activeColor.copy(0.5f),
     indicatorHeight: Dp = 8.dp,
     indicatorWidth: Dp = indicatorHeight,
     spacing: Dp = indicatorHeight,

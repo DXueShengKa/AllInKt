@@ -2,10 +2,10 @@ package com.compose.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +27,7 @@ fun CircularProgressDialog(
                 CircularProgressIndicator(
                     Modifier.padding(20.dp)
                 )
-                if (text != null) Text(text,Modifier.padding(bottom = 10.dp, start = 10.dp, end = 10.dp), style = MaterialTheme.typography.body1)
+                if (text != null) Text(text,Modifier.padding(bottom = 10.dp, start = 10.dp, end = 10.dp), style = MaterialTheme.typography.bodyLarge)
             }
         }
     }

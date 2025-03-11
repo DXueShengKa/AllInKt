@@ -2,10 +2,10 @@ package com.compose.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
@@ -110,7 +110,7 @@ fun ExpandableText(
     showMoreText: String = "... 更多",
     showMoreStyle: SpanStyle = SpanStyle(
         fontWeight = FontWeight.W500,
-        color = MaterialTheme.colors.primaryVariant
+        color = MaterialTheme.colorScheme.primaryContainer
     ),
     showLessText: String = " 更少",
     showLessStyle: SpanStyle = showMoreStyle,

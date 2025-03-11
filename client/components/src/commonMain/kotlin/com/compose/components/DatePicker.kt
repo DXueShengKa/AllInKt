@@ -27,13 +27,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Divider
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -95,10 +95,10 @@ fun DatePickerDialog(
     onCancel: () -> Unit,
     pickerState: DatePickerState = remember { DatePickerState() },
     colors: DatePickerColors = DatePickerColors(
-        MaterialTheme.colors.primary,
-        MaterialTheme.colors.onPrimary,
-        MaterialTheme.colors.primary.copy(0.3f),
-        MaterialTheme.colors.secondary
+        MaterialTheme.colorScheme.primary,
+        MaterialTheme.colorScheme.onPrimary,
+        MaterialTheme.colorScheme.primary.copy(0.3f),
+        MaterialTheme.colorScheme.secondary
     ),
     onDate: (LocalDate) -> Unit
 ) {
@@ -106,7 +106,7 @@ fun DatePickerDialog(
 
         Column(
             Modifier
-                .background(MaterialTheme.colors.background, MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.background, MaterialTheme.shapes.medium)
                 .padding(horizontal = 16.dp)
         ) {
 
@@ -155,10 +155,10 @@ fun DatePicker(
     state: DatePickerState,
     modifier: Modifier = Modifier,
     colors: DatePickerColors = DatePickerColors(
-        MaterialTheme.colors.primary,
-        MaterialTheme.colors.onPrimary,
-        MaterialTheme.colors.primaryVariant,
-        MaterialTheme.colors.onSecondary
+        MaterialTheme.colorScheme.primary,
+        MaterialTheme.colorScheme.onPrimary,
+        MaterialTheme.colorScheme.primaryContainer,
+        MaterialTheme.colorScheme.onSecondary
     )
 ) {
     Column(
@@ -183,9 +183,9 @@ fun DatePicker(
                     "${state.now.year}年",
                     yearModifier,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.headlineSmall
                 )
-                androidx.compose.material.Icon(
+                androidx.compose.material3.Icon(
                     Icons.Rounded.KeyboardArrowDown, null,
                     yearModifier
                         .padding(end = 4.dp)
@@ -199,9 +199,9 @@ fun DatePicker(
                     state.nowMonth,
                     monthModifier.padding(start = 10.dp),
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.headlineSmall
                 )
-                androidx.compose.material.Icon(
+                androidx.compose.material3.Icon(
                     Icons.Rounded.KeyboardArrowDown, null,
                     monthModifier
                         .padding(end = 4.dp)
@@ -224,7 +224,7 @@ fun DatePicker(
                     .border(1.dp, color, MaterialTheme.shapes.medium)
                     .padding(8.dp, 6.dp),
                 color = color,
-                style = MaterialTheme.typography.body2
+                style = MaterialTheme.typography.bodyMedium
             )
         }
 
@@ -308,7 +308,7 @@ private fun DatePickerLayout(
                     }
                 }
 
-                Divider(Modifier.padding(vertical = 6.dp))
+                HorizontalDivider(Modifier.padding(vertical = 6.dp))
 
                 da.array.forEach {
                     key(it) {
@@ -395,7 +395,7 @@ private fun PickerWheel(
                 Modifier
                     .height(height)
                     .wrapContentHeight(),
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.headlineMedium
             )
         },
         unselectedContent = { height, str ->

@@ -16,10 +16,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Refresh
@@ -78,9 +78,9 @@ fun ImageCaptcha(
                 Icon(
                     Icons.Default.Refresh, null,
                     Modifier.rotate(state.reloadAnimatable.value),
-                    tint = MaterialTheme.colors.primary
+                    tint = MaterialTheme.colorScheme.primary
                 )
-                Text("刷新图片", color = MaterialTheme.colors.primary)
+                Text("刷新图片", color = MaterialTheme.colorScheme.primary)
             }
 
             Image(
@@ -135,9 +135,9 @@ fun ImageCaptcha(
 @ExperimentalFoundationApi
 @Composable
 private fun SliderBar(state: ImageCaptchaState) {
-    val primary = MaterialTheme.colors.primary
-    val error = MaterialTheme.colors.error
-    val hint = if (state.resultState == CAPTCHA_ERROR) error else MaterialTheme.colors.secondary
+    val primary = MaterialTheme.colorScheme.primary
+    val error = MaterialTheme.colorScheme.error
+    val hint = if (state.resultState == CAPTCHA_ERROR) error else MaterialTheme.colorScheme.secondary
     val textMeasurer = rememberTextMeasurer()
     val textStyle = LocalTextStyle.current
 
@@ -214,7 +214,7 @@ private fun SliderBar(state: ImageCaptchaState) {
                 .background(primary, CircleShape)
                 .fillMaxHeight()
                 .aspectRatio(1f),
-            MaterialTheme.colors.onPrimary
+            MaterialTheme.colorScheme.onPrimary
         )
     }
 }

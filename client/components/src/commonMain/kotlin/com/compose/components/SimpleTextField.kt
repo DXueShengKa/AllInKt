@@ -1,18 +1,19 @@
 package com.compose.components
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -28,7 +29,7 @@ fun SimpleTextField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     singleLine: Boolean = false,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    cursorBrush: SolidColor = SolidColor(MaterialTheme.colors.primary),
+    cursorBrush: SolidColor = SolidColor(MaterialTheme.colorScheme.primary),
     enabled: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
     placeholder: @Composable () -> Unit = {},
@@ -55,7 +56,7 @@ fun SimpleTextField(
             label = "SimpleTextField"
         ){
             CompositionLocalProvider(
-                LocalTextStyle provides textStyle.copy(MaterialTheme.colors.secondary),
+                LocalTextStyle provides textStyle.copy(MaterialTheme.colorScheme.secondary),
                 content = placeholder
             )
         }

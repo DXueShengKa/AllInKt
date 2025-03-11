@@ -10,7 +10,7 @@ import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
@@ -104,8 +104,8 @@ fun ProgressBar(
     @FloatRange(0.0,1.0) value: Float,
     onValueChange: (Float) -> Unit,
     modifier: Modifier = Modifier,
-    activeTrackColor: Color = MaterialTheme.colors.primary,
-    inactiveTrackColor: Color = MaterialTheme.colors.onPrimary,
+    activeTrackColor: Color = MaterialTheme.colorScheme.primary,
+    inactiveTrackColor: Color = MaterialTheme.colorScheme.onPrimary,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {

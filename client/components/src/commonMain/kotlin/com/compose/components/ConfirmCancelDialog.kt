@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,8 +65,8 @@ fun ConfirmCancelDialog(
     content: String,
     cancelText: String = "取消",
     confirmText: String = "确认",
-    cancelBackground: Color = MaterialTheme.colors.surface,
-    confirmBackground: Color = MaterialTheme.colors.primary,
+    cancelBackground: Color = MaterialTheme.colorScheme.surface,
+    confirmBackground: Color = MaterialTheme.colorScheme.primary,
     properties: DialogProperties = DialogProperties(),
     onDismissRequest: () -> Unit = {},
     onCancel: (() -> Unit)?,
@@ -105,8 +105,8 @@ fun ConfirmCancelDialog(
     content: @Composable ColumnScope.() -> Unit,
     cancelText: String = "取消",
     confirmText: String = "确认",
-    cancelBackground: Color = MaterialTheme.colors.surface,
-    confirmBackground: Color = MaterialTheme.colors.primary,
+    cancelBackground: Color = MaterialTheme.colorScheme.surface,
+    confirmBackground: Color = MaterialTheme.colorScheme.primary,
     properties: DialogProperties = DialogProperties(),
     onDismissRequest: () -> Unit = {},
     onCancel: (() -> Unit)?,
@@ -139,7 +139,7 @@ fun ConfirmCancelContent(
     Column(
         Modifier
             .clip(shape)
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         content()
         Row(
@@ -156,7 +156,7 @@ fun ConfirmCancelContent(
                 ) {
                     Text(
                         cancelText,
-                        color = MaterialTheme.colors.onSurface
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
                 Spacer(Modifier.width(10.dp))
@@ -171,7 +171,7 @@ fun ConfirmCancelContent(
             ) {
                 Text(
                     confirmText,
-                    color = MaterialTheme.colors.onError
+                    color = MaterialTheme.colorScheme.onError
                 )
             }
         }
