@@ -11,6 +11,8 @@ kotlin {
                 implementation(projects.client.net)
                 implementation(libs.koin.core)
                 implementation(libs.koin.annotations)
+                api(libs.kotlinx.io.core)
+                api(libs.kotlinx.io.bytestring)
             }
         }
     }

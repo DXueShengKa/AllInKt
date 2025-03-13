@@ -29,7 +29,7 @@ fun main() = application {
         title = "AllInKt",
     ) {
         KoinApplication(application = {
-            modules(dataModule, defaultModule)
+            modules(dataModule, defaultModule, AppKoinViewModel)
         }) {
             MainTheme {
                 Scaffold {

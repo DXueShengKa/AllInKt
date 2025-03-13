@@ -1,12 +1,11 @@
 package cn.allin.ui.fileMamager
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import cn.allin.LocalNavController
 import cn.allin.ksp.navigation.NavRoute
 import cn.allin.ui.fileManager.FileHome
 import cn.allin.ui.fileManager.rememberFileManagerState
-import kotlinx.coroutines.delay
+import org.koin.compose.viewmodel.koinViewModel
 
 const val RouteFileManager = "RouteFileManager"
 
@@ -17,14 +16,27 @@ const val RouteFileManager = "RouteFileManager"
 @Composable
 internal fun RouteFileManager() {
     val nav = LocalNavController.current
+    val vm = koinViewModel<FileManagerViewModel>()
+
     val state = rememberFileManagerState(
+        vm.fileListFlow,
         onBack = {
-            nav.navigateUp()
-        }
+            if (vm.currentPath == null)
+                nav.navigateUp()
+            else
+                vm.previous()
+        },
+        onItemClick = {
+            vm.next(it)
+        },
+        onDelete = {
+
+        },
+        onDown = {
+
+        },
+        getDesc = vm.getDesc
     )
+
     FileHome(state)
-    LaunchedEffect(state) {
-        delay(2000)
-        state.open()
-    }
 }

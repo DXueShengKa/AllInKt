@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             KoinApplication(application = {
-                modules(dataModule, defaultModule)
+                modules(dataModule, defaultModule,AppKoinViewModel)
             }) {
                 App()
             }
