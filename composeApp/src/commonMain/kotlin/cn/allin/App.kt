@@ -1,27 +1,110 @@
 package cn.allin
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.icons.sharp.FileDownload
+import androidx.compose.material.icons.sharp.FileOpen
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import cn.allin.ksp.navigation.NavRoute
+import cn.allin.theme.MainIcons
+import cn.allin.ui.fileMamager.RouteFileManager
+import cn.allin.ui.fileMamager.RouteTransferManager
 import eu.wewox.lazytable.LazyTable
 import eu.wewox.lazytable.LazyTableItem
+import org.koin.compose.LocalKoinApplication
+import org.koin.compose.LocalKoinScope
+import org.koin.compose.application.rememberKoinApplication
+import org.koin.core.annotation.KoinInternalApi
+import org.koin.dsl.KoinAppDeclaration
+import org.koin.dsl.koinApplication
 
 val LocalNavController = staticCompositionLocalOf<NavController> { error("未初始化导航") }
 
+const val RouteApp = "MainApp"
 
+@NavRoute(routeString = RouteApp)
 @Composable
 fun App() {
+    val nav = LocalNavController.current
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(100.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        item {
+            AppItem(MainIcons.FileOpen, "文件管理") { nav.navigate(RouteFileManager) }
+        }
+        item {
+            AppItem(MainIcons.FileDownload, "传输管理") { nav.navigate(RouteTransferManager) }
+        }
+    }
+}
 
+@Composable
+private fun AppItem(img: ImageVector, text: String, onItemClicked: () -> Unit) {
+    ElevatedCard(onClick = onItemClicked, Modifier.size(100.dp)) {
+        Icon(img, text)
+        Text(text)
+    }
+}
+
+@OptIn(KoinInternalApi::class)
+@Composable
+fun MainApp(
+    application: KoinAppDeclaration,
+    builder: NavGraphBuilder.() -> Unit
+) {
+    val navController = rememberNavController()
+    val koin = rememberKoinApplication(koinApplication(application))
+    CompositionLocalProvider(
+        LocalNavController provides navController,
+        LocalKoinApplication provides koin,
+        LocalKoinScope provides koin.scopeRegistry.rootScope
+    ) {
+        NavHost(
+            navController = navController,
+            startDestination = RouteApp,
+            modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+            enterTransition = {
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start)
+            },
+            exitTransition = {
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start)
+            },
+            popEnterTransition = {
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End)
+            },
+            popExitTransition = {
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End)
+            },
+            builder = builder
+        )
+    }
 }
 
 

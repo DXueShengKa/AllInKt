@@ -38,6 +38,7 @@ kotlin {
             implementation(libs.jetbrains.adaptive.navigation)
             implementation(libs.koin.kmp.compose.viewmodel)
             implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(projects.shared)

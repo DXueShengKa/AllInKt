@@ -4,7 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import cn.allin.data.dataModule
-import org.koin.compose.KoinApplication
+import cn.allin.navigation.appNavGraphs
+import cn.allin.theme.MainTheme
 import org.koin.ksp.generated.defaultModule
 
 class MainActivity : ComponentActivity() {
@@ -12,10 +13,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            KoinApplication(application = {
-                modules(dataModule, defaultModule,AppKoinViewModel)
-            }) {
-                App()
+            MainTheme {
+                MainApp(
+                    application = {
+                        modules(dataModule, defaultModule, AppKoinViewModel)
+                    }
+                ) {
+                    appNavGraphs()
+                }
             }
         }
     }

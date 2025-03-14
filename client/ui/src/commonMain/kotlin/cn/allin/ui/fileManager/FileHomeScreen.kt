@@ -86,7 +86,7 @@ fun rememberFileManagerState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FileHome(
+fun FileHomeScreen(
     fileManagerState: FileManagerState,
 ) {
 

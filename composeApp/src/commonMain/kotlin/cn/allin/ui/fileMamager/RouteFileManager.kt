@@ -3,7 +3,7 @@ package cn.allin.ui.fileMamager
 import androidx.compose.runtime.Composable
 import cn.allin.LocalNavController
 import cn.allin.ksp.navigation.NavRoute
-import cn.allin.ui.fileManager.FileHome
+import cn.allin.ui.fileManager.FileHomeScreen
 import cn.allin.ui.fileManager.rememberFileManagerState
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -38,5 +38,5 @@ internal fun RouteFileManager() {
         getDesc = vm.getDesc
     )
 
-    FileHome(state)
+    FileHomeScreen(state)
 }
