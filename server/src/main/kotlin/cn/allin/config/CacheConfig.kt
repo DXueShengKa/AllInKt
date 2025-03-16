@@ -15,6 +15,7 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.data.redis.serializer.RedisSerializationContext
 import org.springframework.data.redis.serializer.RedisSerializer
 import org.springframework.data.redis.serializer.StringRedisSerializer
+import org.springframework.web.reactive.function.client.WebClient
 
 @OptIn(ExperimentalSerializationApi::class)
 @Configuration
@@ -25,6 +26,12 @@ class CacheConfig {
         const val AUTH = "auth"
     }
 
+
+    @Bean
+    fun webClient(): WebClient {
+        return WebClient.builder()
+            .build()
+    }
 
     @Bean
     fun reactiveRedisTemplateByte(redisConnectionFactory: ReactiveRedisConnectionFactory): ReactiveRedisTemplate<String, ByteArray> {
