@@ -12,6 +12,12 @@ object ServerRoute {
 
     const val AUTH = "auth"
 
+
+    /**
+     * 公众号
+     */
+    const val OFFI_ACCOUNT = "offiaccount"
+
     object Region {
         const val ROUTE = "region"
 

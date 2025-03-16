@@ -149,6 +149,7 @@ class SecurityConfig {
                 authorize("/user/page", hasAuthority(UserRole.ROLE_ADMIN.name))
                 authorize("/user/*", hasAnyAuthority(UserRole.ROLE_USER.name, UserRole.ROLE_ADMIN.name))
                 authorize("/region/**", permitAll)
+                authorize("/offiaccount/**", permitAll)
                 authorize(anyExchange, authenticated)
             }
 
