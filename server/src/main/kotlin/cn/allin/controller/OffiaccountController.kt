@@ -27,7 +27,6 @@ class OffiaccountController(
         private const val WX_TOKEN = "b889a8e9af4bd"
     }
 
-
     private val xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder()
     private val logger = LoggerFactory.getLogger(OffiaccountController::class.java)
 
@@ -62,13 +61,15 @@ class OffiaccountController(
 
 
     @PostMapping
-    fun post(@RequestBody body: String) {
+    fun post(@RequestBody body: String): Mono<String> {
         val p = body.byteInputStream()
         val xml = xmlDoc.parse(p).documentElement
         val vo = elementToMsgVO(xml)
         p.close()
         xmlDoc.reset()
-        logger.info("微信推送消息:{}", vo)
+//        logger.info("微信推送消息:{}", vo)
+
+        return service.answer(vo,service.saveMsg(vo))
     }
 
 
@@ -79,10 +80,12 @@ class OffiaccountController(
         var fromUserName = ""
         var msgType = ""
         var content: String? = null
-        var msgId: Long = 0
+        var msgId: Long? = null
         var picUrl: String? = null
-        var mediaId: String? = null
+        var mediaId: Long? = null
         var createTime: Long = 0
+        var idx: String? = null
+        var event: String? = null
 
         for (i in 0..<cn.length) {
             val item = cn.item(i)
@@ -114,11 +117,19 @@ class OffiaccountController(
                     }
 
                     "MediaId" -> {
-                        mediaId = item.textContent
+                        mediaId = item.textContent.toLong()
                     }
 
                     "CreateTime" -> {
                         createTime = item.textContent.toLong()
+                    }
+
+                    "Idx" -> {
+                        idx = item.textContent
+                    }
+
+                    "Event" -> {
+                        event = item.textContent
                     }
                 }
             }
@@ -131,7 +142,9 @@ class OffiaccountController(
             msgId,
             picUrl,
             mediaId,
-            createTime
+            idx,
+            event,
+            createTime,
         )
     }
 

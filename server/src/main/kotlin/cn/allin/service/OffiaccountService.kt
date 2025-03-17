@@ -1,5 +1,7 @@
 package cn.allin.service
 
+import cn.allin.repository.OffiaccountRepository
+import cn.allin.vo.OffiAccoutMsgVO
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -8,7 +10,8 @@ import reactor.core.publisher.Mono
 @Service
 class OffiaccountService(
     private val webClient: WebClient,
-    private val redisService: RedisService
+    private val redisService: RedisService,
+    private val repository: OffiaccountRepository
 ) {
     companion object {
         const val WX_CACHE_NAME = "wx"
@@ -47,4 +50,40 @@ class OffiaccountService(
         val access_token: String,
         val expires_in: Int
     )
+
+
+
+    private fun createAnswer(toUser: String,formUser: String,content: String): String{
+        val time = System.currentTimeMillis()
+        return """
+        <xml>
+        <ToUserName>$toUser</ToUserName>
+        <FromUserName>$formUser</FromUserName>
+        <CreateTime>$time</CreateTime>
+        <MsgType>text</MsgType>
+        <Content><![CDATA[$content]]></Content>
+        </xml>  
+        """.trimIndent()
+    }
+
+    fun saveMsg(vo: OffiAccoutMsgVO): Long{
+        return repository.acceptMsg(vo)
+    }
+
+
+    fun answer(vo: OffiAccoutMsgVO,msgId: Long): Mono<String>{
+
+        val content = vo.content
+        if (content.isNullOrEmpty())
+            return Mono.empty()
+
+        return Mono.just(repository.findAnswer(content))
+            .filter { it.isNotEmpty() }
+            .map {
+                val a = it[0]
+                repository.autoAnswer(a.id,msgId)
+                createAnswer(vo.fromUserName, vo.toUserName, a.answer)
+            }
+    }
+
 }
