@@ -19,10 +19,10 @@ class OffiaccountService(
         const val WX_ACCESS_TOKEN = "$WX_CACHE_NAME:accessToken"
     }
 
-    @Value("\${wx.appid}")
+    @Value("{wx.appid}")
     lateinit var wxAppid: String
 
-    @Value("\${wx.secret}")
+    @Value("{wx.secret}")
     lateinit var wxSecret: String
 
 //        @Cacheable(cacheNames = [WX_CACHE_NAME], key = "#root.method.name")
