@@ -3,6 +3,8 @@ package cn.allin
 
 import cn.allin.ui.RouteAddUser
 import cn.allin.ui.RouteAddUserFC
+import cn.allin.ui.RouteAuth
+import cn.allin.ui.RouteAuthFC
 import cn.allin.ui.RouteUserList
 import cn.allin.ui.RouteUserListFC
 import colorSchemes
@@ -12,17 +14,31 @@ import mui.material.PaletteMode
 import mui.material.styles.createTheme
 import react.FC
 import react.create
+import react.router.Navigate
 import react.router.Outlet
 import react.router.RouteObject
 import react.router.dom.createBrowserRouter
+import react.router.useNavigate
 import react.router.useRouteError
 import toolpad.core.DashboardLayout
 import toolpad.core.PageContainer
 import toolpad.core.react_router.ReactRouterAppProvider
+import useSession
 
 
 private val AppLayout = FC {
+    val navigate = useNavigate()
+    val sessionContext = useSession()
     ReactRouterAppProvider {
+        authentication = jso {
+            signIn = {
+                navigate(RouteAuth)
+            }
+            signOut = {
+                sessionContext.set(null)
+                navigate(RouteAuth)
+            }
+        }
         theme = createTheme(
             jso {
                 palette = jso {
@@ -35,6 +51,8 @@ private val AppLayout = FC {
             },
             muiLocal.zhCN
         )
+
+        session = sessionContext.session
 
         navigation = arrayOf(
             jso {
@@ -61,9 +79,17 @@ private val AppLayout = FC {
 }
 
 private val RootLayout = FC {
-    DashboardLayout {
-        PageContainer {
-            Outlet()
+    val session = useSession()
+    if (session.session == null) {
+        Navigate {
+            to = RouteAuth
+            replace = true
+        }
+    } else {
+        DashboardLayout {
+            PageContainer {
+                Outlet()
+            }
         }
     }
 }
@@ -89,18 +115,25 @@ val AppBrowserRouter = createBrowserRouter(
     arrayOf(jso {
         Component = AppLayout
 
-        children = arrayOf(jso {
-            path = "/"
-            Component = RootLayout
-            children = RootRoutes
-            errorElement = FC {
-                +"/ 加载错误"
-            }.create()
-        })
+        children = arrayOf(
+            jso {
+                path = "/"
+                Component = RootLayout
+                children = RootRoutes
+                errorElement = FC {
+                    +"/ 加载错误"
+                }.create()
+            },
+            jso {
+                path = RouteAuth
+                Component = RouteAuthFC
+            }
+        )
 
         errorElement = FC {
-            val e: Error = useRouteError().asDynamic().error
-            +"App Error ${e.message}"
+            val e = useRouteError()
+            console.log(e)
+            +"错误 ${e.toString()}"
         }.create()
     })
 )
