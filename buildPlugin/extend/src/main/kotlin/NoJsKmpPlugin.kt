@@ -6,7 +6,9 @@ import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
-
+/**
+ * 不含js的多平台配置
+ */
 class NoJsKmpPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {

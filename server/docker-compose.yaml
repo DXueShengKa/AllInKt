@@ -1,0 +1,43 @@
+version: '1'
+services:
+  pgsql:
+    build:
+      context: .
+      dockerfile: zh_pgsql.dockerfile
+    container_name: my-pg
+    environment:
+#      POSTGRES_USER: allkt
+      POSTGRES_PASSWORD: 1234
+      LANG: zh_CN.UTF-8
+      LANGUAGE: zh_CN:en_US
+      LC_ALL: zh_CN.UTF-8
+#      TZ: Asia/Shanghai
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:latest
+    container_name: my-redis
+    environment:
+      LANG: zh_CN.UTF-8
+      LANGUAGE: zh_CN:en_US
+      LC_ALL: zh_CN.UTF-8
+    ports:
+      - "6379:6379"
+    command: [ "redis-server","--requirepass","1234" ]
+
+  app:
+    image: dragonwell-registry.cn-hangzhou.cr.aliyuncs.com/dragonwell/dragonwell:21
+    container_name: my-server
+    environment:
+      LANG: zh_CN.UTF-8
+      LANGUAGE: zh_CN:en_US
+      LC_ALL: zh_CN.UTF-8
+    volumes:
+      - /home/server:/app
+    ports:
+      - "80:8020"
+    depends_on:
+      - pgsql
+      - redis
+    command: [ "java", "-Xmx512m", "-jar", "/app/server-1.0.0.jar" ]

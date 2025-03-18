@@ -18,7 +18,7 @@ import useSession
 import web.form.FormData
 import kotlin.js.Promise
 
-const val RouteAuth = "auth"
+const val RouteAuth = "Auth"
 
 private val providers: Array<AuthProvider> = arrayOf(
     jso {

@@ -20,7 +20,7 @@ kotlin {
     }
 }
 
-
+//把依赖的jar分开打包
 tasks.register<Copy>("copyLibs") {
     into("build/libs/lib")
     from(configurations.runtimeClasspath)
@@ -32,11 +32,13 @@ tasks.bootJar {
     setExcludes(listOf("*.jar"))
     dependsOn("copyLibs")
     manifest {
+        //引用分开打包的jar包
         attributes["Class-Path"] = configurations.runtimeClasspath
             .get().files
             .joinToString(" ") { "lib/${it.name}" }
     }
 
+    //把admin打包的文件复制到静态文件里
     from(projectDir.parent + "/admin/build/dist/js/productionExecutable") {
         into("BOOT-INF/classes/static/admin")
     }

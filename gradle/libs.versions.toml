@@ -11,6 +11,8 @@ kotlin-wrappers = "2025.3.15"
 #https://ant-design.antgroup.com/changelog-cn
 antd = "5.23.2"
 dayjs = "1.11.13"
+toolpad-core = "^0.12.1"
+
 #https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.10.1"
 #https://github.com/Kotlin/kotlinx.serialization
