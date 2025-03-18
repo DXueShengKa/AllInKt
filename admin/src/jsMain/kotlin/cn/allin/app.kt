@@ -1,6 +1,7 @@
 package cn.allin
 
 
+import SessionContext
 import cn.allin.ui.RouteAddUser
 import cn.allin.ui.RouteAddUserFC
 import cn.allin.ui.RouteAuth
@@ -26,55 +27,58 @@ import toolpad.core.react_router.ReactRouterAppProvider
 import useSession
 
 
-private val AppLayout = FC {
+val AppLayout = FC {
     val navigate = useNavigate()
     val sessionContext = useSession()
-    ReactRouterAppProvider {
-        authentication = jso {
-            signIn = {
-                navigate(RouteAuth)
-            }
-            signOut = {
-                sessionContext.set(null)
-                navigate(RouteAuth)
-            }
-        }
-        theme = createTheme(
-            jso {
-                palette = jso {
-                    mode = PaletteMode.light
+    SessionContext.Provider {
+        value = sessionContext
+        ReactRouterAppProvider {
+            authentication = jso {
+                signIn = {
+                    navigate(RouteAuth)
                 }
-                cssVariables(
-                    colorSchemeSelector = "data-toolpad-color-scheme"
-                )
-                colorSchemes(true, true)
-            },
-            muiLocal.zhCN
-        )
-
-        session = sessionContext.session
-
-        navigation = arrayOf(
-            jso {
-                kind = "header"
-                title = "首页"
-//                icon = HomeMini.create()
-            },
-            jso {
-                title = "添加用户"
-                segment = RouteAddUser
-//                icon = PersonAdd.create()
-            },
-            jso {
-                title = "用户列表"
-                segment = RouteUserList
-//                icon = People.create()
+                signOut = {
+                    sessionContext.set(null)
+                    navigate(RouteAuth)
+                }
             }
-        )
-        branding = jso {
-            title = "后台管理"
+            theme = createTheme(
+                jso {
+                    palette = jso {
+                        mode = PaletteMode.light
+                    }
+                    cssVariables(
+                        colorSchemeSelector = "data-toolpad-color-scheme"
+                    )
+                    colorSchemes(true, true)
+                },
+                muiLocal.zhCN
+            )
+
+            session = sessionContext.session
+
+            navigation = arrayOf(
+                jso {
+                    kind = "header"
+                    title = "首页"
+//                icon = HomeMini.create()
+                },
+                jso {
+                    title = "添加用户"
+                    segment = RouteAddUser
+//                icon = PersonAdd.create()
+                },
+                jso {
+                    title = "用户列表"
+                    segment = RouteUserList
+//                icon = People.create()
+                }
+            )
+            branding = jso {
+                title = "后台管理"
+            }
+            Outlet()
         }
-        Outlet()
     }
 }
 
@@ -94,7 +98,7 @@ private val RootLayout = FC {
     }
 }
 
-private val RootRoutes = arrayOf<RouteObject>(
+private val RootLayoutRoutes = arrayOf<RouteObject>(
     jso {
         path = RouteAddUser
         Component = RouteAddUserFC
@@ -119,7 +123,7 @@ val AppBrowserRouter = createBrowserRouter(
             jso {
                 path = "/"
                 Component = RootLayout
-                children = RootRoutes
+                children = RootLayoutRoutes
                 errorElement = FC {
                     +"/ 加载错误"
                 }.create()
@@ -137,3 +141,4 @@ val AppBrowserRouter = createBrowserRouter(
         }.create()
     })
 )
+

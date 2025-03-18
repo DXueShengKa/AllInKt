@@ -53,7 +53,7 @@ kotlin {
             implementation(libs.kotlin.wrappers.tanstack.table)
             implementation(libs.kotlin.wrappers.tanstack.query)
             implementation(npm("@mui/x-date-pickers",""))
-            implementation(npm("@toolpad/core","^0.12.0"))
+            implementation(npm("@toolpad/core","^0.12.1"))
 
             implementation(npm("@mui/material","^6"))
 //            implementation(npm("@mui/icons-material","^6"))
