@@ -23,10 +23,13 @@ class OffiaccountService(
     }
 
     @Value("{wx.appid}")
-    lateinit var wxAppid: String
+    private lateinit var wxAppid: String
 
     @Value("{wx.secret}")
-    lateinit var wxSecret: String
+    private lateinit var wxSecret: String
+
+    @Value("{wx.token}")
+    lateinit var wxToken: String
 
 //        @Cacheable(cacheNames = [WX_CACHE_NAME], key = "#root.method.name")
 

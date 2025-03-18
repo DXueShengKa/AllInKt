@@ -22,11 +22,6 @@ class OffiaccountController(
     private val service: OffiaccountService,
 ) {
 
-    companion object {
-        //随机的token
-        private const val WX_TOKEN = "b889a8e9af4bd"
-    }
-
     private val xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder()
     private val logger = LoggerFactory.getLogger(OffiaccountController::class.java)
 
@@ -41,7 +36,7 @@ class OffiaccountController(
 
         logger.info("微信验证请求:{},{},{}", timestamp, nonce, echostr)
 
-        val k = arrayOf(WX_TOKEN, timestamp, nonce)
+        val k = arrayOf(service.wxToken, timestamp, nonce)
             .also { it.sort() }
             .joinToString("")
 

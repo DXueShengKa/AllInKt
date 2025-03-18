@@ -33,12 +33,6 @@ class CacheConfig {
     }
 
     @Bean
-    fun webClient(): WebClient {
-        return WebClient.builder()
-            .build()
-    }
-
-    @Bean
     fun reactiveRedisTemplateByte(redisConnectionFactory: ReactiveRedisConnectionFactory): ReactiveRedisTemplate<String, ByteArray> {
         val context = RedisSerializationContext.newSerializationContext<String, ByteArray>()
             .key(StringRedisSerializer.UTF_8)
