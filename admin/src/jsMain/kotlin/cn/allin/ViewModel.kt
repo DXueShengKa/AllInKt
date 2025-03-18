@@ -24,16 +24,17 @@ fun useCoroutineScope(): RefObject<CoroutineScope> {
         c.current = IsolatedCoroutineScope()
         onCleanup {
             c.current?.cancel()
+            c.current = null
         }
     }
     return c
 }
 
 
-inline operator fun <T: Any>  RefObject<T>.getValue(
+operator fun <T : Any> RefObject<T>.getValue(
     thisRef: Nothing?,
     property: KProperty<*>,
-): T?{
+): T? {
     return current
 }
 

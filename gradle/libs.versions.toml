@@ -7,18 +7,20 @@ android-gradle = "8.7.3"
 #https://github.com/JetBrains/kotlin
 kotlin = "2.1.10"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "2025.2.2"
+kotlin-wrappers = "2025.3.15"
 #https://ant-design.antgroup.com/changelog-cn
 antd = "5.23.2"
 dayjs = "1.11.13"
+toolpad-core = "^0.12.1"
+
 #https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.10.1"
 #https://github.com/Kotlin/kotlinx.serialization
 kotlinx-serialization = "1.8.0"
 #https://github.com/Kotlin/kotlinx-datetime
-kotlinx-datetime = "0.6.1"
+kotlinx-datetime = "0.6.2"
 #https://github.com/Kotlin/kotlinx-io
-kotlinx-io = "0.6.0"
+kotlinx-io = "0.7.0"
 #https://github.com/google/ksp
 ksp = "2.1.10-1.0.30"
 #https://github.com/square/kotlinpoet
@@ -48,12 +50,12 @@ koin = "4.0.2"
 #https://github.com/InsertKoinIO/koin-annotations
 koin-annotations = "2.0.0"
 #https://github.com/oleksandrbalan/lazytable
-lazytable = "1.9.0-beta01"
+lazytable = "1.10.0"
 
 spring-boot = "3.4.1"
 spring-dependencyManagement = "1.1.7"
 #https://github.com/turansky/seskar
-seskar = "3.81.0"
+seskar = "4.4.0"
 #https://github.com/babyfish-ct/jimmer
 jimmer = "0.9.59"
 

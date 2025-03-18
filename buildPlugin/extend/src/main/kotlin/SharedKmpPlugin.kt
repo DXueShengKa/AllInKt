@@ -6,7 +6,9 @@ import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
-
+/**
+ * 包含所有平台的配置
+ */
 class SharedKmpPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {

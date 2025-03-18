@@ -18,7 +18,8 @@ fun main() {
     val root = document.createElement(div)
     document.body.append(root)
     dayjs.locale(DayLocalZhCn)
-    val node = QueryClientProvider.create {
+
+    val reactElement = QueryClientProvider.create {
         client = queryClient
         LocalizationProvider {
             dateAdapter = AdapterDayjs
@@ -30,5 +31,5 @@ fun main() {
     }
 
     createRoot(root)
-        .render(node)
+        .render(reactElement)
 }

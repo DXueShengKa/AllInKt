@@ -47,9 +47,12 @@ class RedisService(
             .set(key, value.toByteArray(), Duration.ofSeconds(seconds))
     }
 
+
     fun delete(key: String): Mono<Boolean> {
         return reactiveRedisTemplateByte.opsForValue().delete(key)
     }
+
+
 }
 
 inline fun <reified T : Any> RedisService.get(key: String): Mono<T> {

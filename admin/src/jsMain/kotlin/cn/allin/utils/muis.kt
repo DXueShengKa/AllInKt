@@ -1,5 +1,10 @@
+
 import js.objects.jso
 import mui.material.styles.ThemeOptions
+import react.Context
+import react.createContext
+import react.use
+import toolpad.core.Session
 
 
 fun ThemeOptions.cssVariables(
@@ -21,4 +26,19 @@ fun ThemeOptions.colorSchemes(
         this.light = light
         this.dark = dark
     }
+}
+
+external interface SessionContextValue {
+    var session: Session?
+    var set: (Session?) -> Unit
+}
+
+val SessionContext: Context<SessionContextValue> = createContext<SessionContextValue>(jso {
+    set = {
+        session = it
+    }
+})
+
+fun useSession(): SessionContextValue {
+    return use(SessionContext)
 }

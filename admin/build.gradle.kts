@@ -53,12 +53,12 @@ kotlin {
             implementation(libs.kotlin.wrappers.tanstack.table)
             implementation(libs.kotlin.wrappers.tanstack.query)
             implementation(npm("@mui/x-date-pickers",""))
-            implementation(npm("@toolpad/core","^0.12.0"))
 
             implementation(npm("@mui/material","^6"))
 //            implementation(npm("@mui/icons-material","^6"))
             implementation(npm("react-router","^7"))
 
+            implementation(npm("@toolpad/core",libs.versions.toolpad.core.get()))
             implementation(npm("dayjs",libs.versions.dayjs.get()))
             implementation(projects.shared)
             implementation(projects.client.net)

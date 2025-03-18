@@ -5,6 +5,9 @@ import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
+/**
+ * compose多平台配置，不含web
+ */
 class ComposeKmpPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {

@@ -44,7 +44,7 @@ import web.html.HTMLElement
 import web.html.InputType
 
 
-const val RouteAddUser = "addUser"
+const val RouteAddUser = "AddUser"
 
 
 val RouteAddUserFC = FC {
