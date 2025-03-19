@@ -9,4 +9,5 @@ external interface NavigationObj {
     var kind: String?
     var title: String?
     var icon: ReactNode?
+    var children: Navigation?
 }

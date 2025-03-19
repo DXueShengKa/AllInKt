@@ -10,7 +10,7 @@ spring:
 #                - classpath:db.sql
 #            platform: postgresql
     profiles:
-        active: prod
+        active: ali
     main:
         web-application-type: reactive
 

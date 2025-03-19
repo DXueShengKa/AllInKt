@@ -46,8 +46,6 @@ import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.getCoreRowModel
 
 
-const val RouteUserList = "UserList"
-
 private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
     jso {
         id = "select"
@@ -112,7 +110,7 @@ private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
 )
 
 
-val RouteUserListFC = FC {
+private val UserListFC = FC {
     var pageParams by useState(PageParams())
     var userPage: PageVO<UserVO>? by useState()
     var rowSelect: RowSelectionState by useState(jso())
@@ -214,3 +212,4 @@ val RouteUserListFC = FC {
     }
 }
 
+val RouteUserList = routes("list", "用户列表", UserListFC)

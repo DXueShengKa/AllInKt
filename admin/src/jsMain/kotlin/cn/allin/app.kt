@@ -2,12 +2,10 @@ package cn.allin
 
 
 import SessionContext
-import cn.allin.ui.RouteAddUser
-import cn.allin.ui.RouteAddUserFC
 import cn.allin.ui.RouteAuth
 import cn.allin.ui.RouteAuthFC
+import cn.allin.ui.RouteUserAdd
 import cn.allin.ui.RouteUserList
-import cn.allin.ui.RouteUserListFC
 import colorSchemes
 import cssVariables
 import js.objects.jso
@@ -22,12 +20,44 @@ import react.router.dom.createBrowserRouter
 import react.router.useNavigate
 import react.router.useRouteError
 import toolpad.core.DashboardLayout
+import toolpad.core.Navigation
 import toolpad.core.PageContainer
 import toolpad.core.react_router.ReactRouterAppProvider
 import useSession
 
+private val RootLayoutRoutes = arrayOf<RouteObject>(
+    jso {
+        path = "user"
+        children = arrayOf(
+            RouteUserAdd.routeObj,
+            RouteUserList.routeObj
+        )
+    },
 
-val AppLayout = FC {
+    jso {
+        path = "*"
+        Component = FC {
+            +"默认页面"
+        }
+    }
+)
+
+private val appNavigation: Navigation = arrayOf(
+    jso {
+        kind = "header"
+        title = "首页"
+    },
+    jso {
+        title = "用户管理"
+        segment = "user"
+        children = arrayOf(
+            RouteUserAdd.navigation,
+            RouteUserList.navigation
+        )
+    }
+)
+
+private val AppLayout = FC {
     val navigate = useNavigate()
     val sessionContext = useSession()
     SessionContext.Provider {
@@ -57,23 +87,8 @@ val AppLayout = FC {
 
             session = sessionContext.session
 
-            navigation = arrayOf(
-                jso {
-                    kind = "header"
-                    title = "首页"
-//                icon = HomeMini.create()
-                },
-                jso {
-                    title = "添加用户"
-                    segment = RouteAddUser
-//                icon = PersonAdd.create()
-                },
-                jso {
-                    title = "用户列表"
-                    segment = RouteUserList
-//                icon = People.create()
-                }
-            )
+            navigation = appNavigation
+
             branding = jso {
                 title = "后台管理"
             }
@@ -84,7 +99,7 @@ val AppLayout = FC {
 
 private val RootLayout = FC {
     val session = useSession()
-    if (session.session == null) {
+    if (session.session != null) {
         Navigate {
             to = RouteAuth
             replace = true
@@ -98,22 +113,6 @@ private val RootLayout = FC {
     }
 }
 
-private val RootLayoutRoutes = arrayOf<RouteObject>(
-    jso {
-        path = RouteAddUser
-        Component = RouteAddUserFC
-    },
-    jso {
-        path = RouteUserList
-        Component = RouteUserListFC
-    },
-    jso {
-        path = "*"
-        Component = FC {
-            +"默认页面"
-        }
-    }
-)
 
 val AppBrowserRouter = createBrowserRouter(
     arrayOf(jso {

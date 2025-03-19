@@ -27,6 +27,10 @@ object ServerRoute {
 
         const val COUNTY = "/county"
     }
+
+    object Qanda {
+        const val ROUTE = "qanda"
+    }
 }
 
 object ServerParams {

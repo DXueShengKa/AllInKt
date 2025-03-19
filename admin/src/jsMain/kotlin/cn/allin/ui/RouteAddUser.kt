@@ -44,10 +44,7 @@ import web.html.HTMLElement
 import web.html.InputType
 
 
-const val RouteAddUser = "AddUser"
-
-
-val RouteAddUserFC = FC {
+private val AddUserFC = FC {
     val theme = useTheme<Theme>()
     val cs by useCoroutineScope()
     var userForm: UserVO by useState { UserVO() }
@@ -221,3 +218,5 @@ val RouteAddUserFC = FC {
     }
 
 }
+
+val RouteUserAdd = routes("add", "添加用户", AddUserFC)
