@@ -39,9 +39,9 @@ tasks.bootJar {
     }
 
     //把admin打包的文件复制到静态文件里
-    from(projectDir.parent + "/admin/build/dist/js/productionExecutable") {
-        into("BOOT-INF/classes/static/admin")
-    }
+//    from(projectDir.parent + "/admin/build/dist/js/productionExecutable") {
+//        into("BOOT-INF/classes/static/admin")
+//    }
 }
 
 tasks.withType<Test> {

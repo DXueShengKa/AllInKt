@@ -57,7 +57,7 @@ spring-dependencyManagement = "1.1.7"
 #https://github.com/turansky/seskar
 seskar = "4.4.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.59"
+jimmer = "0.9.66"
 
 activity = "1.10.1"
 paging = "3.3.6"
@@ -69,6 +69,8 @@ jjwt = "0.12.6"
 caffeine = "3.2.0"
 #https://github.com/Guardsquare/proguard
 proguard = "7.6.0"
+#https://github.com/aallam/openai-kotlin
+openai = "4.0.1"
 
 junit = "4.13.2"
 jsoup = "1.17.2"
@@ -206,6 +208,8 @@ android-gradle = { module = "com.android.tools.build:gradle", version.ref = "and
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
 androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
+
+openai-client = { module = "com.aallam.openai:openai-client", version.ref="openai" }
 
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 jjwt = { module = "io.jsonwebtoken:jjwt", version.ref = "jjwt" }
