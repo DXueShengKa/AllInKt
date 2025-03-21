@@ -1,4 +1,7 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -7,6 +10,8 @@ plugins {
     alias(libs.plugins.kotlin.composeCompiler)
     alias(libs.plugins.ksp)
 }
+
+val isTest: String by project
 
 kotlin {
 

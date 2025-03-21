@@ -2,17 +2,19 @@ package cn.allin
 
 import androidx.compose.ui.window.ComposeUIViewController
 import cn.allin.data.dataModule
-import org.koin.compose.KoinApplication
+import cn.allin.navigation.appNavGraphs
+import cn.allin.theme.MainTheme
 import org.koin.ksp.generated.defaultModule
 import platform.UIKit.UIViewController
 
 fun MainViewController(): UIViewController = ComposeUIViewController {
-    KoinApplication(application = {
-        modules(
-            dataModule,
-            defaultModule
-        )
-    }) {
-        App()
+    MainTheme {
+        MainApp(
+            application = {
+                modules(dataModule, defaultModule, AppKoinViewModel)
+            }
+        ) {
+            appNavGraphs()
+        }
     }
 }

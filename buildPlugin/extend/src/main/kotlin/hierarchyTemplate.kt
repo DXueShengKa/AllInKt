@@ -18,7 +18,7 @@ val hierarchyTemplate = KotlinHierarchyTemplate {
     common {
         withCompilations { true }
 
-        groupNonAndroid()
+//        groupNonAndroid()
         groupJsCommon()
         groupNonJsCommon()
         groupJvmCommon()
@@ -35,18 +35,18 @@ private fun NamedDomainObjectContainer<KotlinSourceSet>.main(
     named("${name}Main", action).get()
 
 
-private const val nonAndroid = "nonAndroid"
-
-fun NamedDomainObjectContainer<KotlinSourceSet>.nonAndroidMain(action: Action<KotlinSourceSet>) =
-    main(nonAndroid, action)
-
-private fun KotlinHierarchyBuilder.groupNonAndroid() {
-    group(nonAndroid) {
-        withJvm()
-        groupJsCommon()
-        groupNative()
-    }
-}
+//private const val nonAndroid = "nonAndroid"
+//
+//fun NamedDomainObjectContainer<KotlinSourceSet>.nonAndroidMain(action: Action<KotlinSourceSet>) =
+//    main(nonAndroid, action)
+//
+//private fun KotlinHierarchyBuilder.groupNonAndroid() {
+//    group(nonAndroid) {
+//        withJvm()
+//        groupJsCommon()
+//        groupNative()
+//    }
+//}
 
 
 private const val jsCommon = "jsCommon"
