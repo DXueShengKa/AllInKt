@@ -1,5 +1,7 @@
 package cn.allin.model
 
+import cn.allin.ksp.server.EntityToVo
+import cn.allin.vo.QaTagVO
 import org.babyfish.jimmer.sql.Entity
 import org.babyfish.jimmer.sql.GeneratedValue
 import org.babyfish.jimmer.sql.GenerationType
@@ -8,7 +10,7 @@ import org.babyfish.jimmer.sql.Table
 import java.time.LocalDateTime
 
 
-//@EntityToVo([QaTagVO::class])
+@EntityToVo([QaTagVO::class])
 @Entity
 @Table(name = "qa_tag")
 interface QaTagEntity {

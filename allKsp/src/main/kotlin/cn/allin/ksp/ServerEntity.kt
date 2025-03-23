@@ -4,7 +4,6 @@ import cn.allin.ksp.server.EntityToVo
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.closestClassDeclaration
 import com.google.devtools.ksp.containingFile
-import com.google.devtools.ksp.getConstructors
 import com.google.devtools.ksp.getDeclaredProperties
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
@@ -154,10 +153,8 @@ fun generatorEntityToVo(resolver: Resolver, codeGenerator: CodeGenerator, logger
             val voSeq = annotationValue.asSequence()
                 .map { type ->
                     val voFieldList = (type.declaration as KSClassDeclaration)
-                        .getConstructors()
-                        .maxBy { c ->
-                            c.parameters.size
-                        }.parameters
+                        .primaryConstructor!!
+                        .parameters
                         .map {
                             VoField(it.name!!.getShortName(), it.type.resolve())
                         }
@@ -192,18 +189,20 @@ private class GenerateToVo(private val logger: KSPLogger, private val voTypes: S
             for (field in it.fields) {
                 val entityTypeDeclaration: KSClassDeclaration = entityField[field.name]?.declaration as? KSClassDeclaration ?: continue
 
+                val nullability = if (field.type.isMarkedNullable) "?" else ""
+
                 val right: String = if (field.type.declaration.qualifiedName == entityTypeDeclaration.qualifiedName) {
                     field.name
                 } else if (entityTypeDeclaration.classKind == ClassKind.ENUM_CLASS) {
                     when (field.type.declaration.simpleName.getShortName()) {
-                        "String" -> "${field.name}.name"
-                        "Int" -> "${field.name}.ordinal"
+                        "String" -> "${field.name}$nullability.name"
+                        "Int" -> "${field.name}$nullability.ordinal"
                         else -> continue
                     }
                 } else if (entityTypeDeclaration.toClassName() == JavaLocalDate) {
-                    "${field.name}?.toKotlinLocalDate()"
+                    "${field.name}$nullability.toKotlinLocalDate()"
                 } else if (entityTypeDeclaration.toClassName() == JavaLocalDateTime) {
-                    "${field.name}?.toKotlinLocalDateTime()"
+                    "${field.name}$nullability.toKotlinLocalDateTime()"
                 } else {
                     continue
                 }

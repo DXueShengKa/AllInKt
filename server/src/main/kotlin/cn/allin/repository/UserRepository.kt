@@ -8,6 +8,7 @@ import cn.allin.model.gender
 import cn.allin.model.id
 import cn.allin.model.name
 import cn.allin.model.password
+import cn.allin.utils.toPageVO
 import cn.allin.utils.toUserVO
 import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
@@ -35,9 +36,7 @@ class UserRepository(
         return sqlClient.createQuery(UserEntity::class) {
             select(table)
         }.fetchPage(pageIndex = index, pageSize = size)
-            .let { p ->
-                PageVO(p.rows.map { it.toUserVO() }, p.totalRowCount.toInt(), p.totalPageCount.toInt())
-            }
+            .toPageVO { it.toUserVO() }
     }
 
     fun add(userVO: UserVO) {

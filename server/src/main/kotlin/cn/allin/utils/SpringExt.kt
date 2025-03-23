@@ -1,6 +1,7 @@
 package cn.allin.utils
 
 import cn.allin.config.UserRole
+import cn.allin.vo.PageVO
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -10,6 +11,7 @@ import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.descriptors.element
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import org.babyfish.jimmer.Page
 import org.springframework.cache.Cache
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -112,3 +114,12 @@ fun createTriggerUpdateTimestamp(tableName: String) =
              for each row
          execute procedure update_timestamp_column();
     """.trimIndent()
+
+
+fun <T,R> Page<T>.toPageVO(transform: (T) -> R): PageVO<R> {
+    return PageVO(
+        rows = this.rows.map(transform),
+        totalRow = this.totalRowCount.toInt(),
+        totalPage = this.totalPageCount.toInt()
+    )
+}
