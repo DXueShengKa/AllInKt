@@ -4,7 +4,6 @@ import cn.allin.ksp.server.EntityToVo
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.closestClassDeclaration
 import com.google.devtools.ksp.containingFile
-import com.google.devtools.ksp.getConstructors
 import com.google.devtools.ksp.getDeclaredProperties
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
@@ -121,7 +120,8 @@ fun generatorEntity(resolver: Resolver, codeGenerator: CodeGenerator, logger: KS
 
 private class VoField(
     val name: String,
-    val type: KSType
+    val type: KSType,
+    val nullable: Boolean,
 )
 
 private class VoType(
@@ -145,6 +145,10 @@ fun generatorEntityToVo(resolver: Resolver, codeGenerator: CodeGenerator, logger
 
     resolver.getSymbolsWithAnnotation(toVoName)
         .forEach { a ->
+            val entity = a.containingFile!!.declarations.filterIsInstance<KSClassDeclaration>()
+                .first()
+                .getDeclaredProperties()
+
             val annotationValue: List<KSType> = a.annotations.first {
                 toVoName.endsWith(it.shortName.getShortName())
             }.arguments
@@ -154,12 +158,17 @@ fun generatorEntityToVo(resolver: Resolver, codeGenerator: CodeGenerator, logger
             val voSeq = annotationValue.asSequence()
                 .map { type ->
                     val voFieldList = (type.declaration as KSClassDeclaration)
-                        .getConstructors()
-                        .maxBy { c ->
-                            c.parameters.size
-                        }.parameters
+                        .primaryConstructor!!
+                        .parameters
                         .map {
-                            VoField(it.name!!.getShortName(), it.type.resolve())
+                            val fieldName = it.name!!.asString()
+                            VoField(
+                                fieldName,
+                                it.type.resolve(),
+                                //根据entity字段判断空而不是vo的
+                                entity.find { it.simpleName.asString() == fieldName }
+                                    ?.type?.resolve()?.isMarkedNullable == true
+                            )
                         }
                     VoType(type.toClassName(), voFieldList)
                 }
@@ -169,7 +178,7 @@ fun generatorEntityToVo(resolver: Resolver, codeGenerator: CodeGenerator, logger
             a.containingFile?.also(d::add)
         }
 
-       fs.build()
+    fs.build()
         .writeTo(codeGenerator, Dependencies(false, *d.toTypedArray()))
 
 }
@@ -192,18 +201,20 @@ private class GenerateToVo(private val logger: KSPLogger, private val voTypes: S
             for (field in it.fields) {
                 val entityTypeDeclaration: KSClassDeclaration = entityField[field.name]?.declaration as? KSClassDeclaration ?: continue
 
+                val nullability = if (field.nullable) "?" else ""
+
                 val right: String = if (field.type.declaration.qualifiedName == entityTypeDeclaration.qualifiedName) {
                     field.name
                 } else if (entityTypeDeclaration.classKind == ClassKind.ENUM_CLASS) {
                     when (field.type.declaration.simpleName.getShortName()) {
-                        "String" -> "${field.name}.name"
-                        "Int" -> "${field.name}.ordinal"
+                        "String" -> "${field.name}$nullability.name"
+                        "Int" -> "${field.name}$nullability.ordinal"
                         else -> continue
                     }
                 } else if (entityTypeDeclaration.toClassName() == JavaLocalDate) {
-                    "${field.name}?.toKotlinLocalDate()"
+                    "${field.name}$nullability.toKotlinLocalDate()"
                 } else if (entityTypeDeclaration.toClassName() == JavaLocalDateTime) {
-                    "${field.name}?.toKotlinLocalDateTime()"
+                    "${field.name}$nullability.toKotlinLocalDateTime()"
                 } else {
                     continue
                 }

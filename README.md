@@ -24,4 +24,6 @@
 ##### npm淘宝镜像源
 > npm config set registry https://registry.npmmirror.com/
 
+serialization.protobuf 可空字段要写默认null赋值
+
 运行开发版本js需要在gradle里加上 --continuous

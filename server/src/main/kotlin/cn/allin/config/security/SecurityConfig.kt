@@ -1,7 +1,6 @@
 package cn.allin.config.security
 
 import cn.allin.InJson
-import cn.allin.config.UserRole
 import cn.allin.service.UserService
 import cn.allin.vo.MsgVO
 import kotlinx.serialization.encodeToString
@@ -144,13 +143,13 @@ class SecurityConfig {
 //            }
 
             authorizeExchange {
-                authorize("/admin/**", permitAll)
-                authorize("/auth", permitAll)
-                authorize("/user/page", hasAuthority(UserRole.ROLE_ADMIN.name))
-                authorize("/user/*", hasAnyAuthority(UserRole.ROLE_USER.name, UserRole.ROLE_ADMIN.name))
-                authorize("/region/**", permitAll)
-                authorize("/offiaccount/**", permitAll)
-                authorize(anyExchange, authenticated)
+//                authorize("/admin/**", permitAll)
+//                authorize("/auth", permitAll)
+//                authorize("/user/page", hasAuthority(UserRole.ROLE_ADMIN.name))
+//                authorize("/user/*", hasAnyAuthority(UserRole.ROLE_USER.name, UserRole.ROLE_ADMIN.name))
+//                authorize("/region/**", permitAll)
+//                authorize("/offiaccount/**", permitAll)
+                authorize(anyExchange, permitAll)
             }
 
             formLogin {

@@ -2,41 +2,27 @@ package cn.allin.ui
 
 import cn.allin.ServerRoute
 import cn.allin.VoFieldName
-import cn.allin.getValue
 import cn.allin.net.PageParams
 import cn.allin.net.Req
-import cn.allin.net.deleteUser
-import cn.allin.net.getUserPage
-import cn.allin.useCoroutineScope
+import cn.allin.net.getQandaPage
 import cn.allin.utils.columnDefCell
 import cn.allin.utils.columnDefHeader
 import cn.allin.utils.queryFunction
 import cn.allin.utils.queryKey
 import cn.allin.utils.tanstackBody
 import cn.allin.utils.tanstackHead
-import cn.allin.vo.Gender
 import cn.allin.vo.PageVO
-import cn.allin.vo.UserVO
+import cn.allin.vo.QandaVO
 import js.array.ReadonlyArray
 import js.objects.jso
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import mui.material.Button
 import mui.material.Checkbox
 import mui.material.Paper
-import mui.material.Snackbar
-import mui.material.SnackbarOriginHorizontal
-import mui.material.SnackbarOriginVertical
-import mui.material.Stack
-import mui.material.StackDirection
 import mui.material.Table
 import mui.material.TableContainer
 import mui.material.TableFooter
 import mui.material.TablePagination
 import mui.material.TableRow
-import mui.system.responsive
 import react.FC
-import react.create
 import react.useMemo
 import react.useState
 import tanstack.query.core.QueryKey
@@ -47,8 +33,7 @@ import tanstack.table.core.RowSelectionState
 import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.getCoreRowModel
 
-
-private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
+private val QaListColumnDef: ReadonlyArray<ColumnDef<QandaVO, String?>> = arrayOf(
     jso {
         id = "select"
         header = StringOrTemplateHeader(columnDefHeader {
@@ -73,68 +58,58 @@ private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
     jso {
         id = "id"
         header = StringOrTemplateHeader("ID")
-        accessorFn = { user, _ ->
-            user.id.toString()
+        accessorFn = { qa, _ ->
+            qa.id.toString()
         }
     },
     jso {
-        id = VoFieldName.UserVO_name
-        header = StringOrTemplateHeader("名字")
-        accessorFn = { user, _ ->
-            user.name
+        id = VoFieldName.QandaVO_question
+        header = StringOrTemplateHeader("问题")
+        accessorFn = { qa, _ ->
+            qa.question.toString()
         }
     },
     jso {
-        id = VoFieldName.UserVO_gender
-        header = StringOrTemplateHeader("性别")
-        accessorFn = { user, _ ->
-            when (user.gender) {
-                Gender.Female -> "女"
-                Gender.Male -> "男"
-                else -> "未设置"
-            }
+        id = VoFieldName.QandaVO_answer
+        header = StringOrTemplateHeader("回答")
+        accessorFn = { qa, _ ->
+            qa.answer.toString()
         }
     },
-    jso {
-        id = VoFieldName.UserVO_birthday
-        header = StringOrTemplateHeader("生日")
-        accessorFn = { user, _ ->
-            user.birthday?.toString()
-        }
-    },
-    jso {
-        id = VoFieldName.UserVO_address
-        header = StringOrTemplateHeader("地址")
-        accessorFn = { user, _ ->
-            user.address
-        }
-    },
+//    jso {
+//        id = VoFieldName.QandaVO_tagIds
+//        header = StringOrTemplateHeader("标签")
+//        accessorFn = { qa, _ ->
+//            qa.tagIds?.joinToString(",")
+//        }
+//    }
 )
 
 
-private val UserListFC = FC {
-    var pageParams by useState(PageParams())
-    var userPage: PageVO<UserVO>? by useState()
-    var rowSelect: RowSelectionState by useState(jso())
-    val cs: CoroutineScope? by useCoroutineScope()
-    var showMessage by useState(false)
+private val QandaListFC = FC {
 
-    val query = useQuery<PageVO<UserVO>, Error, PageVO<UserVO>, QueryKey>(options = jso {
-        queryKey = queryKey(ServerRoute.USER, pageParams)
+    var pageParams by useState(PageParams())
+    var qaPage: PageVO<QandaVO>? by useState()
+    var rowSelect: RowSelectionState by useState(jso())
+//    val cs: CoroutineScope? by useCoroutineScope()
+//    var showMessage by useState(false)
+
+    val query = useQuery<PageVO<QandaVO>, Error, PageVO<QandaVO>, QueryKey>(options = jso {
+        queryKey = queryKey(ServerRoute.Qanda, pageParams)
         queryFn = queryFunction {
-            Req.getUserPage(pageParams)
+            Req.getQandaPage(pageParams)
         }
     })
 
 
-    val tableData: Array<UserVO> = useMemo(query.data) {
+    val tableData: Array<QandaVO> = useMemo(query.data) {
         rowSelect = jso()
-        userPage = query.data
+        qaPage = query.data
         query.data?.rows?.toTypedArray() ?: emptyArray()
     }
 
-    val table = useReactTable<UserVO>(jso {
-        columns = UserColumnDef
+    val table = useReactTable<QandaVO>(jso {
+        columns = QaListColumnDef
         data = tableData
         state = jso {
             rowSelection = rowSelect
@@ -145,44 +120,6 @@ private val UserListFC = FC {
         this.getCoreRowModel = getCoreRowModel()
     })
 
-    Snackbar {
-        open = showMessage
-        message = FC {
-            +"已删除"
-        }.create()
-        anchorOrigin = jso {
-            vertical = SnackbarOriginVertical.top
-            horizontal = SnackbarOriginHorizontal.center
-        }
-        autoHideDuration = 3000
-        onClose = { _, _->
-            showMessage = false
-        }
-    }
-
-    Stack {
-        direction = responsive(StackDirection.row)
-
-        Button {
-            onClick = {
-                cs?.launch {
-                    val ids = table.getSelectedRowModel().flatRows.map { it.original.id }
-                    if (Req.deleteUser(ids)) {
-                        showMessage = true
-                        query.refetch(jso())
-                    }
-                }
-            }
-            +"删除"
-        }
-
-        Button {
-            onClick = {
-                query.refetch(jso())
-            }
-            +"刷新"
-        }
-    }
 
     TableContainer {
         component = Paper
@@ -193,7 +130,7 @@ private val UserListFC = FC {
                 TableRow {
                     TablePagination {
                         rowsPerPageOptions = arrayOf(10, 20, 30)
-                        count = userPage?.totalRow ?: 0
+                        count = qaPage?.totalRow ?: 0
                         rowsPerPage = pageParams.size
                         page = pageParams.index
                         onPageChange = { e, i ->
@@ -214,4 +151,7 @@ private val UserListFC = FC {
     }
 }
 
-val RouteUserList = routes("list", "用户列表", UserListFC)
+
+val RouteQandaList = routes(
+    "list", "问题列表", QandaListFC
+)
