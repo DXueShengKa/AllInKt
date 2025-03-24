@@ -4,7 +4,8 @@ import cn.allin.ValidatorError
 import cn.allin.VoFieldName
 import cn.allin.VoValidatorMessage
 import cn.allin.getValue
-import cn.allin.net.ReqUser
+import cn.allin.net.Req
+import cn.allin.net.addUser
 import cn.allin.useCoroutineScope
 import cn.allin.utils.dayjs
 import cn.allin.utils.reactNode
@@ -98,7 +99,7 @@ private val AddUserFC = FC {
 
                 addResult = AlertColor.error to "添加失败"
             }) {
-                ReqUser.addUser(userForm)
+                Req.addUser(userForm)
                 addResult = AlertColor.success to "已添加"
                 delay(2000)
                 addResult = null

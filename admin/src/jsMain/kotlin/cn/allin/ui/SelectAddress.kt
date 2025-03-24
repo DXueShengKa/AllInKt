@@ -1,10 +1,17 @@
 package cn.allin.ui
 
-import cn.allin.net.ReqRegion
+import cn.allin.net.Req
+import cn.allin.net.regionCity
+import cn.allin.net.regionCounty
+import cn.allin.net.regionProvince
 import cn.allin.utils.reactNode
 import cn.allin.vo.RegionVO
 import js.objects.jso
-import mui.material.*
+import mui.material.Box
+import mui.material.FormControl
+import mui.material.InputLabel
+import mui.material.MenuItem
+import mui.material.Select
 import react.FC
 import react.Props
 import react.useEffect
@@ -26,7 +33,7 @@ val SelectAddress = FC<SelectAddressProps> { p ->
 
 
     useEffect(Unit) {
-        val province: List<RegionVO> = ReqRegion.province()
+        val province: List<RegionVO> = Req.regionProvince()
         selectProvince = province[0]
         provinceList = province
     }
@@ -35,7 +42,7 @@ val SelectAddress = FC<SelectAddressProps> { p ->
         val p = selectProvince
         if (p == null) return@useEffect
 
-        cityList = ReqRegion.city(p.id).also {
+        cityList = Req.regionCity(p.id).also {
             selectCity = it[0]
         }
     }
@@ -44,7 +51,7 @@ val SelectAddress = FC<SelectAddressProps> { p ->
         val c = selectCity
         if (c == null) return@useEffect
 
-        countyList = ReqRegion.county(c.id).also {
+        countyList = Req.regionCounty(c.id).also {
             selectCounty = it[0]
         }
     }

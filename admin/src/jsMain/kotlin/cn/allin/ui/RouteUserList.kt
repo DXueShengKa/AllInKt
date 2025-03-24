@@ -4,7 +4,9 @@ import cn.allin.ServerRoute
 import cn.allin.VoFieldName
 import cn.allin.getValue
 import cn.allin.net.PageParams
-import cn.allin.net.ReqUser
+import cn.allin.net.Req
+import cn.allin.net.deleteUser
+import cn.allin.net.getUserPage
 import cn.allin.useCoroutineScope
 import cn.allin.utils.columnDefCell
 import cn.allin.utils.columnDefHeader
@@ -120,7 +122,7 @@ private val UserListFC = FC {
     val query = useQuery<PageVO<UserVO>, Error, PageVO<UserVO>, QueryKey>(options = jso {
         queryKey = queryKey(ServerRoute.USER, pageParams)
         queryFn = queryFunction {
-            ReqUser.getUserPage(pageParams)
+            Req.getUserPage(pageParams)
         }
     })
 
@@ -165,7 +167,7 @@ private val UserListFC = FC {
             onClick = {
                 cs?.launch {
                     val ids = table.getSelectedRowModel().flatRows.map { it.original.id }
-                    if (ReqUser.deleteUser(ids)) {
+                    if (Req.deleteUser(ids)) {
                         showMessage = true
                         query.refetch(jso())
                     }
