@@ -1,6 +1,7 @@
 package cn.allin
 
 import cn.allin.VoValidatorMessage.Companion.user
+import cn.allin.vo.QandaVO
 import cn.allin.vo.UserVO
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -73,6 +74,21 @@ class VoValidatorMessage(
             }
 
 
+            return null
+        }
+
+        @JvmStatic
+        @JsStatic
+        fun qanda(qandaVO: QandaVO, field: String): VoValidatorMessage? {
+            when (field) {
+                VoFieldName.QandaVO_answer -> {
+                    if (qandaVO.answer.isEmpty()) return VoValidatorMessage(VoFieldName.QandaVO_answer,"不能为空","")
+                }
+
+                VoFieldName.QandaVO_question -> {
+                    if (qandaVO.question.isEmpty()) return VoValidatorMessage(VoFieldName.QandaVO_question,"不能为空","")
+                }
+            }
             return null
         }
     }

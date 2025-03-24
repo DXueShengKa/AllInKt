@@ -6,6 +6,7 @@ import cn.allin.ServerParams
 import cn.allin.ServerRoute
 import cn.allin.vo.MsgVO
 import cn.allin.vo.PageVO
+import cn.allin.vo.QandaVO
 import cn.allin.vo.RegionVO
 import cn.allin.vo.UserVO
 import io.ktor.client.*
@@ -18,14 +19,15 @@ data class PageParams(
     val index: Int = 0
 )
 
-object Req {
-    val http = HttpClient(ktorEngineFactory) {
-        commonConfig()
-    }
+val http = HttpClient(ktorEngineFactory) {
+    commonConfig()
 }
 
+
+object Req
+
 suspend fun Req.getUserPage(pageParams: PageParams?): PageVO<UserVO> {
-    val response = http.get(ServerRoute.USER) {
+    val response = http.get(ServerRoute.USER+'/'+ ServerRoute.PAGE) {
         parameter(ServerParams.PAGE_SIZE, pageParams?.size)
         parameter(ServerParams.PAGE_INDEX, pageParams?.index)
     }
@@ -77,4 +79,20 @@ suspend fun Req.regionCity(provinceId: Int): List<RegionVO> {
 
 suspend fun Req.regionCounty(cityId: Int): List<RegionVO> {
     return http.get(ServerRoute.Region.ROUTE + ServerRoute.Region.COUNTY + "/$cityId").body()
+}
+
+
+suspend fun Req.getQandaPage(pageParams: PageParams?): PageVO<QandaVO> {
+     val response = http.get(ServerRoute.Qanda.ROUTE+'/'+ ServerRoute.PAGE) {
+        parameter(ServerParams.PAGE_SIZE, pageParams?.size)
+        parameter(ServerParams.PAGE_INDEX, pageParams?.index)
+    }
+    return response.body()
+}
+
+suspend fun Req.addQanda(vo: QandaVO): Int {
+    val response = http.post(ServerRoute.Qanda.ROUTE) {
+        setBody(vo)
+    }
+    return response.body()
 }

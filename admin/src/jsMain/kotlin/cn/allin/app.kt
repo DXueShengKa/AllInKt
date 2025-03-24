@@ -4,6 +4,8 @@ package cn.allin
 import SessionContext
 import cn.allin.ui.RouteAuth
 import cn.allin.ui.RouteAuthFC
+import cn.allin.ui.RouteQandaAdd
+import cn.allin.ui.RouteQandaList
 import cn.allin.ui.RouteUserAdd
 import cn.allin.ui.RouteUserList
 import colorSchemes
@@ -16,7 +18,7 @@ import react.create
 import react.router.Navigate
 import react.router.Outlet
 import react.router.RouteObject
-import react.router.dom.createBrowserRouter
+import react.router.dom.createHashRouter
 import react.router.useNavigate
 import react.router.useRouteError
 import toolpad.core.DashboardLayout
@@ -31,6 +33,13 @@ private val RootLayoutRoutes = arrayOf<RouteObject>(
         children = arrayOf(
             RouteUserAdd.routeObj,
             RouteUserList.routeObj
+        )
+    },
+    jso {
+        path = "qanda"
+        children = arrayOf(
+            RouteQandaList.routeObj,
+            RouteQandaAdd.routeObj
         )
     },
 
@@ -53,6 +62,14 @@ private val appNavigation: Navigation = arrayOf(
         children = arrayOf(
             RouteUserAdd.navigation,
             RouteUserList.navigation
+        )
+    },
+    jso {
+        title = "问答管理"
+        segment = "qanda"
+        children = arrayOf(
+            RouteQandaList.navigation,
+            RouteQandaAdd.navigation
         )
     }
 )
@@ -114,7 +131,7 @@ private val RootLayout = FC {
 }
 
 
-val AppBrowserRouter = createBrowserRouter(
+val AppBrowserRouter = createHashRouter(
     arrayOf(jso {
         Component = AppLayout
 
