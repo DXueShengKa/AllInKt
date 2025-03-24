@@ -3,9 +3,7 @@ plugins {
 }
 
 kotlin {
-    jvm {
-        withJava()
-    }
+    jvm()
 
     val osName = System.getProperty("os.name")
     if (osName == "Mac OS X"){
@@ -13,6 +11,7 @@ kotlin {
         iosArm64()
         iosSimulatorArm64()
     }
+
 
     sourceSets {
         commonMain.dependencies {
