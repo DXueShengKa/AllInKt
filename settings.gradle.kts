@@ -34,10 +34,10 @@ dependencyResolutionManagement {
 
 include(
     ":composeApp",
-    ":server",
+//    ":server",
     ":shared",
-    ":admin",
-    ":kt-ai",
+//    ":admin",
+//    ":kt-ai",
     ":allKsp",
     ":ksp-annotation",
     ":client:net",

@@ -1,6 +1,5 @@
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
@@ -17,13 +16,35 @@ kotlin {
 
     androidTarget()
 
-    jvm("desktop")
+//    jvm("desktop")
 
     val osName = System.getProperty("os.name")
     if (osName.startsWith("Mac OS")) listOf(
         iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
+        iosArm64 {
+            val libPath = "$rootDir/iosApp"
+            compilations.named("main") {
+                val jlLib by cinterops.creating {
+                    definitionFile = file("src/iosMain/cinterop/jlLib.def")
+                    compilerOpts(
+                        "-F", libPath,
+                        "-framework", "JL_OTALib",
+                        "-framework", "JL_AdvParse",
+                        "-framework", "JL_HashPair",
+                        "-framework", "JL_BLEKit",
+                    )
+                }
+            }
+//            binaries.all {
+//                linkerOpts(
+//                    "-F", libPath,
+//                    "-framework", "JL_OTALib",
+//                    "-framework", "JL_AdvParse",
+//                    "-framework", "JLLogHelper",
+//                )
+//            }
+        },
+//        iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
@@ -32,7 +53,7 @@ kotlin {
     }
 
     sourceSets {
-        val desktopMain by getting
+//        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
@@ -55,16 +76,20 @@ kotlin {
             implementation(libs.lazytable)
         }
 
+        iosMain.dependencies {
+            implementation(libs.ktorClient.darwin)
+        }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
 //            implementation(libs.koin.test)
         }
 
-        desktopMain.dependencies {
-            implementation(libs.slf4j.simple)
-            implementation(compose.desktop.currentOs)
-            implementation(libs.jspecify)
-        }
+//        desktopMain.dependencies {
+//            implementation(libs.slf4j.simple)
+//            implementation(compose.desktop.currentOs)
+//            implementation(libs.jspecify)
+//        }
     }
 }
 
@@ -107,7 +132,7 @@ android {
 
 }
 
-compose.desktop {
+/*compose.desktop {
 
     application {
         mainClass = "cn.allin.MainKt"
@@ -124,7 +149,7 @@ compose.desktop {
             configurationFiles.from("jvmProguard.pro")
         }
     }
-}
+}*/
 
 dependencies {
     ksp(projects.allKsp)
