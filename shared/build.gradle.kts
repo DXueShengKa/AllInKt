@@ -16,9 +16,12 @@ kotlin {
 
             dependencies {
                 api(libs.kotlinx.serialization.json)
-                api(libs.kotlinx.serialization.protobuf)
                 api(libs.kotlinx.datetime)
                 api(libs.jetbrains.collection)
+                api(libs.arrow.core)
+
+                implementation(libs.kotlinx.serialization.protobuf)
+                implementation(libs.arrow.serialization)
             }
         }
 

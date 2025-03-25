@@ -56,19 +56,17 @@ private val AddUserFC = FC {
         val t = it.target as HTMLInputElement
         when (t.name) {
             VoFieldName.UserVO_name -> {
-                userForm = userForm.copy(name = t.value).also {
-                    errorHelperText = VoValidatorMessage.user(it, VoFieldName.UserVO_name, true)
-                }
+                userForm = userForm.copy(name = t.value)
             }
 
             VoFieldName.UserVO_email -> {
-                userForm = userForm.copy(email = t.value).also {
-                    errorHelperText = VoValidatorMessage.user(it, VoFieldName.UserVO_email, true)
-                }
+                userForm = userForm.copy(email = t.value)
             }
 
             VoFieldName.UserVO_password -> userForm = userForm.copy(password = t.value)
         }
+
+        errorHelperText = UserVO.valid(userForm).leftOrNull()
     }
 
     Stack {
@@ -83,27 +81,28 @@ private val AddUserFC = FC {
 
         component = form
 
-        onSubmit = submit@{
-            it.preventDefault()
-            val v = VoValidatorMessage.validator(userForm)
-            if (v != null) {
-                errorHelperText = v
-                return@submit
-            } else {
-                errorHelperText = null
-            }
+        onSubmit = submit@{ fe ->
+            fe.preventDefault()
 
-            cs?.launch(CoroutineExceptionHandler { _, t ->
-                if (t is ValidatorError)
-                    errorHelperText = t.validatorMessage
+            UserVO.valid(userForm)
+                .onLeft {
+                    errorHelperText = it
+                }
+                .onRight {
+                    errorHelperText = null
+                    cs?.launch(CoroutineExceptionHandler { _, t ->
+                        if (t is ValidatorError)
+                            errorHelperText = t.validatorMessage
 
-                addResult = AlertColor.error to "添加失败"
-            }) {
-                Req.addUser(userForm)
-                addResult = AlertColor.success to "已添加"
-                delay(2000)
-                addResult = null
-            }
+                        addResult = AlertColor.error to "添加失败"
+                    }) {
+                        Req.addUser(userForm)
+                        addResult = AlertColor.success to "已添加"
+                        delay(2000)
+                        addResult = null
+                    }
+                }
+
         }
 
         FormControl {
