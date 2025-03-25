@@ -2,39 +2,27 @@ package cn.allin
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.icons.sharp.FileDownload
-import androidx.compose.material.icons.sharp.FileOpen
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import cn.allin.ksp.navigation.NavRoute
-import cn.allin.theme.MainIcons
-import cn.allin.ui.fileMamager.RouteFileManager
-import cn.allin.ui.fileMamager.RouteTransferManager
-import eu.wewox.lazytable.LazyTable
-import eu.wewox.lazytable.LazyTableItem
+import cn.allin.ui.jlota.JlOtaScreen
 import org.koin.compose.LocalKoinApplication
 import org.koin.compose.LocalKoinScope
 import org.koin.compose.application.rememberKoinApplication
@@ -46,32 +34,27 @@ val LocalNavController = staticCompositionLocalOf<NavController> { error("未初
 
 const val RouteApp = "MainApp"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @NavRoute(routeString = RouteApp)
 @Composable
 fun App() {
-    val nav = LocalNavController.current
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(100.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        contentPadding = PaddingValues(16.dp)
-    ) {
-        item {
-            AppItem(MainIcons.FileOpen, "文件管理") { nav.navigate(RouteFileManager) }
+    BottomSheetScaffold(
+        topBar = {
+            Box(
+                Modifier.statusBarsPadding().fillMaxWidth().height(56.dp).background(Color.Gray),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("ota升级")
+            }
+        },
+        sheetContent = {
+
         }
-        item {
-            AppItem(MainIcons.FileDownload, "传输管理") { nav.navigate(RouteTransferManager) }
-        }
+    ) { innerPadding ->
+        JlOtaScreen()
     }
 }
 
-@Composable
-private fun AppItem(img: ImageVector, text: String, onItemClicked: () -> Unit) {
-    ElevatedCard(onClick = onItemClicked, Modifier.size(100.dp)) {
-        Icon(img, text)
-        Text(text)
-    }
-}
 
 @OptIn(KoinInternalApi::class)
 @Composable
@@ -107,46 +90,3 @@ fun MainApp(
     }
 }
 
-
-@Composable
-fun LazyTableSimpleScreen(
-    onBackClick: () -> Unit,
-) {
-
-    val columns = 10
-    val rows = 30
-    val cells = remember { createCells(columns, rows) }
-
-
-    LazyTable(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        items(
-            items = cells,
-            layoutInfo = { LazyTableItem(it.first, it.second) }
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.surface)
-                    .border(Dp.Hairline, MaterialTheme.colorScheme.onSurface)
-            ) {
-                Text(text = "$it")
-            }
-        }
-
-    }
-}
-
-fun createCells(columns: Int = COLUMNS, rows: Int = ROWS): List<Pair<Int, Int>> =
-    buildList {
-        repeat(rows) { row ->
-            repeat(columns) { column ->
-                add(column to row)
-            }
-        }
-    }
-
-private const val COLUMNS = 10
-private const val ROWS = 30
