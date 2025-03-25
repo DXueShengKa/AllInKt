@@ -2,9 +2,9 @@ package cn.allin.ksp.navigation
 
 import androidx.core.bundle.Bundle
 import androidx.navigation.NavType
+import cn.allin.AllProtoBuf
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.protobuf.ProtoBuf
 import kotlin.enums.EnumEntries
 
 
@@ -18,7 +18,7 @@ class KSerializerNavType<T : Any?>(
 
     override fun get(bundle: Bundle, key: String): T? {
         val ba = bundle.getByteArray(key) ?: return null
-        return ProtoBuf.decodeFromByteArray(serializer, ba)
+        return AllProtoBuf.decodeFromByteArray(serializer, ba)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -36,7 +36,7 @@ class KSerializerNavType<T : Any?>(
     }
 
     override fun put(bundle: Bundle, key: String, value: T) {
-        bundle.putByteArray(key, ProtoBuf.encodeToByteArray(serializer, value))
+        bundle.putByteArray(key, AllProtoBuf.encodeToByteArray(serializer, value))
     }
 }
 

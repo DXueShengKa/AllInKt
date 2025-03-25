@@ -9,7 +9,6 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.protobuf.ProtoBuf
 
 val ContentTypeXProtobuf = ContentType("application", "x-protobuf")
 
@@ -42,7 +41,7 @@ fun HttpClientConfig<*>.commonConfig() {
     }
 
     install(ContentNegotiation) {
-        serialization(ContentTypeXProtobuf, ProtoBuf)
-        serialization(ContentType.Application.Json, cn.allin.InJson)
+        serialization(ContentTypeXProtobuf, cn.allin.AllProtoBuf)
+        serialization(ContentType.Application.Json, cn.allin.AllJson)
     }
 }

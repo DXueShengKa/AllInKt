@@ -1,6 +1,10 @@
 package cn.allin
 
+import arrow.core.serialization.ArrowModule
+import kotlinx.serialization.BinaryFormat
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.protobuf.ProtoBuf
 
 
 object ServerRoute {
@@ -38,7 +42,13 @@ object ServerParams {
     const val PAGE_SIZE = "pageSize"
 }
 
-val InJson = Json {
+val AllJson = Json {
     ignoreUnknownKeys = true
-
+    serializersModule = ArrowModule
 }
+
+@OptIn(ExperimentalSerializationApi::class)
+val AllProtoBuf:BinaryFormat = ProtoBuf {
+    serializersModule = ArrowModule
+}
+

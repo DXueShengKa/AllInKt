@@ -60,7 +60,6 @@ dependencies {
     implementation(libs.spring.starter.data.redis)
     implementation(libs.spring.session.data.redis)
     implementation(libs.spring.session.core)
-//    implementation(libs.caffeine)
 
     developmentOnly(libs.spring.devtools)
     implementation(libs.postgresql)
@@ -68,6 +67,7 @@ dependencies {
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.coroutines.reactor)
     compileOnly(projects.kspAnnotation)
+    implementation(libs.kotlinx.serialization.protobuf)
 
     testImplementation(libs.kotlin.test.junit5)
     testImplementation(libs.reactor.test)

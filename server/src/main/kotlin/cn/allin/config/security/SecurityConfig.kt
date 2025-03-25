@@ -1,6 +1,6 @@
 package cn.allin.config.security
 
-import cn.allin.InJson
+import cn.allin.AllJson
 import cn.allin.service.UserService
 import cn.allin.vo.MsgVO
 import kotlinx.serialization.encodeToString
@@ -44,7 +44,7 @@ class SecurityConfig {
         response.headers.contentType = MediaType.APPLICATION_JSON
         response.headers.acceptCharset = listOf(Charsets.UTF_8)
 
-        val string = InJson.encodeToString(buildJsonObject {
+        val string = AllJson.encodeToString(buildJsonObject {
             put("msg", "成功")
         })
 
@@ -80,7 +80,7 @@ class SecurityConfig {
             }
         }
 
-        val buffer = response.bufferFactory().wrap(InJson.encodeToString(msgVO).encodeToByteArray())
+        val buffer = response.bufferFactory().wrap(AllJson.encodeToString(msgVO).encodeToByteArray())
         response.writeWith(Mono.just(buffer))
     }
 
@@ -89,7 +89,7 @@ class SecurityConfig {
 
         exchange.response.run {
             headers.contentType = MediaType.APPLICATION_JSON
-            val buffer = bufferFactory().wrap(InJson.encodeToString(msgVO).encodeToByteArray())
+            val buffer = bufferFactory().wrap(AllJson.encodeToString(msgVO).encodeToByteArray())
             writeWith(Mono.just(buffer))
         }
     }
@@ -107,7 +107,7 @@ class SecurityConfig {
 
         exchange.response.run {
             headers.contentType = MediaType.APPLICATION_JSON
-            val buffer = bufferFactory().wrap(InJson.encodeToString(msgVO).encodeToByteArray())
+            val buffer = bufferFactory().wrap(AllJson.encodeToString(msgVO).encodeToByteArray())
             writeWith(Mono.just(buffer))
         }
     }
