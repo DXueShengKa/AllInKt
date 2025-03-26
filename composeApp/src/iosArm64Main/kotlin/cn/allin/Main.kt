@@ -3,6 +3,7 @@ package cn.allin
 import androidx.compose.ui.window.ComposeUIViewController
 import cn.allin.data.dataModule
 import cn.allin.di.appModule
+import cn.allin.di.iosModule
 import cn.allin.navigation.appNavGraphs
 import cn.allin.theme.MainTheme
 import org.koin.ksp.generated.defaultModule
@@ -12,7 +13,7 @@ fun ViewController(): UIViewController = ComposeUIViewController {
     MainTheme {
         MainApp(
             application = {
-                modules(dataModule, defaultModule, AppKoinViewModel, appModule)
+                modules(dataModule, defaultModule, AppKoinViewModel, appModule, iosModule)
             }
         ) {
             appNavGraphs()

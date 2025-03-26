@@ -17,18 +17,15 @@ actual class JlOta {
             get() = JL_OTAManager.logSDKVersion()
     }
 
-    private val otaDataSend = object : JL_OTAManagerDelegateProtocol, NSObject(){
+    private val otaDataSend = object : NSObject(), JL_OTAManagerDelegateProtocol {
         override fun otaDataSend(data: NSData) {
 
         }
 
         override fun otaUpgradeResult(result: JL_OTAResult, Progress: Float) {
-            super.otaUpgradeResult(result, Progress)
         }
 
         override fun otaCancel() {
-            super.otaCancel()
-
         }
     }
 
@@ -36,7 +33,7 @@ actual class JlOta {
     private val otaManager = JL_OTAManager()
 
     init {
-        otaManager.delegate = otaDataSend
+//        otaManager.delegate = otaDataSend
         JLHashHandler.sdkVersion()
         println("初始化ota sdk")
     }

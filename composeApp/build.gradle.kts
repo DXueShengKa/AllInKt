@@ -73,7 +73,7 @@ kotlin {
             implementation(projects.client.components)
             implementation(projects.kspAnnotation)
 
-            implementation(libs.lazytable)
+            implementation(libs.bluefalcon)
         }
 
         iosMain.dependencies {
