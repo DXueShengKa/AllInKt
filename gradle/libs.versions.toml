@@ -5,7 +5,7 @@ android-targetSdk = "35"
 android-gradle = "8.7.3"
 
 #https://github.com/JetBrains/kotlin
-kotlin = "2.1.10"
+kotlin = "2.1.20"
 #https://github.com/JetBrains/kotlin-wrappers
 kotlin-wrappers = "2025.3.15"
 #https://ant-design.antgroup.com/changelog-cn
@@ -22,11 +22,9 @@ kotlinx-datetime = "0.6.2"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.7.0"
 #https://github.com/google/ksp
-ksp = "2.1.10-1.0.31"
+ksp = "2.1.20-1.0.31"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "2.1.0"
-#https://github.com/Kotlin/kotlinx.collections.immutable
-kotlinx-collections-immutable = "0.3.7"
 #https://github.com/JetBrains/compose-multiplatform
 jetbrains-compose = "1.7.3"
 jetbrains-md3Adaptive = "1.0.1"
@@ -46,7 +44,7 @@ ktor = "3.1.1"
 #https://github.com/coil-kt/coil
 coil3 = "3.1.0"
 #https://github.com/InsertKoinIO/koin
-koin = "4.0.2"
+koin = "4.0.3"
 #https://github.com/InsertKoinIO/koin-annotations
 koin-annotations = "2.0.0"
 #https://github.com/oleksandrbalan/lazytable
@@ -55,7 +53,7 @@ lazytable = "1.10.0"
 spring-boot = "3.4.1"
 spring-dependencyManagement = "1.1.7"
 #https://github.com/turansky/seskar
-seskar = "4.4.0"
+seskar = "4.7.0"
 #https://github.com/babyfish-ct/jimmer
 jimmer = "0.9.66"
 
@@ -77,6 +75,8 @@ jsoup = "1.17.2"
 jspecify = "1.0.0"
 #https://github.com/arrow-kt/arrow
 arrow = "2.0.1"
+#https://github.com/Reedyuk/blue-falcon
+bluefalcon = "2.2.5"
 
 [plugins]
 
@@ -107,7 +107,6 @@ kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-co
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
-kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 kotlinx-io-bytestring = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-bytestring", version.ref = "kotlinx-io" }
 kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
 
@@ -187,7 +186,7 @@ spring-starter-cache = { module = "org.springframework.boot:spring-boot-starter-
 spring-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
 spring-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-starter-oauth2-resourceServer = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server" }
-spring-starter-data-redis = { module="org.springframework.boot:spring-boot-starter-data-redis-reactive" }
+spring-starter-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis-reactive" }
 
 spring-securityTest = { module = "org.springframework.security:spring-security-test" }
 spring-starter-dataJdbc = { module = "org.springframework.boot:spring-boot-starter-data-jdbc" }
@@ -195,7 +194,7 @@ jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin"
 spring-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 spring-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-session-core = { module = "org.springframework.session:spring-session-core" }
-spring-session-data-redis = { module="org.springframework.session:spring-session-data-redis" }
+spring-session-data-redis = { module = "org.springframework.session:spring-session-data-redis" }
 
 spring-integration-mqtt = { module = "org.springframework.integration:spring-integration-mqtt" }
 spring-integration-ip = { module = "org.springframework.integration:spring-integration-ip" }
@@ -211,7 +210,7 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
 
-openai-client = { module = "com.aallam.openai:openai-client", version.ref="openai" }
+openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openai" }
 
 slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
 jjwt = { module = "io.jsonwebtoken:jjwt", version.ref = "jjwt" }
@@ -226,6 +225,7 @@ arrow-serialization = { module = "io.arrow-kt:arrow-core-serialization", version
 arrow-optics = { module = "io.arrow-kt:arrow-optics", version.ref = "arrow" }
 arrow-optics-ksp = { module = "io.arrow-kt:arrow-optics-ksp-plugin", version.ref = "arrow" }
 
+bluefalcon = { module = "dev.bluefalcon:blue-falcon", version.ref = "bluefalcon" }
 
 [bundles]
 netLibs = [
