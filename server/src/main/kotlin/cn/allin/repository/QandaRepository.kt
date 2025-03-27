@@ -41,4 +41,7 @@ class QandaRepository(private val sqlClient: KSqlClient) {
     }
 
 
+    fun delete(id: Int) {
+        sqlClient.deleteById(QAndAEntity::class,id)
+    }
 }

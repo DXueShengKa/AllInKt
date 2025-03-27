@@ -4,6 +4,7 @@ package cn.allin.net
 
 import cn.allin.ServerParams
 import cn.allin.ServerRoute
+import cn.allin.ui.PageParams
 import cn.allin.vo.MsgVO
 import cn.allin.vo.PageVO
 import cn.allin.vo.QandaVO
@@ -14,10 +15,6 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 
 
-data class PageParams(
-    val size: Int = 10,
-    val index: Int = 0
-)
 
 val http = HttpClient(ktorEngineFactory) {
     commonConfig()
@@ -55,7 +52,7 @@ suspend fun Req.auth(baseVO: UserVO): MsgVO<String> {
 
     val msgVO = response.body<MsgVO<String>>()
 
-    if (msgVO.code == MsgVO.OK) {
+    if (msgVO.message == MsgVO.success) {
 
         WEKV.authorization.set(msgVO.data!!)
 
@@ -90,9 +87,14 @@ suspend fun Req.getQandaPage(pageParams: PageParams?): PageVO<QandaVO> {
     return response.body()
 }
 
-suspend fun Req.addQanda(vo: QandaVO): Int {
+suspend fun Req.addQanda(vo: QandaVO): MsgVO<Int> {
     val response = http.post(ServerRoute.Qanda.ROUTE) {
         setBody(vo)
     }
+    return response.body()
+}
+
+suspend fun Req.deleteQanda(id: Int):MsgVO<String> {
+    val response = http.delete(ServerRoute.Qanda.ROUTE+"/${id}")
     return response.body()
 }

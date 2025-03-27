@@ -62,21 +62,15 @@ class SecurityConfig {
 
         val msgVO: MsgVO<String> = when (authException) {
             is BadCredentialsException -> {
-                MsgVO(
-                    authException.message.toString(),
-                    MsgVO.USER_AUTH_ERR
-                )
+                MsgVO.error(MsgVO.auth, authException.message)
             }
 
             is InsufficientAuthenticationException -> {
-                MsgVO(
-                    authException.message.toString(),
-                    MsgVO.USER_AUTH_ERR
-                )
+                MsgVO.error(MsgVO.auth, authException.message)
             }
 
             else -> {
-                MsgVO("未登录", MsgVO.USER_AUTH_ERR)
+                MsgVO.error(MsgVO.auth, "未登录")
             }
         }
 
@@ -85,7 +79,7 @@ class SecurityConfig {
     }
 
     private val adHandler = ServerAccessDeniedHandler { exchange, authException ->
-        val msgVO: MsgVO<String> = MsgVO("权限不足", MsgVO.USER_AUTH_ERR)
+        val msgVO: MsgVO<String> = MsgVO.error(MsgVO.auth,"权限不足")
 
         exchange.response.run {
             headers.contentType = MediaType.APPLICATION_JSON
@@ -97,11 +91,11 @@ class SecurityConfig {
     private val entryPoint = ServerAuthenticationEntryPoint { exchange, authException ->
         val msgVO: MsgVO<String> = when (authException) {
             is AuthenticationCredentialsNotFoundException -> {
-                MsgVO(authException.message.toString(), MsgVO.USER_AUTH_ERR)
+                MsgVO.error(MsgVO.auth,authException.message)
             }
 
             else -> {
-                MsgVO(authException.message.toString(), MsgVO.USER_AUTH_ERR)
+                MsgVO.error(MsgVO.auth,authException.message)
             }
         }
 

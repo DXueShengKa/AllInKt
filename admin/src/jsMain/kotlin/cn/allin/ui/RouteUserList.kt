@@ -3,7 +3,6 @@ package cn.allin.ui
 import cn.allin.ServerRoute
 import cn.allin.VoFieldName
 import cn.allin.getValue
-import cn.allin.net.PageParams
 import cn.allin.net.Req
 import cn.allin.net.deleteUser
 import cn.allin.net.getUserPage
@@ -12,8 +11,6 @@ import cn.allin.utils.columnDefCell
 import cn.allin.utils.columnDefHeader
 import cn.allin.utils.queryFunction
 import cn.allin.utils.queryKey
-import cn.allin.utils.tanstackBody
-import cn.allin.utils.tanstackHead
 import cn.allin.vo.Gender
 import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
@@ -23,17 +20,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import mui.material.Button
 import mui.material.Checkbox
-import mui.material.Paper
 import mui.material.Snackbar
 import mui.material.SnackbarOriginHorizontal
 import mui.material.SnackbarOriginVertical
 import mui.material.Stack
 import mui.material.StackDirection
-import mui.material.Table
-import mui.material.TableContainer
-import mui.material.TableFooter
-import mui.material.TablePagination
-import mui.material.TableRow
 import mui.system.responsive
 import react.FC
 import react.create
@@ -113,7 +104,7 @@ private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
 
 
 private val UserListFC = FC {
-    var pageParams by useState(PageParams())
+    val (pageParams, setPageParams) = useState(PageParams())
     var userPage: PageVO<UserVO>? by useState()
     var rowSelect: RowSelectionState by useState(jso())
     val cs: CoroutineScope? by useCoroutineScope()
@@ -126,14 +117,13 @@ private val UserListFC = FC {
         }
     })
 
-
     val tableData: Array<UserVO> = useMemo(query.data) {
         rowSelect = jso()
         userPage = query.data
         query.data?.rows?.toTypedArray() ?: emptyArray()
     }
 
-    val table = useReactTable<UserVO>(jso {
+    val uTable = useReactTable<UserVO>(jso {
         columns = UserColumnDef
         data = tableData
         state = jso {
@@ -155,7 +145,7 @@ private val UserListFC = FC {
             horizontal = SnackbarOriginHorizontal.center
         }
         autoHideDuration = 3000
-        onClose = { _, _->
+        onClose = { _, _ ->
             showMessage = false
         }
     }
@@ -166,7 +156,7 @@ private val UserListFC = FC {
         Button {
             onClick = {
                 cs?.launch {
-                    val ids = table.getSelectedRowModel().flatRows.map { it.original.id }
+                    val ids = uTable.getSelectedRowModel().flatRows.map { it.original.id }
                     if (Req.deleteUser(ids)) {
                         showMessage = true
                         query.refetch(jso())
@@ -184,33 +174,18 @@ private val UserListFC = FC {
         }
     }
 
-    TableContainer {
-        component = Paper
-        Table {
-            tanstackHead(table.getHeaderGroups())
-            tanstackBody(table.getRowModel().rows)
-            TableFooter {
-                TableRow {
-                    TablePagination {
-                        rowsPerPageOptions = arrayOf(10, 20, 30)
-                        count = userPage?.totalRow ?: 0
-                        rowsPerPage = pageParams.size
-                        page = pageParams.index
-                        onPageChange = { e, i ->
-                            pageParams = pageParams.copy(
-                                index = i.toInt()
-                            )
-                        }
-                        onRowsPerPageChange = {
-                            pageParams = PageParams(
-                                size = it.target.asDynamic()?.value ?: 10,
-                                index = 0
-                            )
-                        }
-                    }
-                }
-            }
+    AdminPageTable {
+        table = uTable
+        pageCount = userPage?.totalRow
+        page = pageParams
+        onPage = { i ->
+            setPageParams(
+                pageParams.copy(
+                    index = i.toInt()
+                )
+            )
         }
+        setOnPageParams = setPageParams
     }
 }
 

@@ -22,25 +22,25 @@ class AuthController(
 ) {
 
     @DeleteMapping
-    fun delete(httpEntity: HttpEntity<Void>): Mono<MsgVO<Unit>> {
-        val auth = httpEntity.headers[HttpHeaders.AUTHORIZATION]?.firstOrNull() ?: return Mono.just(MsgVO("未登录"))
+    fun delete(httpEntity: HttpEntity<Void>): Mono<MsgVO<String?>> {
+        val auth = httpEntity.headers[HttpHeaders.AUTHORIZATION]?.firstOrNull() ?: return Mono.just(MsgVO.success(null))
         val userId = JwtUtil.extractLong(auth)
         return loginService.logout(userId).map {
-            MsgVO("退出登录")
+            MsgVO.success("退出登录")
         }
     }
 
 
     @PostMapping
     fun post(@RequestBody userVO: UserVO): Mono<MsgVO<String>> {
-        val user = userVO.name?.let(loginService::findUserId) ?: return Mono.just(MsgVO("没有这个用户", MsgVO.USER_NOT_FOUND))
+        val user = userVO.name?.let(loginService::findUserId) ?: return Mono.just(MsgVO.fail(MsgVO.login,"没有这个用户"))
 
         return loginService.login(
             user.id,
-            userVO.password ?: return Mono.just(MsgVO("请输入密码", 1)),
+            userVO.password ?: return Mono.just(MsgVO.fail(MsgVO.login,"请输入密码")),
             user.role
         ).map {
-            MsgVO("登录成功", data = JwtUtil.generateToken(user.id))
+            MsgVO.success(JwtUtil.generateToken(user.id))
         }
     }
 }

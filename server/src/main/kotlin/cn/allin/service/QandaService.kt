@@ -16,4 +16,8 @@ class QandaService(private val qandaRepository: QandaRepository) {
        return qandaRepository.add(pageVO)
     }
 
+    fun delete(id: Int) {
+        qandaRepository.delete(id)
+    }
+
 }
