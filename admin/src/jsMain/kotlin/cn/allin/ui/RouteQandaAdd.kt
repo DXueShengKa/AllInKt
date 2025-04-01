@@ -42,18 +42,15 @@ private val AddUserFC = FC {
         val t = it.target as HTMLInputElement
         when (t.name) {
             VoFieldName.QandaVO_answer -> {
-                userForm = userForm.copy(answer = t.value).also {
-                    errorHelperText = VoValidatorMessage.qanda(it, VoFieldName.QandaVO_answer)
-                }
+                userForm = userForm.copy(answer = t.value)
             }
 
             VoFieldName.QandaVO_question -> {
-                userForm = userForm.copy(question = t.value).also {
-                    errorHelperText = VoValidatorMessage.qanda(it, VoFieldName.QandaVO_question)
-                }
+                userForm = userForm.copy(question = t.value)
             }
-
         }
+
+        errorHelperText = QandaVO.valid(userForm).leftOrNull()
     }
 
     Stack {
@@ -80,7 +77,7 @@ private val AddUserFC = FC {
             cs?.launch(CoroutineExceptionHandler { _, t ->
                 if (t is ValidatorError)
                     errorHelperText = t.validatorMessage
-
+                console.error(t)
                 addResult = AlertColor.error to "添加失败"
             }) {
                 Req.addQanda(userForm)

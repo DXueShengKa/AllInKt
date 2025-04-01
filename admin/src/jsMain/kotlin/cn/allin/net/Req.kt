@@ -4,8 +4,10 @@ package cn.allin.net
 
 import cn.allin.ServerParams
 import cn.allin.ServerRoute
+import cn.allin.ui.PageParams
 import cn.allin.vo.MsgVO
 import cn.allin.vo.PageVO
+import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import cn.allin.vo.RegionVO
 import cn.allin.vo.UserVO
@@ -13,11 +15,6 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 
-
-data class PageParams(
-    val size: Int = 10,
-    val index: Int = 0
-)
 
 val http = HttpClient(ktorEngineFactory) {
     commonConfig()
@@ -27,7 +24,7 @@ val http = HttpClient(ktorEngineFactory) {
 object Req
 
 suspend fun Req.getUserPage(pageParams: PageParams?): PageVO<UserVO> {
-    val response = http.get(ServerRoute.USER+'/'+ ServerRoute.PAGE) {
+    val response = http.get(ServerRoute.USER + '/' + ServerRoute.PAGE) {
         parameter(ServerParams.PAGE_SIZE, pageParams?.size)
         parameter(ServerParams.PAGE_INDEX, pageParams?.index)
     }
@@ -55,7 +52,7 @@ suspend fun Req.auth(baseVO: UserVO): MsgVO<String> {
 
     val msgVO = response.body<MsgVO<String>>()
 
-    if (msgVO.code == MsgVO.OK) {
+    if (msgVO.message == MsgVO.success) {
 
         WEKV.authorization.set(msgVO.data!!)
 
@@ -83,16 +80,29 @@ suspend fun Req.regionCounty(cityId: Int): List<RegionVO> {
 
 
 suspend fun Req.getQandaPage(pageParams: PageParams?): PageVO<QandaVO> {
-     val response = http.get(ServerRoute.Qanda.ROUTE+'/'+ ServerRoute.PAGE) {
+    val response = http.get(ServerRoute.Qanda.ROUTE + '/' + ServerRoute.PAGE) {
         parameter(ServerParams.PAGE_SIZE, pageParams?.size)
         parameter(ServerParams.PAGE_INDEX, pageParams?.index)
     }
     return response.body()
 }
 
-suspend fun Req.addQanda(vo: QandaVO): Int {
+suspend fun Req.addQanda(vo: QandaVO): MsgVO<Int> {
     val response = http.post(ServerRoute.Qanda.ROUTE) {
         setBody(vo)
     }
     return response.body()
+}
+
+suspend fun Req.deleteQanda(id: Int): MsgVO<String> {
+    val response = http.delete(ServerRoute.Qanda.ROUTE + "/${id}")
+    return response.body()
+}
+
+
+suspend fun Req.getQaTagPage(pageParams: PageParams?): PageVO<QaTagVO> {
+    return http.get(ServerRoute.Qanda.ROUTE + "/" + ServerRoute.Qanda.TAG_PAGE) {
+        parameter(ServerParams.PAGE_SIZE, pageParams?.size)
+        parameter(ServerParams.PAGE_INDEX, pageParams?.index)
+    }.body()
 }

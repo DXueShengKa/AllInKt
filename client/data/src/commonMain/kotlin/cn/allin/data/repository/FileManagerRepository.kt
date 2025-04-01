@@ -7,6 +7,7 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
+import kotlinx.io.files.SystemTemporaryDirectory
 import org.koin.core.annotation.Factory
 
 
@@ -14,7 +15,7 @@ import org.koin.core.annotation.Factory
 class FileManagerRepository(
 ) {
     private val fs = SystemFileSystem
-    private val rootPath = Path("/Users/zbkandroid")
+    private val rootPath = SystemTemporaryDirectory
 
     suspend fun paths(parent: Path?): List<WeFile> {
         val paths = if (parent == null) fs.list(rootPath)

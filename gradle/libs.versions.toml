@@ -5,7 +5,7 @@ android-targetSdk = "35"
 android-gradle = "8.7.3"
 
 #https://github.com/JetBrains/kotlin
-kotlin = "2.1.10"
+kotlin = "2.1.20"
 #https://github.com/JetBrains/kotlin-wrappers
 kotlin-wrappers = "2025.3.15"
 #https://ant-design.antgroup.com/changelog-cn
@@ -22,11 +22,9 @@ kotlinx-datetime = "0.6.2"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.7.0"
 #https://github.com/google/ksp
-ksp = "2.1.10-1.0.31"
+ksp = "2.1.20-1.0.31"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "2.1.0"
-#https://github.com/Kotlin/kotlinx.collections.immutable
-kotlinx-collections-immutable = "0.3.7"
 #https://github.com/JetBrains/compose-multiplatform
 jetbrains-compose = "1.7.3"
 jetbrains-md3Adaptive = "1.0.1"
@@ -55,7 +53,7 @@ lazytable = "1.10.0"
 spring-boot = "3.4.1"
 spring-dependencyManagement = "1.1.7"
 #https://github.com/turansky/seskar
-seskar = "4.4.0"
+seskar = "4.7.0"
 #https://github.com/babyfish-ct/jimmer
 jimmer = "0.9.66"
 
@@ -109,7 +107,6 @@ kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-co
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
-kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 kotlinx-io-bytestring = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-bytestring", version.ref = "kotlinx-io" }
 kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
 

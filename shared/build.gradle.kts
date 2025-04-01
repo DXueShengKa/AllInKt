@@ -25,9 +25,6 @@ kotlin {
             }
         }
 
-        nonJsCommonMain.dependencies {
-        }
-
         jsMain.dependencies {
             implementation(npm("@js-joda/timezone", "2.21.1"))
         }

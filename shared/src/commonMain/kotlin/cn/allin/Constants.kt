@@ -34,6 +34,8 @@ object ServerRoute {
 
     object Qanda {
         const val ROUTE = "qanda"
+
+        const val TAG_PAGE = "tag/page"
     }
 }
 

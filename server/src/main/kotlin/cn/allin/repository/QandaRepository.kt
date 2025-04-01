@@ -1,10 +1,13 @@
 package cn.allin.repository
 
 import cn.allin.model.QAndAEntity
+import cn.allin.model.QaTagEntity
 import cn.allin.model.question
 import cn.allin.utils.toPageVO
+import cn.allin.utils.toQaTagVO
 import cn.allin.utils.toQandaVO
 import cn.allin.vo.PageVO
+import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
@@ -41,4 +44,14 @@ class QandaRepository(private val sqlClient: KSqlClient) {
     }
 
 
+    fun delete(id: Int) {
+        sqlClient.deleteById(QAndAEntity::class, id)
+    }
+
+    fun findTagPage(index: Int, size: Int): PageVO<QaTagVO> {
+        return sqlClient.createQuery(QaTagEntity::class) {
+            select(table)
+        }.fetchPage(index, size)
+            .toPageVO { it.toQaTagVO() }
+    }
 }

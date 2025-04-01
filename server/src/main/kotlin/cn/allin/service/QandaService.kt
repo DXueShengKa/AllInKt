@@ -2,6 +2,7 @@ package cn.allin.service
 
 import cn.allin.repository.QandaRepository
 import cn.allin.vo.PageVO
+import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import org.springframework.stereotype.Service
 
@@ -16,4 +17,11 @@ class QandaService(private val qandaRepository: QandaRepository) {
        return qandaRepository.add(pageVO)
     }
 
+    fun delete(id: Int) {
+        qandaRepository.delete(id)
+    }
+
+    fun tagPage(index: Int, size: Int): PageVO<QaTagVO> {
+        return qandaRepository.findTagPage(index, size)
+    }
 }
