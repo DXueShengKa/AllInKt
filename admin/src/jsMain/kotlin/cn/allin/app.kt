@@ -6,6 +6,7 @@ import cn.allin.ui.RouteAuth
 import cn.allin.ui.RouteAuthFC
 import cn.allin.ui.RouteQandaAdd
 import cn.allin.ui.RouteQandaList
+import cn.allin.ui.RouteTagList
 import cn.allin.ui.RouteUserAdd
 import cn.allin.ui.RouteUserList
 import colorSchemes
@@ -39,7 +40,8 @@ private val RootLayoutRoutes = arrayOf<RouteObject>(
         path = "qanda"
         children = arrayOf(
             RouteQandaList.routeObj,
-            RouteQandaAdd.routeObj
+            RouteQandaAdd.routeObj,
+            RouteTagList.routeObj
         )
     },
 
@@ -69,7 +71,8 @@ private val appNavigation: Navigation = arrayOf(
         segment = "qanda"
         children = arrayOf(
             RouteQandaList.navigation,
-            RouteQandaAdd.navigation
+            RouteQandaAdd.navigation,
+            RouteTagList.navigation
         )
     }
 )

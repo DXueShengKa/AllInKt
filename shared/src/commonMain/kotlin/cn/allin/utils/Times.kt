@@ -6,9 +6,18 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.toLocalDateTime
 
-const val DATE_TIME_DEFAULT_FORMAT = "YYYY-MM-DD HH:mm:ss"
+const val DATE_TIME_DEFAULT_FORMAT_STR = "YYYY-MM-DD HH:mm:ss"
+
+
+@OptIn(FormatStringsInDatetimeFormats::class)
+val DATE_TIME_DEFAULT_FORMAT = LocalDateTime.Format {
+    byUnicodePattern(DATE_TIME_DEFAULT_FORMAT_STR)
+}
+
 
 fun Instant.getDateTime() = toLocalDateTime(TimeZone.currentSystemDefault())
 
