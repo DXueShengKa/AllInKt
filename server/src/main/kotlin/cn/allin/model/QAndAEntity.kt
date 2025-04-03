@@ -2,7 +2,6 @@ package cn.allin.model
 
 import cn.allin.ksp.server.EntityToVo
 import cn.allin.vo.QandaVO
-import org.babyfish.jimmer.sql.Column
 import org.babyfish.jimmer.sql.Entity
 import org.babyfish.jimmer.sql.GeneratedValue
 import org.babyfish.jimmer.sql.GenerationType
@@ -20,7 +19,5 @@ interface QAndAEntity {
     val id: Int
     val question: String
     val answer: String
-    @Column(name = "tagids", sqlElementType = "integer")
-    val tagIds: IntArray?
     val createTime: LocalDateTime
 }

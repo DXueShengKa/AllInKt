@@ -57,14 +57,17 @@ class OffiaccountController(
 
     @PostMapping
     fun post(@RequestBody body: String): Mono<String> {
-        val p = body.byteInputStream()
-        val xml = xmlDoc.parse(p).documentElement
-        val vo = elementToMsgVO(xml)
-        p.close()
-        xmlDoc.reset()
 //        logger.info("微信推送消息:{}", vo)
-
-        return service.answer(vo,service.saveMsg(vo))
+        return Mono.create<OffiAccoutMsgVO> { sink ->
+            val p = body.byteInputStream()
+            val xml = xmlDoc.parse(p).documentElement
+            val vo = elementToMsgVO(xml)
+            p.close()
+            xmlDoc.reset()
+            sink.success(vo)
+        }.flatMap { vo ->
+            service.answer(vo,service.saveMsg(vo))
+        }
     }
 
 

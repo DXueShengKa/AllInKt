@@ -35,16 +35,16 @@ jetbrains-navigation = "2.8.0-alpha11"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
 jetbrains-core-bundle = "1.0.1"
 
-datastore = "1.1.3"
+datastore = "1.1.4"
 
 #https://github.com/square/okhttp
 okhttp3 = "4.12.0"
 #https://github.com/ktorio/ktor
-ktor = "3.1.1"
+ktor = "3.1.2"
 #https://github.com/coil-kt/coil
 coil3 = "3.1.0"
 #https://github.com/InsertKoinIO/koin
-koin = "4.0.3"
+koin = "4.0.4"
 #https://github.com/InsertKoinIO/koin-annotations
 koin-annotations = "2.0.0"
 #https://github.com/oleksandrbalan/lazytable
@@ -52,10 +52,11 @@ lazytable = "1.10.0"
 
 spring-boot = "3.4.1"
 spring-dependencyManagement = "1.1.7"
+exposed = "0.60.0"
 #https://github.com/turansky/seskar
 seskar = "4.7.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.66"
+jimmer = "0.9.69"
 
 activity = "1.10.1"
 paging = "3.3.6"
@@ -198,6 +199,9 @@ spring-session-data-redis = { module = "org.springframework.session:spring-sessi
 
 spring-integration-mqtt = { module = "org.springframework.integration:spring-integration-mqtt" }
 spring-integration-ip = { module = "org.springframework.integration:spring-integration-ip" }
+
+exposed-spring = { group = "org.jetbrains.exposed", name = "exposed-spring-boot-starter", version.ref = "exposed" }
+exposed-kotlinDatetime = { group = "org.jetbrains.exposed", name = "exposed-kotlin-datetime", version.ref = "exposed" }
 
 postgresql = { module = "org.postgresql:postgresql" }
 
