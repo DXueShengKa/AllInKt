@@ -55,7 +55,7 @@ kotlin {
             implementation(npm("@mui/x-date-pickers",""))
 
             implementation(npm("@mui/material","^6"))
-            implementation(npm("@mui/icons-material",""))
+            implementation(npm("@mui/icons-material","^6"))
             implementation(npm("react-router","^7"))
 
             implementation(npm("@toolpad/core",libs.versions.toolpad.core.get()))
