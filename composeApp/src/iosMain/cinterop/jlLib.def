@@ -1,3 +1,3 @@
 language = Objective-C
-modules = JL_AdvParse JL_OTALib JL_HashPair JL_BLEKit
+modules = JL_AdvParse JL_OTALib JL_HashPair JL_BLEKit JLLogHelper
 package = jlLib

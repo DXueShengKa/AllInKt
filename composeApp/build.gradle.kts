@@ -21,32 +21,42 @@ kotlin {
     val osName = System.getProperty("os.name")
     if (osName.startsWith("Mac OS")) listOf(
         iosX64(),
-        iosArm64 {
-            val libPath = "$rootDir/iosApp"
-            compilations.named("main") {
-                //https://doc.zh-jieli.com/Apps/iOS/ota/zh-cn/master/Framework/framework.html
-                val jlLib by cinterops.creating {
-                    definitionFile = file("src/iosMain/cinterop/jlLib.def")
-                    compilerOpts(
-                        "-F", libPath,
-                        "-framework", "JL_OTALib",
-                        "-framework", "JL_AdvParse",
-                        "-framework", "JL_HashPair",
-                        "-framework", "JL_BLEKit",
-                    )
-                }
-            }
-//            binaries.all {
-//                linkerOpts(
-//                    "-F", libPath,
-//                    "-framework", "JL_OTALib",
-//                    "-framework", "JL_AdvParse",
-//                    "-framework", "JLLogHelper",
-//                )
-//            }
-        },
+        iosArm64(),
 //        iosSimulatorArm64()
     ).forEach { iosTarget ->
+
+        val basePath = "$rootDir/composeApp/src/iosMain/framework"
+
+        //根据设备类型指定库文件所在文件名
+        val abiPath = if (iosTarget.name == "iosArm64") "ios-arm64"
+        else "ios-arm64_x86_64-simulator"
+
+        iosTarget.compilations.named("main") {
+            //https://doc.zh-jieli.com/Apps/iOS/ota/zh-cn/master/Framework/framework.html
+            val jlLib by cinterops.creating {
+                definitionFile = file("src/iosMain/cinterop/jlLib.def")
+                //-F 指定库目录所在位置（绝对路径）
+                //-framework 指定这个库的名字
+                compilerOpts(
+                    "-F", "$basePath/JL_OTALib.xcframework/$abiPath",
+                    "-framework", "JL_OTALib",
+
+                    "-F", "$basePath/JL_AdvParse.xcframework/$abiPath",
+                    "-framework", "JL_AdvParse",
+
+                    "-F", "$basePath/JL_HashPair.xcframework/$abiPath",
+                    "-framework", "JL_HashPair",
+
+                    "-F", "$basePath/JL_BLEKit.xcframework/$abiPath",
+                    "-framework", "JL_BLEKit",
+
+                    "-F", "$basePath/JLLogHelper.xcframework/$abiPath",
+                    "-framework", "JLLogHelper",
+                )
+            }
+        }
+
+
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
@@ -54,12 +64,11 @@ kotlin {
     }
 
     sourceSets {
-//        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
             //https://doc.zh-jieli.com/Apps/Android/ota/zh-cn/master/framework/framework.html
-            implementation(fileTree(mapOf("dir" to "src/androidMain/libs", "include" to listOf("*.jar","*.aar"))))
+            implementation(fileTree(mapOf("dir" to "src/androidMain/libs", "include" to listOf("*.jar", "*.aar"))))
         }
 
         commonMain.dependencies {
@@ -88,11 +97,6 @@ kotlin {
 //            implementation(libs.koin.test)
         }
 
-//        desktopMain.dependencies {
-//            implementation(libs.slf4j.simple)
-//            implementation(compose.desktop.currentOs)
-//            implementation(libs.jspecify)
-//        }
     }
 }
 
@@ -135,24 +139,6 @@ android {
 
 }
 
-/*compose.desktop {
-
-    application {
-        mainClass = "cn.allin.MainKt"
-
-        nativeDistributions {
-//            targetFormats(TargetFormat.Dmg, TargetFormat.Exe, TargetFormat.AppImage)
-            targetFormats(TargetFormat.Dmg, TargetFormat.Exe, TargetFormat.Deb)
-            packageName = "cn.allin"
-            packageVersion = "1.0.0"
-        }
-
-        buildTypes.release.proguard {
-            version.set(libs.versions.proguard.get())
-            configurationFiles.from("jvmProguard.pro")
-        }
-    }
-}*/
 
 dependencies {
     ksp(projects.allKsp)

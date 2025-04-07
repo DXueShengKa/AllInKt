@@ -9,8 +9,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cn.allin.ota.JlOta
@@ -18,6 +21,10 @@ import dev.bluefalcon.AdvertisementDataRetrievalKeys
 import dev.bluefalcon.BlueFalcon
 import dev.bluefalcon.BlueFalconDelegate
 import dev.bluefalcon.BluetoothPeripheral
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
 import org.koin.core.Koin
 
@@ -27,7 +34,6 @@ import org.koin.core.Koin
 internal fun JlOtaScreen(){
     val koin: Koin = getKoin()
     val state = remember{ OtaState(koin.get(),koin.get()) }
-
 
     Column (modifier = Modifier.fillMaxSize()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -45,8 +51,8 @@ internal fun JlOtaScreen(){
         }
         Text(text = JlOta.version)
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(state.deviceList){
-                Text(it?:"null")
+            items(state.peripheralSet){
+                Text(it.name?:"null")
             }
         }
     }
@@ -55,9 +61,11 @@ internal fun JlOtaScreen(){
 
 internal class OtaState(
     private val jlOta: JlOta,
-    private val blueFalcon: BlueFalcon
+    val blueFalcon: BlueFalcon
 ){
     private val p = hashMapOf<String, BluetoothPeripheral>()
+
+    var peripheralSet by mutableStateOf<List<BluetoothPeripheral>>(emptyList())
 
     private val bleDelegate = object: BlueFalconDelegate {
         override fun didConnect(bluetoothPeripheral: BluetoothPeripheral) {
@@ -88,8 +96,16 @@ internal class OtaState(
     }
 
     init {
-        blueFalcon.delegates.add(bleDelegate)
+//        blueFalcon.delegates.add(bleDelegate)
+        CoroutineScope(Dispatchers.IO).launch {
+//            delay(1000)
+            blueFalcon.peripherals.collect {
+                peripheralSet = it.toList()
+            }
+        }
+
     }
+
 
     val deviceList = mutableStateListOf<String?>()
 
