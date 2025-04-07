@@ -40,7 +40,7 @@ class UserRepository(
     }
 
     fun add(userVO: UserVO) {
-        sqlClient.save(UserEntity {
+        sqlClient.saveCommand(UserEntity {
             birthday = userVO.birthday?.toJavaLocalDate()
             name = userVO.name!!
             password = userVO.password!!
@@ -50,7 +50,7 @@ class UserRepository(
             }
             address = userVO.address
             gender = userVO.gender
-        }, SaveMode.INSERT_ONLY)
+        }, SaveMode.INSERT_ONLY).execute()
     }
 
     fun findByUsername(username: String): UserEntity? {

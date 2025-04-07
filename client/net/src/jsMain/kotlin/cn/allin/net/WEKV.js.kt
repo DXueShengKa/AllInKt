@@ -16,7 +16,7 @@ internal actual inline operator fun <reified T> WEKV.getValue(thisRef: Any?, pro
         Set::class -> setOf<String>()
         else -> ""
     }
-    return Data(property.name,v) as Data<T>
+    return Data(property.name,v).unsafeCast<Data<T>>()
 }
 
 actual class Data<T>(private val key: String, val defaultValue: T) {

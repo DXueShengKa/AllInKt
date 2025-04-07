@@ -18,7 +18,7 @@ class OffiaccountRepository(
 ) {
 
     fun acceptMsg(vo: OffiAccoutMsgVO): Long {
-        return sqlClient.save(AcceptMsgRecordEntity {
+        return sqlClient.saveCommand(AcceptMsgRecordEntity {
             toUserName = vo.toUserName
             fromUserName = vo.fromUserName
             msgType = vo.msgType
@@ -28,7 +28,7 @@ class OffiaccountRepository(
             mediaId = vo.mediaId
             createTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(vo.createTime), java.time.ZoneId.systemDefault())
             idx = vo.idx
-        }, SaveMode.INSERT_ONLY).modifiedEntity.id
+        }, SaveMode.INSERT_ONLY).execute().modifiedEntity.id
     }
 
     fun findAnswer(question: String): List<QAndAEntity> {
@@ -40,9 +40,9 @@ class OffiaccountRepository(
     }
 
     fun autoAnswer(qId: Int, msgId: Long) {
-        sqlClient.save(AutoAnswerRecordEntity {
+        sqlClient.saveCommand(AutoAnswerRecordEntity {
             qaId = qId
             msgRecordId = msgId
-        }, SaveMode.INSERT_ONLY)
+        }, SaveMode.INSERT_ONLY).execute()
     }
 }

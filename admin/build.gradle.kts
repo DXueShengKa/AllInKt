@@ -43,22 +43,21 @@ kotlin {
 
         jsMain.dependencies {
             implementation(project.dependencies.platform(libs.kotlin.wrappers.bom))
-            implementation(libs.kotlin.wrappers.emotion)
+            implementation(libs.kotlin.wrappers.emotion.react)
             implementation(libs.kotlin.wrappers.react)
             implementation(libs.kotlin.wrappers.react.dom)
             implementation(libs.kotlin.wrappers.react.router)
             implementation(libs.kotlin.wrappers.mui.material)
-//            implementation(libs.kotlin.wrappers.mui.icons)
             implementation(libs.kotlin.wrappers.muix.treeView)
             implementation(libs.kotlin.wrappers.tanstack.table)
-            implementation(libs.kotlin.wrappers.tanstack.query)
             implementation(npm("@mui/x-date-pickers",""))
 
-            implementation(npm("@mui/material","^6"))
-            implementation(npm("@mui/icons-material","^6"))
+            implementation(npm("@mui/material",libs.versions.mui.material.get()))
+            //用mui kt封装库的，打包时不会被压缩，生成产物过大, 需要图标再手动声明
+            implementation(npm("@mui/icons-material",libs.versions.mui.material.get()))
             implementation(npm("react-router","^7"))
 
-            implementation(npm("@toolpad/core",libs.versions.toolpad.core.get()))
+            implementation(npm("@toolpad/core",libs.versions.mui.toolpad.get()))
             implementation(npm("dayjs",libs.versions.dayjs.get()))
             implementation(projects.shared)
             implementation(projects.client.net)

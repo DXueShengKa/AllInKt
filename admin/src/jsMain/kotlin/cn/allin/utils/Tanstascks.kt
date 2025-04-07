@@ -1,9 +1,7 @@
 package cn.allin.utils
 
 import js.array.ReadonlyArray
-import js.coroutines.internal.IsolatedCoroutineScope
-import js.coroutines.promise
-import kotlinx.coroutines.cancel
+import js.objects.jso
 import mui.material.TableBody
 import mui.material.TableCell
 import mui.material.TableHead
@@ -12,10 +10,6 @@ import mui.material.TableRow
 import react.ChildrenBuilder
 import react.FC
 import react.ReactDsl
-import tanstack.query.core.MutationFunction
-import tanstack.query.core.QueryFunction
-import tanstack.query.core.QueryFunctionContext
-import tanstack.query.core.QueryKey
 import tanstack.react.table.renderCell
 import tanstack.react.table.renderHeader
 import tanstack.table.core.CellContext
@@ -24,29 +18,25 @@ import tanstack.table.core.HeaderContext
 import tanstack.table.core.HeaderGroup
 import tanstack.table.core.Row
 import tanstack.table.core.RowData
-import web.events.addHandler
-
-fun <T, TQueryKey : QueryKey, TPageParam> queryFunction(
-    block: suspend (QueryFunctionContext<TQueryKey, TPageParam>) -> T
-): QueryFunction<T, TQueryKey, TPageParam> =
-    QueryFunction { context ->
-        val scope = IsolatedCoroutineScope()
-
-        context.signal.abortEvent.addHandler {
-            scope.cancel()
-        }
-
-        scope.promise { block(context) }
-    }
+import tanstack.table.core.RowSelectionState
+import tanstack.table.core.TableOptions
+import tanstack.table.core.Updater
 
 
-fun <D, V> createMutationFunction(action: suspend (V) -> D): MutationFunction<D, V> = { variables ->
-    IsolatedCoroutineScope()
-        .promise { action(variables) }
+fun <T> Updater<T>.updaterFn(old:T):T{
+    return unsafeCast<(T)->T>()(old)
 }
 
-fun queryKey(vararg key: Any): QueryKey {
-    return key.asDynamic()
+/**
+ * tanstack包装器缺少api手动增加
+ */
+fun <Data: Any> TableOptions<Data>.setState(
+    rowSelection: Updater<RowSelectionState>
+):TableOptions<Data>{
+    asDynamic()["state"] = jso {
+        this.rowSelection = rowSelection
+    }
+    return this
 }
 
 fun <TData : RowData, TValue> columnDefCell(

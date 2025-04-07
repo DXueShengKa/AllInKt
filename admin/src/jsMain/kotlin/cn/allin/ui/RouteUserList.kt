@@ -1,16 +1,15 @@
 package cn.allin.ui
 
-import cn.allin.ServerRoute
 import cn.allin.VoFieldName
-import cn.allin.getValue
 import cn.allin.net.Req
 import cn.allin.net.deleteUser
 import cn.allin.net.getUserPage
-import cn.allin.useCoroutineScope
 import cn.allin.utils.columnDefCell
 import cn.allin.utils.columnDefHeader
-import cn.allin.utils.queryFunction
-import cn.allin.utils.queryKey
+import cn.allin.utils.getValue
+import cn.allin.utils.invokeFn
+import cn.allin.utils.setState
+import cn.allin.utils.useCoroutineScope
 import cn.allin.vo.Gender
 import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
@@ -30,12 +29,12 @@ import react.FC
 import react.create
 import react.useMemo
 import react.useState
-import tanstack.query.core.QueryKey
-import tanstack.react.query.useQuery
 import tanstack.react.table.useReactTable
 import tanstack.table.core.ColumnDef
 import tanstack.table.core.RowSelectionState
 import tanstack.table.core.StringOrTemplateHeader
+import tanstack.table.core.TableOptions
+import tanstack.table.core.Updater
 import tanstack.table.core.getCoreRowModel
 
 
@@ -106,34 +105,30 @@ private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
 private val UserListFC = FC {
     val (pageParams, setPageParams) = useState(PageParams())
     var userPage: PageVO<UserVO>? by useState()
-    var rowSelect: RowSelectionState by useState(jso())
+    val (rowSelect,setRowSelect) = useState<Updater<RowSelectionState>>(jso())
     val cs: CoroutineScope? by useCoroutineScope()
     var showMessage by useState(false)
 
-    val query = useQuery<PageVO<UserVO>, Error, PageVO<UserVO>, QueryKey>(options = jso {
-        queryKey = queryKey(ServerRoute.USER, pageParams)
-        queryFn = queryFunction {
-            Req.getUserPage(pageParams)
-        }
-    })
+    val query = cn.allin.net.useQuery(pageParams) {
+        Req.getUserPage(it)
+    }
 
     val tableData: Array<UserVO> = useMemo(query.data) {
-        rowSelect = jso()
+        setRowSelect(jso<Updater<RowSelectionState>>())
         userPage = query.data
         query.data?.rows?.toTypedArray() ?: emptyArray()
     }
 
-    val uTable = useReactTable<UserVO>(jso {
-        columns = UserColumnDef
-        data = tableData
-        state = jso {
-            rowSelection = rowSelect
-        }
-        onRowSelectionChange = {
-            rowSelect = it.asDynamic()
-        }
-        this.getCoreRowModel = getCoreRowModel()
-    })
+    val uTable = useReactTable<UserVO>(
+        options = TableOptions(
+            columns = UserColumnDef,
+            data = tableData,
+            onRowSelectionChange = setRowSelect.invokeFn,
+            getCoreRowModel = getCoreRowModel(),
+        ).setState(
+            rowSelection = rowSelect,
+        )
+    )
 
     Snackbar {
         open = showMessage
@@ -159,7 +154,7 @@ private val UserListFC = FC {
                     val ids = uTable.getSelectedRowModel().flatRows.map { it.original.id }
                     if (Req.deleteUser(ids)) {
                         showMessage = true
-                        query.refetch(jso())
+                        query.refresh()
                     }
                 }
             }
@@ -168,7 +163,7 @@ private val UserListFC = FC {
 
         Button {
             onClick = {
-                query.refetch(jso())
+                query.refresh()
             }
             +"刷新"
         }
@@ -185,7 +180,7 @@ private val UserListFC = FC {
                 )
             )
         }
-        setOnPageParams = setPageParams
+        onPageParams = setPageParams.invokeFn
     }
 }
 

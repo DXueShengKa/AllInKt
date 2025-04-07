@@ -9,6 +9,7 @@ import cn.allin.utils.toQandaVO
 import cn.allin.vo.PageVO
 import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
+import kotlinx.datetime.toKotlinLocalDateTime
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.like
@@ -30,17 +31,26 @@ class QandaRepository(private val sqlClient: KSqlClient) {
     fun findPage(pageIndex: Int, size: Int): PageVO<QandaVO> {
         return sqlClient.createQuery(QAndAEntity::class) {
             select(table)
-        }.fetchPage(pageIndex, size)
-            .toPageVO { it.toQandaVO() }
+        }
+            .fetchPage(pageIndex, size)
+            .toPageVO {
+                QandaVO(
+                    it.id,
+                    it.question,
+                    it.answer,
+                    it.createTime.toKotlinLocalDateTime(),
+//                    it.tags.map { tag -> tag.toQaTagVO() },
+                )
+            }
     }
 
     fun add(vo: QandaVO): Int {
-        return sqlClient.save(
+        return sqlClient.saveCommand(
             QAndAEntity {
                 question = vo.question
                 answer = vo.answer
             }, SaveMode.INSERT_ONLY
-        ).modifiedEntity.id
+        ).execute().modifiedEntity.id
     }
 
 

@@ -16,12 +16,11 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 
 
-val http = HttpClient(ktorEngineFactory) {
-    commonConfig()
+object Req {
+    val http = HttpClient(ktorEngineFactory) {
+        commonConfig()
+    }
 }
-
-
-object Req
 
 suspend fun Req.getUserPage(pageParams: PageParams?): PageVO<UserVO> {
     val response = http.get(ServerRoute.USER + '/' + ServerRoute.PAGE) {

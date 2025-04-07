@@ -1,8 +1,8 @@
 package cn.allin.ui
 
 import SessionContextValue
-import cn.allin.getValue
-import cn.allin.useCoroutineScope
+import cn.allin.utils.getValue
+import cn.allin.utils.useCoroutineScope
 import js.objects.jso
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.promise
@@ -16,7 +16,6 @@ import toolpad.core.SignInPage
 import toolpad.core.slotProps
 import useSession
 import web.form.FormData
-import kotlin.js.Promise
 
 const val RouteAuth = "Auth"
 
@@ -29,7 +28,7 @@ private val providers: Array<AuthProvider> = arrayOf(
 
 private suspend fun login(nav: NavigateFunction, sessionContext: SessionContextValue, provider: AuthProvider, formData: FormData): AuthResponse {
     delay(2000)
-    console.log(provider, formData, formData["email"], formData["password"])
+//    console.log(provider, formData, formData["email"], formData["password"])
     sessionContext.set(jso())
     nav("/")
     return jso()
@@ -38,14 +37,14 @@ private suspend fun login(nav: NavigateFunction, sessionContext: SessionContextV
 val RouteAuthFC = FC {
     val nav = useNavigate()
     var sessionContext = useSession()
-    val useCs by useCoroutineScope()
+    val cs  by useCoroutineScope()
 
     SignInPage {
 
         signIn = { provider, formData ->
-            useCs?.promise {
+            cs.promise {
                 login(nav, sessionContext, provider, formData)
-            } ?: Promise.resolve(jso())
+            }
         }
 
         providers = cn.allin.ui.providers

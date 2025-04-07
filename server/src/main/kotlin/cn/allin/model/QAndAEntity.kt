@@ -20,4 +20,13 @@ interface QAndAEntity {
     val question: String
     val answer: String
     val createTime: LocalDateTime
+
+
+//    @ManyToMany
+//    @JoinTable(
+//        name = "qa_tag_relation",
+//        joinColumnName = "qa_id",
+//        inverseJoinColumnName = "tag_id"
+//    )
+//    val tags:List<QaTagEntity>
 }

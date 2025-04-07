@@ -7,11 +7,15 @@ android-gradle = "8.7.3"
 #https://github.com/JetBrains/kotlin
 kotlin = "2.1.20"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "2025.3.15"
+kotlin-wrappers = "2025.4.6"
 #https://ant-design.antgroup.com/changelog-cn
 antd = "5.23.2"
 dayjs = "1.11.13"
-toolpad-core = "^0.12.1"
+#https://mui.com/toolpad/core/introduction/
+mui-toolpad = "^0.12.1"
+#https://v6.mui.com/material-ui/getting-started/
+mui-material = "^6"
+
 
 #https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.10.1"
@@ -34,7 +38,7 @@ jetbrains-lifecycle = "2.8.4"
 jetbrains-navigation = "2.8.0-alpha11"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
 jetbrains-core-bundle = "1.0.1"
-
+#https://developer.android.google.cn/jetpack/androidx/releases/datastore?hl=zh-cn
 datastore = "1.1.4"
 
 #https://github.com/square/okhttp
@@ -56,9 +60,10 @@ exposed = "0.60.0"
 #https://github.com/turansky/seskar
 seskar = "4.7.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.69"
-
+jimmer = "0.9.71"
+#https://developer.android.google.cn/jetpack/androidx/releases/activity?hl=zh-cn
 activity = "1.10.1"
+#https://developer.android.google.cn/jetpack/androidx/releases/paging?hl=zh-cn
 paging = "3.3.6"
 
 slf4j = "2.0.13"
@@ -112,7 +117,7 @@ kotlinx-io-bytestring = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-by
 kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
 
 kotlin-wrappers-bom = { module = "org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom", version.ref = "kotlin-wrappers" }
-kotlin-wrappers-emotion = { module = "org.jetbrains.kotlin-wrappers:kotlin-emotion" }
+kotlin-wrappers-emotion-react = { module = "org.jetbrains.kotlin-wrappers:kotlin-emotion-react" }
 kotlin-wrappers-react = { module = "org.jetbrains.kotlin-wrappers:kotlin-react" }
 kotlin-wrappers-react-dom = { module = "org.jetbrains.kotlin-wrappers:kotlin-react-dom" }
 kotlin-wrappers-react-router = { module = "org.jetbrains.kotlin-wrappers:kotlin-react-router" }
@@ -121,8 +126,6 @@ kotlin-wrappers-muix-datePickers = { module = "org.jetbrains.kotlin-wrappers:kot
 kotlin-wrappers-muix-treeView = { module = "org.jetbrains.kotlin-wrappers:kotlin-muix-tree-view" }
 kotlin-wrappers-mui-icons = { module = "org.jetbrains.kotlin-wrappers:kotlin-mui-icons-material" }
 kotlin-wrappers-tanstack-table = { module = "org.jetbrains.kotlin-wrappers:kotlin-tanstack-react-table" }
-kotlin-wrappers-tanstack-query = { module = "org.jetbrains.kotlin-wrappers:kotlin-tanstack-react-query" }
-kotlin-wrappers-tanstack-query-devtools = { module = "org.jetbrains.kotlin-wrappers:kotlin-tanstack-react-query-devtools" }
 
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp-aa = { group = "com.google.devtools.ksp", name = "symbol-processing-aa", version.ref = "ksp" }

@@ -11,7 +11,6 @@ import mui.material.TablePagination
 import mui.material.TableRow
 import react.FC
 import react.Props
-import react.StateSetter
 import tanstack.react.table.renderCell
 import tanstack.react.table.renderHeader
 import tanstack.table.core.Table
@@ -28,10 +27,7 @@ external interface AdminTableProps : Props {
     var pageCount: Int?
     var page: PageParams
     var onPage: (Int) -> Unit
-    
-    // 更改每个页面的行数时触发
     var onPageParams: (PageParams) -> Unit
-    var setOnPageParams: StateSetter<PageParams>?
 }
 
 val AdminPageTable = FC<AdminTableProps> {
@@ -85,7 +81,7 @@ val AdminPageTable = FC<AdminTableProps> {
                                 e.target.asDynamic()?.value ?: 10,
                                 0
                             )
-                            it.setOnPageParams?.invoke(p)?:it.onPageParams(p)
+                            it.onPageParams(p)
                         }
                     }
                 }
