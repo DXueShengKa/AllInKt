@@ -24,6 +24,7 @@ kotlin {
         iosArm64 {
             val libPath = "$rootDir/iosApp"
             compilations.named("main") {
+                //https://doc.zh-jieli.com/Apps/iOS/ota/zh-cn/master/Framework/framework.html
                 val jlLib by cinterops.creating {
                     definitionFile = file("src/iosMain/cinterop/jlLib.def")
                     compilerOpts(
@@ -57,6 +58,8 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
+            //https://doc.zh-jieli.com/Apps/Android/ota/zh-cn/master/framework/framework.html
+            implementation(fileTree(mapOf("dir" to "src/androidMain/libs", "include" to listOf("*.jar","*.aar"))))
         }
 
         commonMain.dependencies {
