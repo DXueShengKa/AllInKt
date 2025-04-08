@@ -7,6 +7,7 @@ import muix.pickers.LocalizationProvider
 import react.create
 import react.dom.client.createRoot
 import react.router.RouterProvider
+import toolpad.core.NotificationsProvider
 import web.dom.document
 import web.html.HTML.div
 
@@ -19,8 +20,10 @@ fun main() {
     val reactElement = LocalizationProvider.create {
         dateAdapter = AdapterDayjs
         adapterLocale = "zh-cn"
-        RouterProvider {
-            router = AppBrowserRouter
+        NotificationsProvider {
+            RouterProvider {
+                router = AppBrowserRouter
+            }
         }
     }
 

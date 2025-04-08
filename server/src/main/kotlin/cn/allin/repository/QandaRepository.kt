@@ -2,6 +2,7 @@ package cn.allin.repository
 
 import cn.allin.model.QAndAEntity
 import cn.allin.model.QaTagEntity
+import cn.allin.model.fetchBy
 import cn.allin.model.question
 import cn.allin.utils.toPageVO
 import cn.allin.utils.toQaTagVO
@@ -30,7 +31,12 @@ class QandaRepository(private val sqlClient: KSqlClient) {
 
     fun findPage(pageIndex: Int, size: Int): PageVO<QandaVO> {
         return sqlClient.createQuery(QAndAEntity::class) {
-            select(table)
+            select(table.fetchBy {
+                allScalarFields()
+                tags {
+                    tagName()
+                }
+            })
         }
             .fetchPage(pageIndex, size)
             .toPageVO {
@@ -39,7 +45,7 @@ class QandaRepository(private val sqlClient: KSqlClient) {
                     it.question,
                     it.answer,
                     it.createTime.toKotlinLocalDateTime(),
-//                    it.tags.map { tag -> tag.toQaTagVO() },
+                    it.tags.takeIf { it.isNotEmpty() }?.map { tag -> tag.tagName },
                 )
             }
     }

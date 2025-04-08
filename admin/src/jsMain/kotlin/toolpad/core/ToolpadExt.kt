@@ -56,4 +56,30 @@ external interface Authentication {
     var signOut: () -> Unit
 }
 
+external interface Notifications {
+    fun show(text: String, config: NotificationsConfig = definedExternally): Any
+    fun close(key: Any = definedExternally)
+}
 
+
+sealed external interface NCSeverity {
+    companion object {
+        @JsValue("info")
+        val info: NCSeverity
+
+        @JsValue("warning")
+        val warning: NCSeverity
+
+        @JsValue("error")
+        val error: NCSeverity
+
+        @JsValue("success")
+        val success: NCSeverity
+    }
+}
+
+
+external interface NotificationsConfig {
+    var severity: NCSeverity
+    var autoHideDuration: Int
+}

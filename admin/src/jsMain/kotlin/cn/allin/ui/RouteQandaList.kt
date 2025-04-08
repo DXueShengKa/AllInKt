@@ -27,6 +27,7 @@ import tanstack.table.core.RowSelectionState
 import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.TableOptions
 import tanstack.table.core.getCoreRowModel
+import toolpad.core.useNotifications
 
 private fun qaListColumnDef(
     onDelete: (QandaVO) -> Unit,
@@ -73,13 +74,13 @@ private fun qaListColumnDef(
             qa.answer.toString()
         }
     },
-//    jso {
-//        id = VoFieldName.QandaVO_tagIds
-//        header = StringOrTemplateHeader("标签")
-//        accessorFn = { qa, _ ->
-//            qa.tagIds?.joinToString(",")
-//        }
-//    }
+    jso {
+        id = VoFieldName.QandaVO_tagList
+        header = StringOrTemplateHeader("标签")
+        accessorFn = { qa, _ ->
+            qa.tagList?.joinToString(",")
+        }
+    },
 
     jso {
         id = "操作"
@@ -101,6 +102,7 @@ private val QandaListFC = FC {
     var qaPage: PageVO<QandaVO>? by useState()
     var rowSelect: RowSelectionState by useState(jso())
     val cs by useCoroutineScope()
+    val notifications = useNotifications()
 
 
     val query = useQuery(pageParams) {
@@ -111,6 +113,10 @@ private val QandaListFC = FC {
         cs.launch {
             val msg = Req.deleteQanda(it.id ?: return@launch)
             query.refresh()
+            if (msg.isSuccess) {
+                notifications.show("${it.question} 已删除")
+                notifications.close()
+            }
         }
     }
 

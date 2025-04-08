@@ -6,6 +6,8 @@ import org.babyfish.jimmer.sql.Entity
 import org.babyfish.jimmer.sql.GeneratedValue
 import org.babyfish.jimmer.sql.GenerationType
 import org.babyfish.jimmer.sql.Id
+import org.babyfish.jimmer.sql.JoinTable
+import org.babyfish.jimmer.sql.ManyToMany
 import org.babyfish.jimmer.sql.Table
 import java.time.LocalDateTime
 
@@ -22,11 +24,11 @@ interface QAndAEntity {
     val createTime: LocalDateTime
 
 
-//    @ManyToMany
-//    @JoinTable(
-//        name = "qa_tag_relation",
-//        joinColumnName = "qa_id",
-//        inverseJoinColumnName = "tag_id"
-//    )
-//    val tags:List<QaTagEntity>
+    @ManyToMany
+    @JoinTable(
+        name = "qa_tag_relation",
+        joinColumnName = "qa_id",
+        inverseJoinColumnName = "tag_id"
+    )
+    val tags:List<QaTagEntity>
 }
