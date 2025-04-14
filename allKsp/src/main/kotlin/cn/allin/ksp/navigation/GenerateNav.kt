@@ -99,8 +99,20 @@ private class GenerateNavDsl(private val logger: KSPLogger) : KSEmptyVisitor<Cod
 
         val navRoute = function.annotations.first { it.shortName.getShortName() == NavRoute::class.simpleName }
 
-        val routeType = navRoute.arguments.first { it.name?.getShortName() == "routeType" }.value as? KSType
-        val routeStr = navRoute.arguments.first { it.name?.getShortName() == "routeString" }.value?.toString() ?: ""
+        var routeType: KSType? = null
+        var routeStr = ""
+        navRoute.arguments.forEach { va ->
+           when (va.name?.asString()) {
+               "routeType" -> {
+                   routeType = va.value as? KSType
+               }
+               "routeString" -> {
+                   va.value?.also {
+                       routeStr = it as String
+                   }
+               }
+           }
+        }
 
 
         if (routeStr.isNotEmpty()
@@ -165,7 +177,14 @@ private class GenerateNavDsl(private val logger: KSPLogger) : KSEmptyVisitor<Cod
             }.joinToString()
 
 
-            val routeDeclaration = routeType.declaration as KSClassDeclaration
+            val routeDeclaration:KSClassDeclaration = when(val d = routeType.declaration){
+                is KSTypeAlias ->{
+                    d.type.resolve().declaration as KSClassDeclaration
+                }
+                else -> {
+                    d as KSClassDeclaration
+                }
+            }
 
             val composeNavParam = StringBuilder()
             val typeMapKv = mutableListOf<String>()
@@ -238,7 +257,8 @@ private class GenerateNavDsl(private val logger: KSPLogger) : KSEmptyVisitor<Cod
     }
 
     private fun checkType(routeType: KSType, function: KSFunctionDeclaration) {
-        val routeTypeName = routeType.declaration.simpleName.asString()
+        val routeDeclaration = routeType.declaration
+        val routeTypeName = routeDeclaration.simpleName.asString()
 
         if (!routeTypeName.startsWith(ROUTE)) {
             //如果没找到route开头的类，继续查找route开头的类型别名
@@ -249,14 +269,21 @@ private class GenerateNavDsl(private val logger: KSPLogger) : KSEmptyVisitor<Cod
                         alias = it
                     alias
                 }
-                ?.first()
+                ?.firstOrNull()
 
             if (ta == null || ta.type.resolve().declaration.simpleName.asString() != routeTypeName)
                 error("作为导航路由的类须使用Route名字开头，用于统一提示, ${function.qualifiedName?.asString()} ")
         }
 
-        if (!routeType.declaration.annotations.any { it.shortName.getShortName() == "Serializable" }) {
-            error("路由类 ${routeType.canonicalName()} 需要@Serializable")
+        if (!routeDeclaration.isSerializable()) {
+            //如果是类型别名则使用源类型判断
+            if (routeDeclaration is KSTypeAlias){
+                if (routeDeclaration.type.resolve().declaration.isSerializable())
+                    return
+            }
+
+            if (!routeType.starProjection().declaration.isSerializable())
+                error("路由类 ${routeType.canonicalName()} 需要@Serializable")
         }
 
     }

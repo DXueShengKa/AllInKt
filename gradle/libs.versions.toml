@@ -10,6 +10,7 @@ kotlin = "2.1.20"
 kotlin-wrappers = "2025.4.6"
 #https://ant-design.antgroup.com/changelog-cn
 antd = "5.23.2"
+#https://github.com/iamkun/dayjs/
 dayjs = "1.11.13"
 #https://mui.com/toolpad/core/introduction/
 mui-toolpad = "^0.12.1"
@@ -26,7 +27,7 @@ kotlinx-datetime = "0.6.2"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.7.0"
 #https://github.com/google/ksp
-ksp = "2.1.20-1.0.31"
+ksp = "2.1.20-2.0.0"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "2.1.0"
 #https://github.com/JetBrains/compose-multiplatform
@@ -53,9 +54,11 @@ koin = "4.0.4"
 koin-annotations = "2.0.0"
 #https://github.com/oleksandrbalan/lazytable
 lazytable = "1.10.0"
-
-spring-boot = "3.4.1"
+#https://github.com/spring-projects/spring-boot
+spring-boot = "3.4.4"
+#https://docs.spring.io/dependency-management-plugin/docs/current/reference/html/#introduction
 spring-dependencyManagement = "1.1.7"
+
 exposed = "0.60.0"
 #https://github.com/turansky/seskar
 seskar = "4.7.0"
@@ -77,7 +80,8 @@ proguard = "7.6.0"
 openai = "4.0.1"
 
 junit = "4.13.2"
-jsoup = "1.17.2"
+#https://jsoup.org/
+jsoup = "1.19.1"
 jspecify = "1.0.0"
 #https://github.com/arrow-kt/arrow
 arrow = "2.0.1"
