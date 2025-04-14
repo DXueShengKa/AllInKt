@@ -1,32 +1,44 @@
 package cn.allin.utils
 
 import cn.allin.BuildConfig
-import platform.Foundation.NSLog
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.ptr
+import platform.darwin.OS_LOG_TYPE_DEBUG
+import platform.darwin.OS_LOG_TYPE_ERROR
+import platform.darwin.OS_LOG_TYPE_FAULT
+import platform.darwin.OS_LOG_TYPE_INFO
+import platform.darwin.__dso_handle
+import platform.darwin._os_log_internal
+import platform.darwin.os_log_create
 
+
+@OptIn(ExperimentalForeignApi::class)
 actual class InLogger(
-    private val tag: String,
+    tag: String
 ) {
+    private val log = os_log_create("cn.allin.AllInKt", tag)
 
-    private fun log(level: String, message: String?) {
-        if (BuildConfig.DEBUG && message != null) {
-            println("[$level] $tag: $message")
-        }
-    }
 
     actual fun info(message: String?) {
-        log("info", message)
+        if (BuildConfig.DEBUG && message != null)
+            _os_log_internal(__dso_handle.ptr, log, OS_LOG_TYPE_INFO, message)
     }
 
     actual fun debug(message: String?) {
-        log("debug", message)
+        if (BuildConfig.DEBUG && message != null)
+            _os_log_internal(__dso_handle.ptr, log, OS_LOG_TYPE_DEBUG, message)
     }
 
     actual fun warning(message: String?) {
-        log("warning", message)
+        if (BuildConfig.DEBUG && message != null)
+            _os_log_internal(__dso_handle.ptr, log, OS_LOG_TYPE_FAULT, message)
+
     }
 
     actual fun error(message: String?) {
-        NSLog("error", message)
+        if (BuildConfig.DEBUG && message != null)
+            _os_log_internal(__dso_handle.ptr, log, OS_LOG_TYPE_ERROR, message)
+
     }
 
 }
