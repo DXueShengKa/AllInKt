@@ -14,9 +14,10 @@ import platform.darwin.os_log_create
 
 @OptIn(ExperimentalForeignApi::class)
 actual class InLogger(
-    tag: String
+    tag: String?,
+    subsystem: String = "cn.allin.AllInKt",
 ) {
-    private val log = os_log_create("cn.allin.AllInKt", tag)
+    private val log = os_log_create(subsystem = subsystem, category = tag)
 
 
     actual fun info(message: String?) {

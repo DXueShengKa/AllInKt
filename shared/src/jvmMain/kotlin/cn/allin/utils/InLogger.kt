@@ -3,8 +3,10 @@ package cn.allin.utils
 import cn.allin.BuildConfig
 import java.util.logging.Logger
 
-actual class InLogger(private val tag: String) {
-    private val logger = Logger.getLogger(tag)
+actual class InLogger(
+    private val logger: Logger
+) {
+    constructor(tag: String) : this(Logger.getLogger(tag))
 
     actual fun info(message: String?) {
         if (BuildConfig.DEBUG && message != null) {

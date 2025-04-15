@@ -3,7 +3,7 @@
 package cn.allin.net
 
 import cn.allin.ServerParams
-import cn.allin.ServerRoute
+import cn.allin.apiRoute
 import cn.allin.ui.PageParams
 import cn.allin.vo.MsgVO
 import cn.allin.vo.PageVO
@@ -23,7 +23,7 @@ object Req {
 }
 
 suspend fun Req.getUserPage(pageParams: PageParams?): PageVO<UserVO> {
-    val response = http.get(ServerRoute.USER + '/' + ServerRoute.PAGE) {
+    val response = http.get(apiRoute.user.page) {
         parameter(ServerParams.PAGE_SIZE, pageParams?.size)
         parameter(ServerParams.PAGE_INDEX, pageParams?.index)
     }
@@ -32,20 +32,20 @@ suspend fun Req.getUserPage(pageParams: PageParams?): PageVO<UserVO> {
 
 
 suspend fun Req.deleteUser(ids: List<Long>): Boolean {
-    return http.delete(ServerRoute.USER) {
+    return http.delete(apiRoute.user.path) {
         parameter("ids", ids.joinToString())
     }.body()
 }
 
 suspend fun Req.addUser(addUser: UserVO) {
-    http.post(ServerRoute.USER) {
+    http.post(apiRoute.user.path) {
         setBody(addUser)
     }
 }
 
 
 suspend fun Req.auth(baseVO: UserVO): MsgVO<String> {
-    val response = http.post(ServerRoute.AUTH) {
+    val response = http.post(apiRoute.auth.path) {
         setBody(baseVO)
     }.call.response
 
@@ -66,20 +66,20 @@ suspend fun Req.auth(baseVO: UserVO): MsgVO<String> {
 
 
 suspend fun Req.regionProvince(): List<RegionVO> {
-    return http.get(ServerRoute.Region.ROUTE + ServerRoute.Region.PROVINCE).body()
+    return http.get(apiRoute.region.province.path).body()
 }
 
 suspend fun Req.regionCity(provinceId: Int): List<RegionVO> {
-    return http.get(ServerRoute.Region.ROUTE + ServerRoute.Region.CITY + "/$provinceId").body()
+    return http.get(apiRoute.region.city.path(provinceId)).body()
 }
 
 suspend fun Req.regionCounty(cityId: Int): List<RegionVO> {
-    return http.get(ServerRoute.Region.ROUTE + ServerRoute.Region.COUNTY + "/$cityId").body()
+    return http.get(apiRoute.region.country.path(cityId)).body()
 }
 
 
 suspend fun Req.getQandaPage(pageParams: PageParams?): PageVO<QandaVO> {
-    val response = http.get(ServerRoute.Qanda.ROUTE + '/' + ServerRoute.PAGE) {
+    val response = http.get(apiRoute.qanda.page) {
         parameter(ServerParams.PAGE_SIZE, pageParams?.size)
         parameter(ServerParams.PAGE_INDEX, pageParams?.index)
     }
@@ -87,20 +87,20 @@ suspend fun Req.getQandaPage(pageParams: PageParams?): PageVO<QandaVO> {
 }
 
 suspend fun Req.addQanda(vo: QandaVO): MsgVO<Int> {
-    val response = http.post(ServerRoute.Qanda.ROUTE) {
+    val response = http.post(apiRoute.qanda.path) {
         setBody(vo)
     }
     return response.body()
 }
 
 suspend fun Req.deleteQanda(id: Int): MsgVO<String> {
-    val response = http.delete(ServerRoute.Qanda.ROUTE + "/${id}")
+    val response = http.delete(apiRoute.qanda.path(id))
     return response.body()
 }
 
 
 suspend fun Req.getQaTagPage(pageParams: PageParams?): PageVO<QaTagVO> {
-    return http.get(ServerRoute.Qanda.ROUTE + "/" + ServerRoute.Qanda.TAG_PAGE) {
+    return http.get(apiRoute.qanda.tag.page.path) {
         parameter(ServerParams.PAGE_SIZE, pageParams?.size)
         parameter(ServerParams.PAGE_INDEX, pageParams?.index)
     }.body()

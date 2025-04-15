@@ -1,5 +1,6 @@
 package cn.allin.handler
 
+import cn.allin.apiRoute
 import cn.allin.repository.RegionRepository
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -24,7 +25,7 @@ class RegionHandler(
 
     suspend fun getCity(request: ServerRequest): ServerResponse {
         val v = regionRepository.findCity(
-            provinceId = request.pathVariable("provinceId").toInt()
+            provinceId = request.pathVariable(apiRoute.region.City.PROVINCE_ID).toInt()
         )
 
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(v)
@@ -32,7 +33,7 @@ class RegionHandler(
 
     suspend fun getCounty(request: ServerRequest): ServerResponse {
         val v = regionRepository.findCounty(
-            cityId = request.pathVariable("cityId").toInt()
+            cityId = request.pathVariable(apiRoute.region.Country.CITY_ID).toInt()
         )
 
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(v)

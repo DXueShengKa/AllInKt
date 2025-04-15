@@ -1,6 +1,6 @@
 package cn.allin.controller
 
-import cn.allin.ServerRoute
+import cn.allin.apiRoute
 import cn.allin.config.security.JwtUtil
 import cn.allin.service.LoginService
 import cn.allin.vo.MsgVO
@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono
 
 
 @RestController
-@RequestMapping(ServerRoute.AUTH)
+@RequestMapping(apiRoute.auth.AUTH)
 class AuthController(
     private val loginService: LoginService,
 ) {

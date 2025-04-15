@@ -1,7 +1,7 @@
 package cn.allin.controller
 
 import cn.allin.ServerParams
-import cn.allin.ServerRoute
+import cn.allin.apiRoute
 import cn.allin.service.QandaService
 import cn.allin.vo.MsgVO
 import cn.allin.vo.PageVO
@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(value = [ServerRoute.Qanda.ROUTE])
+@RequestMapping(value = [apiRoute.qanda.QANDA])
 class QandaController(
     val qandaService: QandaService
 ) {
 
-    @GetMapping(ServerRoute.PAGE)
+    @GetMapping(apiRoute.PAGE)
     fun page(
         @RequestParam(ServerParams.PAGE_INDEX) pageIndex: Int?,
         @RequestParam(ServerParams.PAGE_SIZE) pageSize: Int?
@@ -38,13 +38,13 @@ class QandaController(
         return MsgVO.success(qandaService.add(qandaVO))
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(apiRoute.PATH_ID)
     fun delete(@PathVariable id: Int): MsgVO<String> {
         qandaService.delete(id)
         return MsgVO.success(MsgVO.delete)
     }
 
-    @GetMapping(ServerRoute.Qanda.TAG_PAGE)
+    @GetMapping(apiRoute.qanda.tag.page.TAG_PAGE)
     fun tagPage(
         @RequestParam(ServerParams.PAGE_INDEX) pageIndex: Int?,
         @RequestParam(ServerParams.PAGE_SIZE) pageSize: Int?

@@ -1,6 +1,6 @@
 package cn.allin.controller
 
-import cn.allin.ServerRoute
+import cn.allin.apiRoute
 import cn.allin.service.OffiaccountService
 import cn.allin.vo.OffiAccoutMsgVO
 import org.slf4j.LoggerFactory
@@ -17,7 +17,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 
 
 @RestController
-@RequestMapping(ServerRoute.OFFI_ACCOUNT)
+@RequestMapping(apiRoute.offiAccount.OFFI_ACCOUNT)
 class OffiaccountController(
     private val service: OffiaccountService,
 ) {
