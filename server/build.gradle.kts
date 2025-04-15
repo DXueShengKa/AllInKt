@@ -51,7 +51,9 @@ tasks.withType<Test> {
 dependencies {
     ksp(projects.allKsp)
     ksp(libs.jimmer.ksp)
-    implementation(libs.jimmer.spring)
+    implementation(libs.jimmer.spring){
+        exclude(group = "org.babyfish.jimmer", module = "jimmer-client")
+    }
     implementation(projects.shared)
     implementation(libs.spring.starter.webflux)
     implementation(libs.spring.starter.security)
