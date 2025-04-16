@@ -47,5 +47,5 @@ tasks.withType<KotlinCompilationTask<*>>().all {
 }
 
 dependencies {
-    kspCommonMainMetadata(projects.allKsp)
+    kspCommonMainMetadata(projects.ksp.shared)
 }

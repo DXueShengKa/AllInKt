@@ -39,7 +39,6 @@ kotlin {
         }
 
         useCommonJs()
-        useEsModules()
 
         binaries.executable()
 

@@ -20,26 +20,11 @@ class CodeProcessor(environment: SymbolProcessorEnvironment) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if (invoked) return emptyList()
         invoked = true
-        val moduleName = resolver.getModuleName().asString()
-        logger.warn(moduleName)
 
-        when {
-            moduleName.contains(AllInProcessorProvider.MODULE_SERVER) -> {
-                generatorEntityToVo(resolver,codeGenerator,logger)
-            }
-
-            moduleName.contains(AllInProcessorProvider.MODULE_COMPOSE_APP) -> {
-                val nav = GenerateNav(codeGenerator, resolver, logger, "App")
-                nav.generateNavGraphDsl()
-                nav.writeFile()
-                generateViewModel("App",codeGenerator,resolver,"cn.allin")
-            }
-
-            moduleName.contains(AllInProcessorProvider.MODULE_SHARED) -> {
-                generatorSerializationField(resolver, codeGenerator, logger)
-                generateBuildConfig(codeGenerator,options, moduleName)
-            }
-        }
+        val nav = GenerateNav(codeGenerator, resolver, logger, "App")
+        nav.generateNavGraphDsl()
+        nav.writeFile()
+        generateViewModel("App", codeGenerator, resolver, "cn.allin")
 
         return emptyList()
     }

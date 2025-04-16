@@ -49,7 +49,7 @@ tasks.withType<Test> {
 }
 
 dependencies {
-    ksp(projects.allKsp)
+    ksp(projects.ksp.server)
     ksp(libs.jimmer.ksp)
     implementation(libs.jimmer.spring){
         exclude(group = "org.babyfish.jimmer", module = "jimmer-client")
@@ -68,7 +68,7 @@ dependencies {
 
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.coroutines.reactor)
-    compileOnly(projects.kspAnnotation)
+    compileOnly(projects.ksp.annotation)
     implementation(libs.kotlinx.serialization.protobuf)
 
     testImplementation(libs.kotlin.test.junit5)
