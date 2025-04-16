@@ -27,9 +27,19 @@ kotlin {
                     }
                 }
             }
-//            useEsModules()
-            useCommonJs()
+
+            testTask {
+
+                useKarma { //运行测试用的，安装了哪个浏览器就开哪个
+
+//                    useChromium()
+                    useFirefox()
+                }
+            }
         }
+
+        useCommonJs()
+        useEsModules()
 
         binaries.executable()
 
@@ -61,6 +71,10 @@ kotlin {
             implementation(npm("dayjs",libs.versions.dayjs.get()))
             implementation(projects.shared)
             implementation(projects.client.net)
+        }
+
+        jsTest.dependencies {
+            implementation(kotlin("test-js"))
         }
     }
 }
