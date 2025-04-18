@@ -1,7 +1,11 @@
 package toolpad.core
 
 import js.objects.jso
+import mui.material.FormControlLabelProps
+import mui.material.TextFieldProps
+import react.dom.html.FormHTMLAttributes
 import seskar.js.JsValue
+import web.html.HTMLFormElement
 
 
 external interface AuthProvider {
@@ -23,25 +27,25 @@ sealed external interface AuthProviderId {
 
 
 external interface SignInSlot {
-    var emailField: dynamic
-    var form: dynamic
+    var emailField: TextFieldProps?
+    var passwordField: TextFieldProps?
+    var form: FormHTMLAttributes<HTMLFormElement>?
+    var rememberMe: FormControlLabelProps?
+
 }
 
-external interface EmailField {
-    var autoFocus: Boolean?
-}
 
-external interface SignInForm {
-    var noValidate: Boolean?
-}
-
-inline fun SignInProps.slotProps(
-    emailField: EmailField.() -> Unit,
-    form: SignInForm.() -> Unit,
+fun SignInProps.slotProps(
+    emailField: (TextFieldProps.() -> Unit) ? = null,
+    passwordField: (TextFieldProps.() -> Unit) ? = null,
+    form: (FormHTMLAttributes<HTMLFormElement>.() -> Unit)? = null,
+    rememberMe: (FormControlLabelProps.() -> Unit)? = null,
 ) {
-    this.slotProps = jso<SignInSlot> {
-        this.emailField = jso<EmailField>(emailField)
-        this.form = jso<SignInForm>(form)
+    slotProps = jso {
+        this.emailField = emailField?.let(::jso)
+        this.passwordField = passwordField?.let(::jso)
+        this.rememberMe = rememberMe?.let(::jso)
+        this.form = form?.let(::jso)
     }
 }
 
@@ -82,4 +86,24 @@ sealed external interface NCSeverity {
 external interface NotificationsConfig {
     var severity: NCSeverity
     var autoHideDuration: Int
+}
+
+external interface SignInPageLocaleText {
+    var signInTitle: String
+    var signInSubtitle: String
+    var signInRememberMe: String
+    // providerSignInTitle: (provider: string) => string;
+    var providerSignInTitle: (String) -> String
+    var email: String
+    var password: String
+    var or: String
+    var with: String
+    var passkey: String
+    var to: String
+}
+
+
+//(brandingTitle?: string) => string
+fun SignInPageLocaleText.signInTitle(title: (String) -> String) {
+    signInTitle = title.asDynamic()
 }

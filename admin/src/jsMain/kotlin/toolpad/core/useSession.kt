@@ -1,9 +1,9 @@
-//@file:JsModule("@toolpad/core/useSession")
+@file:JsModule("@toolpad/core/useSession")
 
 package toolpad.core
 
 
-//external fun useSession(): Session?
+external fun <S: Session> useSession(): S?
 
 
 external interface Session {
@@ -11,10 +11,10 @@ external interface Session {
 }
 
 external interface UserSession {
-    var id: String
-    var name: String
-    var image: String
-    var email: String
+    var id: String?
+    var name: String?
+    var image: String?
+    var email: String?
 }
 
 

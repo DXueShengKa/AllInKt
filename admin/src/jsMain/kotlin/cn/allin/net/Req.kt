@@ -2,7 +2,9 @@
 
 package cn.allin.net
 
+import cn.allin.BuildConfig
 import cn.allin.ServerParams
+import cn.allin.ValidatorError
 import cn.allin.apiRoute
 import cn.allin.ui.PageParams
 import cn.allin.vo.MsgVO
@@ -13,12 +15,49 @@ import cn.allin.vo.RegionVO
 import cn.allin.vo.UserVO
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.engine.js.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
+import io.ktor.http.*
+import js.objects.jso
+import toolpad.core.UserSession
 
 
 object Req {
-    val http = HttpClient(ktorEngineFactory) {
-        commonConfig()
+    val http = HttpClient(Js) {
+//        commonConfig()
+        HttpResponseValidator {
+            validateResponse {
+                when (it.status) {
+                    HttpStatusCode.Unauthorized -> {
+                        WEKV.authorization.remove()
+                    }
+
+                    HttpStatusCode.BadRequest -> {
+                        throw ValidatorError(it.body())
+                    }
+                }
+            }
+        }
+
+        defaultRequest {
+            url(SERVER_BASE_URL)
+            accept(ContentType.Application.Json)
+            contentType(ContentType.Application.Json)
+            headers {
+                WEKV.authorization.getOrNull()?.also {
+                    append(HttpHeaders.Authorization, it)
+                }
+            }
+        }
+
+        contentNegotiation()
+
+        if (BuildConfig.DEBUG) Logging {
+            this.level = LogLevel.ALL
+            this.logger = Logger.DEFAULT
+        }
     }
 }
 
@@ -59,6 +98,27 @@ suspend fun Req.auth(baseVO: UserVO): MsgVO<String> {
             println("$s $strings")
         }
         console.log(response.headers)
+    }
+
+    return msgVO
+}
+
+suspend fun Req.currentUser(): UserSession? {
+    val user: UserVO? = http.get(apiRoute.user.path).body()
+    return if (user != null) {
+        jso {
+            id = user.id.toString()
+            name = user.name
+            email = user.email
+        }
+    } else null
+}
+
+suspend fun Req.deleteAuth(): MsgVO<String> {
+    val msgVO: MsgVO<String> = http.delete(apiRoute.auth.path).body()
+
+    if (msgVO.message == MsgVO.success) {
+        WEKV.authorization.remove()
     }
 
     return msgVO

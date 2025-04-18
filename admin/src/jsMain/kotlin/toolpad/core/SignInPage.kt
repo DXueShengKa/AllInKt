@@ -15,6 +15,8 @@ external interface SignInProps : Props {
     var signIn: (AuthProvider, FormData) -> Promise<AuthResponse>
     var providers: Array<AuthProvider>
     var slotProps: SignInSlot
+
+    var localeText: SignInPageLocaleText
 }
 
 

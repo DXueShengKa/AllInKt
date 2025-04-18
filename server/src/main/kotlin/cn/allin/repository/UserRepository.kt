@@ -4,6 +4,7 @@ import cn.allin.config.UserRole
 import cn.allin.model.UserEntity
 import cn.allin.model.birthday
 import cn.allin.model.email
+import cn.allin.model.fetchBy
 import cn.allin.model.gender
 import cn.allin.model.id
 import cn.allin.model.name
@@ -53,17 +54,23 @@ class UserRepository(
         }, SaveMode.INSERT_ONLY).execute()
     }
 
-    fun findByUsername(username: String): UserEntity? {
+    fun findRole(username: String): UserEntity? {
         return sqlClient.executeQuery(UserEntity::class, limit = 1) {
             where(table.name eq username)
-            select(table)
+            select(table.fetchBy {
+                role()
+            })
         }.firstOrNull()
     }
 
-    fun findIdByUsername(username: String): Long? {
-        return sqlClient.executeQuery(UserEntity::class) {
-            where(table.name eq username)
-            select(table.id)
+
+    fun findPasswordRole(id: Long): UserEntity? {
+        return sqlClient.executeQuery(UserEntity::class, limit = 1) {
+            where(table.id eq id)
+            select(table.fetchBy {
+                role()
+                password()
+            })
         }.firstOrNull()
     }
 

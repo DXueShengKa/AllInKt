@@ -33,7 +33,7 @@ class AuthController(
 
     @PostMapping
     fun post(@RequestBody userVO: UserVO): Mono<MsgVO<String>> {
-        val user = userVO.name?.let(loginService::findUserId) ?: return Mono.just(MsgVO.fail(MsgVO.login,"没有这个用户"))
+        val user = userVO.name?.let(loginService::findLoginUser) ?: return Mono.just(MsgVO.fail(MsgVO.login,"没有这个用户"))
 
         return loginService.login(
             user.id,

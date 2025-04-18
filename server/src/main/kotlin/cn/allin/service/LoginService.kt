@@ -21,8 +21,8 @@ class LoginService(
     private val authenticationManager: ReactiveAuthenticationManager,
 ) {
 
-    fun findUserId(username: String): UserEntity? {
-        return userRepository.findByUsername(username)
+    fun findLoginUser(username: String): UserEntity? {
+        return userRepository.findRole(username)
     }
 
 

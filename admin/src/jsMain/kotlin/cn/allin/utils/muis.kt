@@ -1,7 +1,6 @@
 
 import js.objects.jso
 import mui.material.styles.ThemeOptions
-import react.Context
 import react.createContext
 import react.use
 import toolpad.core.Session
@@ -33,12 +32,12 @@ external interface SessionContextValue {
     var set: (Session?) -> Unit
 }
 
-val SessionContext: Context<SessionContextValue> = createContext<SessionContextValue>(jso {
+val SessionContext = createContext<SessionContextValue>(jso {
     set = {
         session = it
     }
 })
 
-fun useSession(): SessionContextValue {
+fun useSessionContext(): SessionContextValue {
     return use(SessionContext)
 }

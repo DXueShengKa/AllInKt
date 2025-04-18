@@ -16,6 +16,16 @@ const val SERVER_BASE_URL = "http://localhost:8020"
 
 expect val ktorEngineFactory: HttpClientEngineFactory<*>
 
+
+
+@OptIn(ExperimentalSerializationApi::class)
+fun HttpClientConfig<*>.contentNegotiation() {
+    install(ContentNegotiation) {
+        serialization(ContentTypeXProtobuf, cn.allin.AllProtoBuf)
+        serialization(ContentType.Application.Json, cn.allin.AllJson)
+    }
+}
+
 @OptIn(ExperimentalSerializationApi::class)
 fun HttpClientConfig<*>.commonConfig() {
     HttpResponseValidator {

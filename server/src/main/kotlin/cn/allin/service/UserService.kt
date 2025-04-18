@@ -20,7 +20,7 @@ class UserService(
         }
 
         return mono(DispatchersVirtual) {
-            val user = userRepository.findById(id.toLong()) ?: throw UsernameNotFoundException("没有账号")
+            val user = userRepository.findPasswordRole(id.toLong()) ?: throw UsernameNotFoundException("没有账号")
             val u = SpringUser(user.id.toString(), "{noop}"+user.password, listOf(user.role))
             u
         }

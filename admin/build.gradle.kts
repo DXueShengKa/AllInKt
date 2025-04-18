@@ -70,6 +70,7 @@ kotlin {
             implementation(npm("dayjs",libs.versions.dayjs.get()))
             implementation(projects.shared)
             implementation(projects.client.net)
+            implementation(libs.ktorClient.logging)
         }
 
         jsTest.dependencies {
