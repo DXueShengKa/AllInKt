@@ -25,6 +25,8 @@ fun generatorSerializationField(resolver: Resolver, codeGenerator: CodeGenerator
 
     val d = mutableListOf<KSFile>()
 
+    val stringType = String::class.asTypeName()
+
     resolver.getSymbolsWithAnnotation("kotlinx.serialization.Serializable")
         .flatMap { a ->
             a.containingFile?.declarations?.mapNotNull {
@@ -37,7 +39,6 @@ fun generatorSerializationField(resolver: Resolver, codeGenerator: CodeGenerator
                 return@forEach
 
             val className = d.simpleName.asString()
-            val stringType = String::class.asTypeName()
 //            val receiverType = ClassName(d.packageName.asString(), className, "Companion")
 
             val constructor = d.getConstructors().first()
