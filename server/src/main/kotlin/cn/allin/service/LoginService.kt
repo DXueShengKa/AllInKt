@@ -28,10 +28,9 @@ class LoginService(
 
     @CacheEvict(cacheNames = [CacheConfig.AUTH], key = "#userId")
     fun logout(userId: Long): Mono<SecurityContext> {
-        return ReactiveSecurityContextHolder.getContext()
-            .contextWrite {
-                it.delete(userId)
-            }
+       return ReactiveSecurityContextHolder.getContext()
+            .contextWrite(ReactiveSecurityContextHolder.clearContext())
+
     }
 
 
@@ -43,7 +42,7 @@ class LoginService(
             .contextWrite {
                 ReactiveSecurityContextHolder.withAuthentication(token)
             }
-            .map { token }
+            .thenReturn(token)
     }
 
 }

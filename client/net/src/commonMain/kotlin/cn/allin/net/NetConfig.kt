@@ -14,6 +14,8 @@ val ContentTypeXProtobuf = ContentType("application", "x-protobuf")
 
 const val SERVER_BASE_URL = "http://localhost:8020"
 
+//const val SERVER_BASE_URL = "http://www.839421549.xyz/server"
+
 expect val ktorEngineFactory: HttpClientEngineFactory<*>
 
 

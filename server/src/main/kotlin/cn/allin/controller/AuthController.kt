@@ -25,9 +25,8 @@ class AuthController(
     fun delete(httpEntity: HttpEntity<Void>): Mono<MsgVO<String?>> {
         val auth = httpEntity.headers[HttpHeaders.AUTHORIZATION]?.firstOrNull() ?: return Mono.just(MsgVO.success(null))
         val userId = JwtUtil.extractLong(auth)
-        return loginService.logout(userId).map {
-            MsgVO.success("退出登录")
-        }
+        return loginService.logout(userId)
+            .thenReturn(MsgVO.success("退出登录"))
     }
 
 

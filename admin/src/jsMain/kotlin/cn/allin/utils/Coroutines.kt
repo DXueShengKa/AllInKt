@@ -53,6 +53,10 @@ operator fun <T : Any> RefObject<T>.getValue(
 }
 
 
+operator fun <T : Any> RefObject<T>.setValue(thisRef: Nothing?, property: KProperty<*>, value: T) {
+    current = value
+}
+
 fun <T> Flow<T>.asState(init: T): T {
     var t by useState<T> { init }
     useEffect {

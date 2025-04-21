@@ -3,7 +3,6 @@ package cn.allin
 
 import SessionContext
 import cn.allin.net.Req
-import cn.allin.net.WEKV
 import cn.allin.net.currentUser
 import cn.allin.net.deleteAuth
 import cn.allin.ui.RouteAuth
@@ -90,7 +89,7 @@ private val AppLayout = FC {
     val sessionContext = useSessionContext()
 
     useEffectOnce {
-        WEKV.authorization.getOrNull()?.let { userVO ->
+        Req.authToken()?.let {
             val u = Req.currentUser()
             sessionContext.set(jso {
                 user = u
@@ -107,11 +106,9 @@ private val AppLayout = FC {
                     navigate(RouteAuth)
                 }
                 signOut = asyncFunction {
-                    val m = Req.deleteAuth()
-                    if (m.isSuccess) {
-                        sessionContext.set(null)
-                        navigate(RouteAuth)
-                    }
+                    Req.deleteAuth()
+                    sessionContext.set(null)
+                    navigate(RouteAuth)
                 }
             }
 

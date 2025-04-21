@@ -25,13 +25,33 @@ import toolpad.core.UserSession
 
 
 object Req {
+
+    private var _authHeader: String? = null
+
+
+    suspend fun authToken(authHeader: String?,remember: Boolean = false){
+        if (authHeader == null) {
+            WEKV.authorization.remove()
+        } else if (remember){
+            WEKV.authorization.set(authHeader)
+        }
+        this._authHeader = authHeader
+    }
+
+    fun authToken(): String? {
+        return _authHeader ?: WEKV.authorization.getOrNull()?.also {
+            _authHeader = it
+        }
+    }
+
+
     val http = HttpClient(Js) {
 //        commonConfig()
         HttpResponseValidator {
             validateResponse {
                 when (it.status) {
                     HttpStatusCode.Unauthorized -> {
-                        WEKV.authorization.remove()
+                        authToken(null)
                     }
 
                     HttpStatusCode.BadRequest -> {
@@ -46,7 +66,7 @@ object Req {
             accept(ContentType.Application.Json)
             contentType(ContentType.Application.Json)
             headers {
-                WEKV.authorization.getOrNull()?.also {
+                authToken()?.also {
                     append(HttpHeaders.Authorization, it)
                 }
             }
@@ -83,7 +103,7 @@ suspend fun Req.addUser(addUser: UserVO) {
 }
 
 
-suspend fun Req.auth(baseVO: UserVO): MsgVO<String> {
+suspend fun Req.auth(baseVO: UserVO,remember: Boolean): MsgVO<String> {
     val response = http.post(apiRoute.auth.path) {
         setBody(baseVO)
     }.call.response
@@ -91,13 +111,7 @@ suspend fun Req.auth(baseVO: UserVO): MsgVO<String> {
     val msgVO = response.body<MsgVO<String>>()
 
     if (msgVO.message == MsgVO.success) {
-
-        WEKV.authorization.set(msgVO.data!!)
-
-        response.headers.forEach { s, strings ->
-            println("$s $strings")
-        }
-        console.log(response.headers)
+        authToken(msgVO.data,remember)
     }
 
     return msgVO
@@ -114,14 +128,13 @@ suspend fun Req.currentUser(): UserSession? {
     } else null
 }
 
-suspend fun Req.deleteAuth(): MsgVO<String> {
+suspend fun Req.deleteAuth() {
     val msgVO: MsgVO<String> = http.delete(apiRoute.auth.path).body()
 
     if (msgVO.message == MsgVO.success) {
-        WEKV.authorization.remove()
+        authToken(null)
     }
 
-    return msgVO
 }
 
 
