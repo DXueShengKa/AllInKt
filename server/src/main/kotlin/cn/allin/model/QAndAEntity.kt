@@ -7,6 +7,7 @@ import org.babyfish.jimmer.sql.GeneratedValue
 import org.babyfish.jimmer.sql.GenerationType
 import org.babyfish.jimmer.sql.Id
 import org.babyfish.jimmer.sql.JoinTable
+import org.babyfish.jimmer.sql.Key
 import org.babyfish.jimmer.sql.ManyToMany
 import org.babyfish.jimmer.sql.Table
 import java.time.LocalDateTime
@@ -19,6 +20,8 @@ interface QAndAEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int
+
+    @Key
     val question: String
     val answer: String
     val createTime: LocalDateTime

@@ -105,7 +105,7 @@ private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
 private val UserListFC = FC {
     val (pageParams, setPageParams) = useState(PageParams())
     var userPage: PageVO<UserVO>? by useState()
-    val (rowSelect,setRowSelect) = useState<Updater<RowSelectionState>>(jso())
+    val (rowSelect, setRowSelect) = useState<Updater<RowSelectionState>>(jso())
     val cs: CoroutineScope? by useCoroutineScope()
     var showMessage by useState(false)
 
@@ -174,11 +174,9 @@ private val UserListFC = FC {
         pageCount = userPage?.totalRow
         page = pageParams
         onPage = { i ->
-            setPageParams(
-                pageParams.copy(
-                    index = i.toInt()
-                )
-            )
+            setPageParams(pageParams.copy(
+                    index = i
+            ))
         }
         onPageParams = setPageParams.invokeFn
     }

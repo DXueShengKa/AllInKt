@@ -78,6 +78,12 @@ interface apiRoute {
         fun path(id: Int) = "$QANDA/$id"
 
 
+        object excel:apiRoute {
+            const val EXCEL = "excel"
+            override val path: String = "$QANDA/$EXCEL"
+        }
+
+
         object tag : apiRoute {
             const val TAG = "tag"
 

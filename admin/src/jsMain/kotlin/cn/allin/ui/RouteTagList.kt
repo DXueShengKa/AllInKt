@@ -3,10 +3,12 @@ package cn.allin.ui
 import cn.allin.VoFieldName
 import cn.allin.net.getQaTagPage
 import cn.allin.net.useQuery
+import cn.allin.utils.DATE_TIME_DEFAULT_FORMAT
 import cn.allin.vo.PageVO
 import cn.allin.vo.QaTagVO
 import js.array.ReadonlyArray
 import js.objects.jso
+import kotlinx.datetime.format
 import react.FC
 import react.useMemo
 import react.useState
@@ -45,7 +47,7 @@ private fun tagListColumnDef(
         id = VoFieldName.QaTagVO_createTime
         header = StringOrTemplateHeader("创建时间")
         accessorFn = { tag, _ ->
-            tag.createTime.toString()
+            tag.createTime.format(DATE_TIME_DEFAULT_FORMAT)
         }
     }
 )

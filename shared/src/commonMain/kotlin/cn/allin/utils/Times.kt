@@ -6,14 +6,24 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
-import kotlinx.datetime.format.byUnicodePattern
+import kotlinx.datetime.format.char
 
 const val DATE_TIME_DEFAULT_FORMAT_STR = "YYYY-MM-DD HH:mm:ss"
 
 
 @OptIn(FormatStringsInDatetimeFormats::class)
 val DATE_TIME_DEFAULT_FORMAT = LocalDateTime.Format {
-    byUnicodePattern(DATE_TIME_DEFAULT_FORMAT_STR)
+    year()
+    char('-')
+    monthNumber()
+    char('-')
+    dayOfMonth()
+    char(' ')
+    hour()
+    char(':')
+    minute()
+    char(':')
+    second()
 }
 
 

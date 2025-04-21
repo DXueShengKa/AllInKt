@@ -2,6 +2,8 @@ package cn.allin.repository
 
 import cn.allin.model.QAndAEntity
 import cn.allin.model.QaTagEntity
+import cn.allin.model.addBy
+import cn.allin.model.by
 import cn.allin.model.fetchBy
 import cn.allin.model.question
 import cn.allin.utils.toPageVO
@@ -14,7 +16,9 @@ import kotlinx.datetime.toKotlinLocalDateTime
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.like
+import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.stereotype.Repository
+import java.util.stream.Stream
 
 @Repository
 class QandaRepository(private val sqlClient: KSqlClient) {
@@ -69,5 +73,44 @@ class QandaRepository(private val sqlClient: KSqlClient) {
             select(table)
         }.fetchPage(index, size)
             .toPageVO { it.toQaTagVO() }
+    }
+
+    fun add(qaList: List<QandaVO>): Int {
+        val tagEntity = qaList.stream().flatMap {
+            it.tagList?.stream() ?: Stream.empty()
+        }
+            .distinct()
+            .map {
+                QaTagEntity {
+                    tagName = it
+                }
+            }
+            .toList()
+
+        sqlClient.saveEntitiesCommand(tagEntity, SaveMode.INSERT_IF_ABSENT).execute()
+
+        val dbTags = sqlClient.findAll(newFetcher(QaTagEntity::class).by {
+            tagName()
+        })
+
+        return sqlClient.saveEntitiesCommand(
+            qaList.map { qa ->
+                QAndAEntity {
+                    question = qa.question
+                    answer = qa.answer
+
+                    qa.tagList?.forEach { t ->
+                        val dbTagId = dbTags.find { it.tagName == t }?.id
+                        if (dbTagId != null) {
+                            tags().addBy {
+                                id = dbTagId
+                            }
+                        }
+                    }
+                }
+            },
+            SaveMode.INSERT_ONLY
+        )
+            .execute().totalAffectedRowCount
     }
 }

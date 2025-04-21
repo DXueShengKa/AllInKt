@@ -8,6 +8,7 @@ import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
+import io.ktor.utils.io.charsets.*
 import kotlinx.serialization.ExperimentalSerializationApi
 
 val ContentTypeXProtobuf = ContentType("application", "x-protobuf")
@@ -30,6 +31,11 @@ fun HttpClientConfig<*>.contentNegotiation() {
 
 @OptIn(ExperimentalSerializationApi::class)
 fun HttpClientConfig<*>.commonConfig() {
+
+    Charsets {
+        register(Charsets.UTF_8)
+    }
+
     HttpResponseValidator {
         validateResponse {
             when(it.status) {

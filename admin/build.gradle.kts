@@ -68,6 +68,7 @@ kotlin {
 
             implementation(npm("@toolpad/core",libs.versions.mui.toolpad.get()))
             implementation(npm("dayjs",libs.versions.dayjs.get()))
+            implementation(npm("@emotion/styled","11.14.0"))
             implementation(projects.shared)
             implementation(projects.client.net)
             implementation(libs.ktorClient.logging)

@@ -24,4 +24,8 @@ class QandaService(private val qandaRepository: QandaRepository) {
     fun tagPage(index: Int, size: Int): PageVO<QaTagVO> {
         return qandaRepository.findTagPage(index, size)
     }
+
+    fun addList(qaList: List<QandaVO>): Int {
+        return qandaRepository.add(qaList)
+    }
 }

@@ -87,6 +87,8 @@ jspecify = "1.0.0"
 arrow = "2.0.1"
 #https://github.com/Reedyuk/blue-falcon
 bluefalcon = "2.2.5"
+#https://github.com/apache/poi
+apache-poi = "5.4.1"
 
 [plugins]
 
@@ -237,6 +239,7 @@ arrow-optics = { module = "io.arrow-kt:arrow-optics", version.ref = "arrow" }
 arrow-optics-ksp = { module = "io.arrow-kt:arrow-optics-ksp-plugin", version.ref = "arrow" }
 
 bluefalcon = { module = "dev.bluefalcon:blue-falcon", version.ref = "bluefalcon" }
+apache-poi-ooxml = { group="org.apache.poi", name="poi-ooxml", version.ref="apache-poi" }
 
 [bundles]
 netLibs = [

@@ -2,7 +2,6 @@
 
 package cn.allin.net
 
-import cn.allin.BuildConfig
 import cn.allin.ServerParams
 import cn.allin.ValidatorError
 import cn.allin.apiRoute
@@ -19,9 +18,13 @@ import io.ktor.client.engine.js.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import js.objects.jso
+import js.typedarrays.Uint8Array
+import js.typedarrays.toByteArray
 import toolpad.core.UserSession
+import web.file.File
 
 
 object Req {
@@ -29,10 +32,10 @@ object Req {
     private var _authHeader: String? = null
 
 
-    suspend fun authToken(authHeader: String?,remember: Boolean = false){
+    suspend fun authToken(authHeader: String?, remember: Boolean = false) {
         if (authHeader == null) {
             WEKV.authorization.remove()
-        } else if (remember){
+        } else if (remember) {
             WEKV.authorization.set(authHeader)
         }
         this._authHeader = authHeader
@@ -74,7 +77,7 @@ object Req {
 
         contentNegotiation()
 
-        if (BuildConfig.DEBUG) Logging {
+        if (false) Logging {
             this.level = LogLevel.ALL
             this.logger = Logger.DEFAULT
         }
@@ -103,7 +106,7 @@ suspend fun Req.addUser(addUser: UserVO) {
 }
 
 
-suspend fun Req.auth(baseVO: UserVO,remember: Boolean): MsgVO<String> {
+suspend fun Req.auth(baseVO: UserVO, remember: Boolean): MsgVO<String> {
     val response = http.post(apiRoute.auth.path) {
         setBody(baseVO)
     }.call.response
@@ -111,7 +114,7 @@ suspend fun Req.auth(baseVO: UserVO,remember: Boolean): MsgVO<String> {
     val msgVO = response.body<MsgVO<String>>()
 
     if (msgVO.message == MsgVO.success) {
-        authToken(msgVO.data,remember)
+        authToken(msgVO.data, remember)
     }
 
     return msgVO
@@ -177,4 +180,17 @@ suspend fun Req.getQaTagPage(pageParams: PageParams?): PageVO<QaTagVO> {
         parameter(ServerParams.PAGE_SIZE, pageParams?.size)
         parameter(ServerParams.PAGE_INDEX, pageParams?.index)
     }.body()
+}
+
+suspend fun Req.uploadExcel(file: File): Boolean {
+    val bytes = file.arrayBuffer()
+
+    val msg: MsgVO<String> = http.submitFormWithBinaryData(apiRoute.qanda.excel.path, formData {
+        append("file", file.name) {
+            val ba = Uint8Array(bytes).toByteArray()
+            write(ba, 0, ba.size)
+        }
+    }).body()
+
+    return msg.isSuccess
 }
