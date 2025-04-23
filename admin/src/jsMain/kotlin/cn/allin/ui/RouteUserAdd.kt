@@ -3,13 +3,13 @@ package cn.allin.ui
 import cn.allin.ValidatorError
 import cn.allin.VoFieldName
 import cn.allin.VoValidatorMessage
-import cn.allin.getValue
 import cn.allin.net.Req
 import cn.allin.net.addUser
-import cn.allin.useCoroutineScope
 import cn.allin.utils.dayjs
+import cn.allin.utils.getValue
 import cn.allin.utils.reactNode
 import cn.allin.utils.toLocalDate
+import cn.allin.utils.useCoroutineScope
 import cn.allin.vo.Gender
 import cn.allin.vo.UserVO
 import js.objects.jso
@@ -18,6 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mui.material.Alert
 import mui.material.AlertColor
+import mui.material.BaseTextFieldProps
 import mui.material.Button
 import mui.material.FormControl
 import mui.material.FormControlLabel
@@ -31,7 +32,6 @@ import mui.material.styles.Theme
 import mui.material.styles.useTheme
 import mui.system.responsive
 import muix.pickers.DatePicker
-import org.w3c.dom.HTMLInputElement
 import react.FC
 import react.create
 import react.dom.events.FormEvent
@@ -42,6 +42,7 @@ import web.cssom.Color
 import web.cssom.px
 import web.html.ButtonType
 import web.html.HTMLElement
+import web.html.HTMLInputElement
 import web.html.InputType
 
 
@@ -90,13 +91,13 @@ private val AddUserFC = FC {
                 }
                 .onRight {
                     errorHelperText = null
-                    cs?.launch(CoroutineExceptionHandler { _, t ->
+                    cs.launch(CoroutineExceptionHandler { _, t ->
                         if (t is ValidatorError)
                             errorHelperText = t.validatorMessage
 
                         addResult = AlertColor.error to "添加失败"
                     }) {
-                        Req.addUser(userForm)
+                        Req.addUser(it)
                         addResult = AlertColor.success to "已添加"
                         delay(2000)
                         addResult = null
@@ -112,15 +113,7 @@ private val AddUserFC = FC {
                 }
                 name = VoFieldName.UserVO_name
                 onChange = handle
-
-                errorHelperText?.also {
-                    if (it.field == VoFieldName.UserVO_name) {
-                        error = true
-                        helperText = reactNode("${it.code},${it.message}")
-                    } else {
-                        error = false
-                    }
-                }
+                validatorMessage(errorHelperText, VoFieldName.UserVO_name)
             }
         }
 
@@ -131,15 +124,7 @@ private val AddUserFC = FC {
                 }
                 name = VoFieldName.UserVO_email
                 onChange = handle
-
-                errorHelperText?.also {
-                    if (it.field == VoFieldName.UserVO_email) {
-                        error = true
-                        helperText = reactNode("${it.code},${it.message}")
-                    } else {
-                        error = false
-                    }
-                }
+                validatorMessage(errorHelperText, VoFieldName.UserVO_email)
             }
         }
 
@@ -151,6 +136,7 @@ private val AddUserFC = FC {
                 name = VoFieldName.UserVO_password
                 type = InputType.password
                 onChange = handle
+                validatorMessage(errorHelperText, VoFieldName.UserVO_password)
             }
         }
 
@@ -217,6 +203,17 @@ private val AddUserFC = FC {
         }
     }
 
+}
+
+private fun BaseTextFieldProps.validatorMessage(errorMsg: VoValidatorMessage?, field: String) {
+    errorMsg?.also {
+        error = if (it.field == field) {
+            helperText = reactNode("${it.code},${it.message}")
+            true
+        } else {
+            false
+        }
+    }
 }
 
 val RouteUserAdd = routes("add", "添加用户", AddUserFC)

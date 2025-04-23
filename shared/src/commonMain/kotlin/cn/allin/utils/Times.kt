@@ -5,26 +5,34 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
-import kotlinx.datetime.format.byUnicodePattern
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.format.char
 
 const val DATE_TIME_DEFAULT_FORMAT_STR = "YYYY-MM-DD HH:mm:ss"
 
 
 @OptIn(FormatStringsInDatetimeFormats::class)
 val DATE_TIME_DEFAULT_FORMAT = LocalDateTime.Format {
-    byUnicodePattern(DATE_TIME_DEFAULT_FORMAT_STR)
+    year()
+    char('-')
+    monthNumber()
+    char('-')
+    dayOfMonth()
+    char(' ')
+    hour()
+    char(':')
+    minute()
+    char(':')
+    second()
 }
 
 
-fun Instant.getDateTime() = toLocalDateTime(TimeZone.currentSystemDefault())
+expect fun Instant.getDateTime():LocalDateTime
 
 fun Instant.getDate() = getDateTime().date
 
 fun Long.toLocalDateTime(): LocalDateTime {
-    return Instant.fromEpochMilliseconds(this).toLocalDateTime(TimeZone.UTC)
+    return Instant.fromEpochMilliseconds(this).getDateTime()
 }
 
 fun isLeapYear(year: Int) = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0

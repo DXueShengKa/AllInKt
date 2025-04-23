@@ -44,6 +44,9 @@ data class MsgVO<T>(
         }
     }
 
+    val isSuccess: Boolean
+        get() = message == success
+
     val dataOrError: T
         get() = data ?: kotlin.error(message)
 }

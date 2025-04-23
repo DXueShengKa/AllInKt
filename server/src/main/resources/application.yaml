@@ -21,13 +21,6 @@ jimmer:
     show-sql: true
     pretty-sql: true
     database-validation-mode: error
-#    client:
-#        openapi:
-#            path: /openapi.yml
-#            ui-path: /openapi.html
-#            properties:
-#              info:
-#                  title: 项目api文档
 
 logging:
     level:

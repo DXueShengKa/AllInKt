@@ -24,7 +24,7 @@ class CacheTest {
 
     @Test
     fun showAll(){
-        reactiveRedisTemplateByte.opsForValue().get("uu2").subscribe {
+        reactiveRedisTemplateByte.opsForValue().get("cacheTest").subscribe {
             println(ProtoBuf.decodeFromByteArray<UserVO>(it))
         }
     }
@@ -32,7 +32,8 @@ class CacheTest {
 
     @Test
     fun cacheOne(){
-        reactiveRedisTemplateByte.opsForValue().set("uu2", ProtoBuf.encodeToByteArray(UserVO(name = "aaa")))
+        reactiveRedisTemplateByte.opsForValue()
+            .set("cacheTest", ProtoBuf.encodeToByteArray(UserVO(name = "aaa", id = 222222)))
             .subscribe()
 
     }

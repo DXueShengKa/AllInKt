@@ -21,17 +21,16 @@ class LoginService(
     private val authenticationManager: ReactiveAuthenticationManager,
 ) {
 
-    fun findUserId(username: String): UserEntity? {
-        return userRepository.findByUsername(username)
+    fun findLoginUser(username: String): UserEntity? {
+        return userRepository.findRole(username)
     }
 
 
     @CacheEvict(cacheNames = [CacheConfig.AUTH], key = "#userId")
     fun logout(userId: Long): Mono<SecurityContext> {
-        return ReactiveSecurityContextHolder.getContext()
-            .contextWrite {
-                it.delete(userId)
-            }
+       return ReactiveSecurityContextHolder.getContext()
+            .contextWrite(ReactiveSecurityContextHolder.clearContext())
+
     }
 
 
@@ -43,7 +42,7 @@ class LoginService(
             .contextWrite {
                 ReactiveSecurityContextHolder.withAuthentication(token)
             }
-            .map { token }
+            .thenReturn(token)
     }
 
 }

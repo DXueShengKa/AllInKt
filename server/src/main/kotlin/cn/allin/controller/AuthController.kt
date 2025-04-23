@@ -1,6 +1,6 @@
 package cn.allin.controller
 
-import cn.allin.ServerRoute
+import cn.allin.apiRoute
 import cn.allin.config.security.JwtUtil
 import cn.allin.service.LoginService
 import cn.allin.vo.MsgVO
@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono
 
 
 @RestController
-@RequestMapping(ServerRoute.AUTH)
+@RequestMapping(apiRoute.auth.AUTH)
 class AuthController(
     private val loginService: LoginService,
 ) {
@@ -25,15 +25,14 @@ class AuthController(
     fun delete(httpEntity: HttpEntity<Void>): Mono<MsgVO<String?>> {
         val auth = httpEntity.headers[HttpHeaders.AUTHORIZATION]?.firstOrNull() ?: return Mono.just(MsgVO.success(null))
         val userId = JwtUtil.extractLong(auth)
-        return loginService.logout(userId).map {
-            MsgVO.success("退出登录")
-        }
+        return loginService.logout(userId)
+            .thenReturn(MsgVO.success("退出登录"))
     }
 
 
     @PostMapping
     fun post(@RequestBody userVO: UserVO): Mono<MsgVO<String>> {
-        val user = userVO.name?.let(loginService::findUserId) ?: return Mono.just(MsgVO.fail(MsgVO.login,"没有这个用户"))
+        val user = userVO.name?.let(loginService::findLoginUser) ?: return Mono.just(MsgVO.fail(MsgVO.login,"没有这个用户"))
 
         return loginService.login(
             user.id,

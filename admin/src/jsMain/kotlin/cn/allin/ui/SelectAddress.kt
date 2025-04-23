@@ -22,7 +22,7 @@ external interface SelectAddressProps : Props {
     var onValue: (String) -> Unit
 }
 
-val SelectAddress = FC<SelectAddressProps> { p ->
+val SelectAddress = FC<SelectAddressProps> { props ->
     var selectProvince by useState<RegionVO?>(null)
     var selectCity by useState<RegionVO?>(null)
     var selectCounty by useState<RegionVO?>(null)
@@ -81,7 +81,7 @@ val SelectAddress = FC<SelectAddressProps> { p ->
             value = selectCounty
             onValue = {
                 selectCounty = it
-                p.onValue(selectProvince?.name + selectCity?.name + it.name)
+                props.onValue(selectProvince?.name + selectCity?.name + it.name)
             }
             regionList = countyList
             id = "县区"

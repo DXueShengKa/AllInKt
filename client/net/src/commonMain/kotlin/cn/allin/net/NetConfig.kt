@@ -8,16 +8,34 @@ import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
+import io.ktor.utils.io.charsets.*
 import kotlinx.serialization.ExperimentalSerializationApi
 
 val ContentTypeXProtobuf = ContentType("application", "x-protobuf")
 
 const val SERVER_BASE_URL = "http://localhost:8020"
 
+//const val SERVER_BASE_URL = "http://www.839421549.xyz/server"
+
 expect val ktorEngineFactory: HttpClientEngineFactory<*>
+
+
+
+@OptIn(ExperimentalSerializationApi::class)
+fun HttpClientConfig<*>.contentNegotiation() {
+    install(ContentNegotiation) {
+        serialization(ContentTypeXProtobuf, cn.allin.AllProtoBuf)
+        serialization(ContentType.Application.Json, cn.allin.AllJson)
+    }
+}
 
 @OptIn(ExperimentalSerializationApi::class)
 fun HttpClientConfig<*>.commonConfig() {
+
+    Charsets {
+        register(Charsets.UTF_8)
+    }
+
     HttpResponseValidator {
         validateResponse {
             when(it.status) {

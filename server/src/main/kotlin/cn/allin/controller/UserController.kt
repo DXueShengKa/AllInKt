@@ -3,7 +3,7 @@ package cn.allin.controller
 import cn.allin.PostUserValidator
 import cn.allin.PutUserValidator
 import cn.allin.ServerParams
-import cn.allin.ServerRoute
+import cn.allin.apiRoute
 import cn.allin.repository.UserRepository
 import cn.allin.utils.UserAuthenticationToken
 import cn.allin.utils.toUserVO
@@ -13,7 +13,6 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -26,7 +25,7 @@ import reactor.core.publisher.Mono
  * 用户接口
  */
 @RestController
-@RequestMapping(ServerRoute.USER)
+@RequestMapping(apiRoute.user.USER)
 class UserController(
     private val userRepository: UserRepository,
 ) {
@@ -34,7 +33,7 @@ class UserController(
     /**
      * 获取用户列表
      */
-    @GetMapping(ServerRoute.PAGE)
+    @GetMapping(apiRoute.PAGE)
     fun get(
         @RequestParam(ServerParams.PAGE_INDEX) pageIndex: Int?,
         @RequestParam(ServerParams.PAGE_SIZE) pageSize: Int?
@@ -57,9 +56,9 @@ class UserController(
      * 删除用户
      * @param userId 用户id
      */
-    @DeleteMapping("/{id}")
-    fun delete(@PathVariable("id") userId: Long): Boolean {
-        return userRepository.delete(userId)
+    @DeleteMapping(apiRoute.PATH_ID)
+    fun delete(id: Long): Boolean {
+        return userRepository.delete(userId = id)
     }
 
     /**

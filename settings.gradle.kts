@@ -5,13 +5,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
     includeBuild("buildPlugin")
     repositories {
-        google {
-            mavenContent {
-                includeGroupAndSubgroups("androidx")
-                includeGroupAndSubgroups("com.android")
-                includeGroupAndSubgroups("com.google")
-            }
-        }
+        google()
         mavenLocal()
         mavenCentral()
         gradlePluginPortal()
@@ -20,13 +14,7 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        google {
-            mavenContent {
-                includeGroupAndSubgroups("androidx")
-                includeGroupAndSubgroups("com.android")
-                includeGroupAndSubgroups("com.google")
-            }
-        }
+        google()
         mavenLocal()
         mavenCentral()
     }
@@ -34,12 +22,14 @@ dependencyResolutionManagement {
 
 include(
     ":composeApp",
-//    ":server",
+    ":server",
     ":shared",
-//    ":admin",
-//    ":kt-ai",
-    ":allKsp",
-    ":ksp-annotation",
+    ":admin",
+    ":kt-ai",
+    ":ksp:annotation",
+    ":ksp:server",
+    ":ksp:shared",
+    ":ksp:composeApp",
     ":client:net",
     ":client:data",
     ":client:ui",

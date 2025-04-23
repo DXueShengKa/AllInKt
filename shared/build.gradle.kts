@@ -26,7 +26,7 @@ kotlin {
         }
 
         jsMain.dependencies {
-            implementation(npm("@js-joda/timezone", "2.21.1"))
+            implementation(npm("@js-joda/timezone", "2.3.0"))
         }
     }
 }
@@ -47,5 +47,5 @@ tasks.withType<KotlinCompilationTask<*>>().all {
 }
 
 dependencies {
-    kspCommonMainMetadata(projects.allKsp)
+    kspCommonMainMetadata(projects.ksp.shared)
 }

@@ -2,6 +2,9 @@ package cn.allin
 
 
 import SessionContext
+import cn.allin.net.Req
+import cn.allin.net.currentUser
+import cn.allin.net.deleteAuth
 import cn.allin.ui.RouteAuth
 import cn.allin.ui.RouteAuthFC
 import cn.allin.ui.RouteQandaAdd
@@ -9,6 +12,7 @@ import cn.allin.ui.RouteQandaList
 import cn.allin.ui.RouteTagList
 import cn.allin.ui.RouteUserAdd
 import cn.allin.ui.RouteUserList
+import cn.allin.utils.asyncFunction
 import colorSchemes
 import cssVariables
 import js.objects.jso
@@ -22,11 +26,14 @@ import react.router.RouteObject
 import react.router.dom.createHashRouter
 import react.router.useNavigate
 import react.router.useRouteError
+import react.useEffectOnce
 import toolpad.core.DashboardLayout
 import toolpad.core.Navigation
 import toolpad.core.PageContainer
+import toolpad.core.Session
 import toolpad.core.react_router.ReactRouterAppProvider
-import useSession
+import toolpad.core.useSession
+import useSessionContext
 
 private val RootLayoutRoutes = arrayOf<RouteObject>(
     jso {
@@ -79,7 +86,18 @@ private val appNavigation: Navigation = arrayOf(
 
 private val AppLayout = FC {
     val navigate = useNavigate()
-    val sessionContext = useSession()
+    val sessionContext = useSessionContext()
+
+    useEffectOnce {
+        Req.authToken()?.let {
+            val u = Req.currentUser()
+            sessionContext.set(jso {
+                user = u
+            })
+            navigate("/")
+        }
+    }
+
     SessionContext.Provider {
         value = sessionContext
         ReactRouterAppProvider {
@@ -87,11 +105,13 @@ private val AppLayout = FC {
                 signIn = {
                     navigate(RouteAuth)
                 }
-                signOut = {
+                signOut = asyncFunction {
+                    Req.deleteAuth()
                     sessionContext.set(null)
                     navigate(RouteAuth)
                 }
             }
+
             theme = createTheme(
                 jso {
                     palette = jso {
@@ -118,8 +138,8 @@ private val AppLayout = FC {
 }
 
 private val RootLayout = FC {
-    val session = useSession()
-    if (session.session != null) {
+    val session = useSession<Session>()
+    if (session?.user == null) {
         Navigate {
             to = RouteAuth
             replace = true

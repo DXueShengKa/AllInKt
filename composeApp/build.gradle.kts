@@ -12,14 +12,15 @@ plugins {
 
 val isTest: String by project
 
+val isMacOS = System.getProperty("os.name").startsWith("Mac OS")
+
 kotlin {
 
     androidTarget()
 
 //    jvm("desktop")
 
-    val osName = System.getProperty("os.name")
-    if (osName.startsWith("Mac OS")) listOf(
+    if (isMacOS) listOf(
         iosX64(),
         iosArm64(),
 //        iosSimulatorArm64()
@@ -83,7 +84,7 @@ kotlin {
             implementation(projects.client.ui)
             implementation(projects.client.data)
             implementation(projects.client.components)
-            implementation(projects.kspAnnotation)
+            implementation(projects.ksp.annotation)
 
             implementation(libs.bluefalcon)
         }
@@ -140,6 +141,18 @@ android {
 }
 
 
-dependencies {
-    ksp(projects.allKsp)
+
+fun DependencyHandler.kspAll(dependencyNotation: Any) {
+    add("kspAndroid", dependencyNotation)
+    add("kspDesktop", dependencyNotation)
+    if (isMacOS){
+        add("kspIosSimulatorArm64", dependencyNotation)
+        add("kspIosArm64", dependencyNotation)
+        add("kspIosX64", dependencyNotation)
+    }
 }
+
+dependencies {
+    kspAll(projects.ksp.composeApp)
+}
+

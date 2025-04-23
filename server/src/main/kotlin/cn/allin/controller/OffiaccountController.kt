@@ -1,6 +1,6 @@
 package cn.allin.controller
 
-import cn.allin.ServerRoute
+import cn.allin.apiRoute
 import cn.allin.service.OffiaccountService
 import cn.allin.vo.OffiAccoutMsgVO
 import org.slf4j.LoggerFactory
@@ -17,7 +17,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 
 
 @RestController
-@RequestMapping(ServerRoute.OFFI_ACCOUNT)
+@RequestMapping(apiRoute.offiAccount.OFFI_ACCOUNT)
 class OffiaccountController(
     private val service: OffiaccountService,
 ) {
@@ -57,14 +57,17 @@ class OffiaccountController(
 
     @PostMapping
     fun post(@RequestBody body: String): Mono<String> {
-        val p = body.byteInputStream()
-        val xml = xmlDoc.parse(p).documentElement
-        val vo = elementToMsgVO(xml)
-        p.close()
-        xmlDoc.reset()
 //        logger.info("微信推送消息:{}", vo)
-
-        return service.answer(vo,service.saveMsg(vo))
+        return Mono.create<OffiAccoutMsgVO> { sink ->
+            val p = body.byteInputStream()
+            val xml = xmlDoc.parse(p).documentElement
+            val vo = elementToMsgVO(xml)
+            p.close()
+            xmlDoc.reset()
+            sink.success(vo)
+        }.flatMap { vo ->
+            service.answer(vo,service.saveMsg(vo))
+        }
     }
 
 

@@ -1,60 +1,57 @@
 package cn.allin.ui
 
-import cn.allin.ServerRoute
 import cn.allin.VoFieldName
-import cn.allin.getValue
 import cn.allin.net.Req
 import cn.allin.net.deleteQanda
 import cn.allin.net.getQandaPage
-import cn.allin.useCoroutineScope
+import cn.allin.net.uploadExcel
+import cn.allin.net.useQuery
+import cn.allin.utils.DATE_TIME_DEFAULT_FORMAT
+import cn.allin.utils.asyncFunction
 import cn.allin.utils.columnDefCell
-import cn.allin.utils.columnDefHeader
-import cn.allin.utils.queryFunction
-import cn.allin.utils.queryKey
+import cn.allin.utils.getValue
+import cn.allin.utils.invokeFn
+import cn.allin.utils.reactNode
+import cn.allin.utils.selectColumnDef
+import cn.allin.utils.setState
+import cn.allin.utils.useCoroutineScope
+import cn.allin.utils.useRowSelectionState
 import cn.allin.vo.PageVO
 import cn.allin.vo.QandaVO
 import js.array.ReadonlyArray
 import js.objects.jso
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
-import mui.material.Checkbox
+import kotlinx.datetime.format
+import mui.material.Button
 import mui.material.IconButton
+import mui.material.Input
+import mui.material.Stack
+import mui.material.StackDirection
+import mui.system.responsive
 import muix.icons.IconsDelete
 import react.FC
+import react.Props
 import react.useMemo
+import react.useRef
 import react.useState
-import tanstack.query.core.QueryKey
-import tanstack.react.query.useQuery
 import tanstack.react.table.useReactTable
 import tanstack.table.core.ColumnDef
-import tanstack.table.core.RowSelectionState
 import tanstack.table.core.StringOrTemplateHeader
+import tanstack.table.core.TableOptions
 import tanstack.table.core.getCoreRowModel
+import toolpad.core.SeverityStr
+import toolpad.core.show
+import toolpad.core.useDialogs
+import toolpad.core.useNotifications
+import web.file.File
+import web.html.HTMLInputElement
+import web.html.InputType
 
 private fun qaListColumnDef(
     onDelete: (QandaVO) -> Unit,
 ): ReadonlyArray<ColumnDef<QandaVO, String?>> = arrayOf(
-    jso {
-        id = "select"
-        header = StringOrTemplateHeader(columnDefHeader {
-            Checkbox {
-                checked = it.table.getIsAllRowsSelected()
-                onChange = { e, b ->
-                    it.table.getToggleAllRowsSelectedHandler().invoke(e)
-                }
-            }
-        })
-
-        cell = columnDefCell {
-            Checkbox {
-                checked = it.row.getIsSelected()
-                disabled = !it.row.getCanSelect()
-                onChange = { e, b ->
-                    it.row.getToggleSelectedHandler().invoke(e)
-                }
-            }
-        }
-    },
+    selectColumnDef(),
     jso {
         id = "id"
         header = StringOrTemplateHeader(id)
@@ -66,24 +63,30 @@ private fun qaListColumnDef(
         id = VoFieldName.QandaVO_question
         header = StringOrTemplateHeader("问题")
         accessorFn = { qa, _ ->
-            qa.question.toString()
+            qa.question
         }
     },
     jso {
         id = VoFieldName.QandaVO_answer
         header = StringOrTemplateHeader("回答")
         accessorFn = { qa, _ ->
-            qa.answer.toString()
+            qa.answer
         }
     },
-//    jso {
-//        id = VoFieldName.QandaVO_tagIds
-//        header = StringOrTemplateHeader("标签")
-//        accessorFn = { qa, _ ->
-//            qa.tagIds?.joinToString(",")
-//        }
-//    }
-
+    jso {
+        id = VoFieldName.QandaVO_tagList
+        header = StringOrTemplateHeader("标签")
+        accessorFn = { qa, _ ->
+            qa.tagList?.joinToString(",")
+        }
+    },
+    jso {
+        id = VoFieldName.QandaVO_createTime
+        header = StringOrTemplateHeader("创建时间")
+        accessorFn = { qa, _ ->
+            qa.createTime?.format(DATE_TIME_DEFAULT_FORMAT)
+        }
+    },
     jso {
         id = "操作"
         header = StringOrTemplateHeader(id)
@@ -100,58 +103,139 @@ private fun qaListColumnDef(
 
 
 private val QandaListFC = FC {
-    var (pageParams, setPageParams) = useState(PageParams())
+    val (pageParams, setPageParams) = useState(PageParams())
     var qaPage: PageVO<QandaVO>? by useState()
-    var rowSelect: RowSelectionState by useState(jso())
-    val cs: CoroutineScope? by useCoroutineScope()
-//    var showMessage by useState(false)
+    val selectState = useRowSelectionState()
+    val cs by useCoroutineScope()
+    val notifications = useNotifications()
 
 
-    val query = useQuery<PageVO<QandaVO>, Error, PageVO<QandaVO>, QueryKey>(options = jso {
-        queryKey = queryKey(ServerRoute.Qanda, pageParams)
-        queryFn = queryFunction {
-            Req.getQandaPage(pageParams)
-        }
-    })
+    val query = useQuery(pageParams) {
+        getQandaPage(pageParams)
+    }
 
-    val onDelete: (QandaVO) -> Unit = {
-        cs?.launch {
-            val msg = Req.deleteQanda(it.id ?: return@launch)
-            query.refetch(jso())
+    val onDelete: (QandaVO) -> Unit = { vo ->
+        cs.launch {
+            Req.deleteQanda(vo.id ?: return@launch)
+                .onLeft {
+                    notifications.show("${vo.question} $it",severity = SeverityStr.error)
+                }.onRight {
+                    query.refresh()
+                    notifications.show("${vo.question} 已删除")
+                }
         }
     }
 
     val tableData: Array<QandaVO> = useMemo(query.data) {
-        rowSelect = jso()
+        selectState.clear()
         qaPage = query.data
         query.data?.rows?.toTypedArray() ?: emptyArray()
     }
 
-    val qaTable = useReactTable<QandaVO>(jso {
-        columns = qaListColumnDef(
-            onDelete = onDelete
+
+    val qaTable = useReactTable(
+        TableOptions<QandaVO>(
+            columns = qaListColumnDef(
+                onDelete = onDelete
+            ),
+            data = tableData,
+            onRowSelectionChange = selectState.onSelectChange,
+            getCoreRowModel = getCoreRowModel(),
+        ).setState(
+            rowSelection = selectState.rows,
         )
-        data = tableData
-        state = jso {
-            rowSelection = rowSelect
+    )
+
+
+    TableMenu {
+        onRefresh = query::refresh
+        onDeleteSelect = {
+            val ids = qaTable.getSelectedRowModel().flatRows.mapNotNull { it.original.id }
+            if (ids.isNotEmpty()) cs.launch {
+                val count = Req.deleteQanda(ids).data
+                query.refresh()
+                notifications.show("删了 $count 条数据")
+            }
+
         }
-        onRowSelectionChange = {
-            rowSelect = it.asDynamic()
-        }
-        this.getCoreRowModel = getCoreRowModel()
-    })
+    }
 
     AdminPageTable {
         table = qaTable
         pageCount = qaPage?.totalRow
         page = pageParams
         onPage = {
-            pageParams = pageParams.copy(
-                index = it.toInt()
+            setPageParams(
+                pageParams.copy(
+                    index = it
+                )
             )
         }
-        setOnPageParams = setPageParams
+        onPageParams = setPageParams.invokeFn
     }
+}
+
+
+private external interface TableMenuProps : Props {
+    var onRefresh: () -> Unit
+
+    var onDeleteSelect: () -> Unit
+}
+
+
+private val TableMenu = FC<TableMenuProps> { props ->
+
+    val excelFile = useRef<File>()
+    val notifications = useNotifications()
+    val dialog = useDialogs()
+
+    Stack {
+        direction = responsive(StackDirection.row)
+        spacing = responsive(2)
+
+        Input {
+            type = InputType.file.toString()
+            onChange = {
+                val e = it.target as HTMLInputElement
+                excelFile.current = e.files?.get(0)
+            }
+        }
+
+        Button {
+            onClick = asyncFunction { event ->
+                event.preventDefault()
+                val f = excelFile.current ?: return@asyncFunction
+
+                Req.uploadExcel(f)
+
+                notifications.show("已更新")
+
+                props.onRefresh()
+            }
+
+            +"上传excel"
+        }
+
+        Button {
+
+            onClick = asyncFunction {
+                val b = dialog.confirm(reactNode("是否删除选中"), jso {
+//                    title = reactNode("")
+                    okText = reactNode("删除")
+                    cancelText = reactNode("取消")
+                }).await()
+
+                if (b) props.onDeleteSelect()
+
+            }.asDynamic()
+
+            IconsDelete()
+
+            +"删除选中"
+        }
+
+    }
+
 }
 
 

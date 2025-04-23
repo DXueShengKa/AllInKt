@@ -1,13 +1,14 @@
 package toolpad.core
 
 import js.objects.jso
+import mui.material.FormControlLabelProps
+import mui.material.TextFieldProps
+import react.dom.html.FormHTMLAttributes
 import seskar.js.JsValue
+import web.html.HTMLFormElement
 
 
-external interface AuthProvider {
-    var id: AuthProviderId
-    var name: String
-}
+
 
 sealed external interface AuthProviderId {
     companion object {
@@ -22,32 +23,18 @@ sealed external interface AuthProviderId {
 }
 
 
-external interface SignInSlot {
-    var emailField: dynamic
-    var form: dynamic
-}
-
-external interface EmailField {
-    var autoFocus: Boolean?
-}
-
-external interface SignInForm {
-    var noValidate: Boolean?
-}
-
-inline fun SignInProps.slotProps(
-    emailField: EmailField.() -> Unit,
-    form: SignInForm.() -> Unit,
+fun SignInProps.slotProps(
+    emailField: (TextFieldProps.() -> Unit)? = null,
+    passwordField: (TextFieldProps.() -> Unit)? = null,
+    form: (FormHTMLAttributes<HTMLFormElement>.() -> Unit)? = null,
+    rememberMe: (FormControlLabelProps.() -> Unit)? = null,
 ) {
-    this.slotProps = jso<SignInSlot> {
-        this.emailField = jso<EmailField>(emailField)
-        this.form = jso<SignInForm>(form)
+    slotProps = jso {
+        this.emailField = emailField?.let(::jso)
+        this.passwordField = passwordField?.let(::jso)
+        this.rememberMe = rememberMe?.let(::jso)
+        this.form = form?.let(::jso)
     }
-}
-
-external interface AuthResponse {
-    var error: String?
-    var type: String?
 }
 
 
@@ -57,3 +44,35 @@ external interface Authentication {
 }
 
 
+sealed external interface SeverityStr {
+    companion object {
+        @JsValue("info")
+        val info: SeverityStr
+
+        @JsValue("warning")
+        val warning: SeverityStr
+
+        @JsValue("error")
+        val error: SeverityStr
+
+        @JsValue("success")
+        val success: SeverityStr
+    }
+}
+
+
+//(brandingTitle?: string) => string
+fun SignInPageLocaleText.signInTitle(title: (String) -> String) {
+    signInTitle = title.asDynamic()
+}
+
+fun Notifications.show(
+    text: String,
+    autoHideDuration: Int = 1500,
+    severity: SeverityStr = SeverityStr.info,
+) {
+    show(text, jso {
+        this.autoHideDuration = autoHideDuration
+        this.severity = severity
+    })
+}

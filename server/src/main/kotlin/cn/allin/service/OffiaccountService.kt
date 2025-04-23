@@ -22,13 +22,13 @@ class OffiaccountService(
         const val WX_ACCESS_TOKEN = "$WX_CACHE_NAME:accessToken"
     }
 
-    @Value("{wx.appid}")
-    private lateinit var wxAppid: String
+    @Value("\${wx.appid}")
+    lateinit var wxAppid: String
 
-    @Value("{wx.secret}")
-    private lateinit var wxSecret: String
+    @Value("\${wx.secret}")
+    lateinit var wxSecret: String
 
-    @Value("{wx.token}")
+    @Value("\${wx.token}")
     lateinit var wxToken: String
 
 //        @Cacheable(cacheNames = [WX_CACHE_NAME], key = "#root.method.name")

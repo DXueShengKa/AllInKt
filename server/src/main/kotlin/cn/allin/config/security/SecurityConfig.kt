@@ -1,6 +1,8 @@
 package cn.allin.config.security
 
 import cn.allin.AllJson
+import cn.allin.apiRoute
+import cn.allin.config.UserRole
 import cn.allin.service.UserService
 import cn.allin.vo.MsgVO
 import kotlinx.serialization.encodeToString
@@ -9,6 +11,7 @@ import kotlinx.serialization.json.put
 import org.springframework.cache.CacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
@@ -26,6 +29,7 @@ import org.springframework.security.web.server.ServerAuthenticationEntryPoint
 import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler
 import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers.pathMatchers
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
@@ -79,7 +83,7 @@ class SecurityConfig {
     }
 
     private val adHandler = ServerAccessDeniedHandler { exchange, authException ->
-        val msgVO: MsgVO<String> = MsgVO.error(MsgVO.auth,"权限不足")
+        val msgVO: MsgVO<String> = MsgVO.error(MsgVO.auth, "权限不足")
 
         exchange.response.run {
             headers.contentType = MediaType.APPLICATION_JSON
@@ -91,11 +95,11 @@ class SecurityConfig {
     private val entryPoint = ServerAuthenticationEntryPoint { exchange, authException ->
         val msgVO: MsgVO<String> = when (authException) {
             is AuthenticationCredentialsNotFoundException -> {
-                MsgVO.error(MsgVO.auth,authException.message)
+                MsgVO.error(MsgVO.auth, "没有权限")
             }
 
             else -> {
-                MsgVO.error(MsgVO.auth,authException.message)
+                MsgVO.error(MsgVO.auth, authException.message)
             }
         }
 
@@ -137,13 +141,19 @@ class SecurityConfig {
 //            }
 
             authorizeExchange {
-//                authorize("/admin/**", permitAll)
-//                authorize("/auth", permitAll)
-//                authorize("/user/page", hasAuthority(UserRole.ROLE_ADMIN.name))
-//                authorize("/user/*", hasAnyAuthority(UserRole.ROLE_USER.name, UserRole.ROLE_ADMIN.name))
-//                authorize("/region/**", permitAll)
-//                authorize("/offiaccount/**", permitAll)
-                authorize(anyExchange, permitAll)
+                authorize("/${apiRoute.auth.AUTH}/**", permitAll)
+
+                authorize(
+                    pathMatchers(HttpMethod.GET, "/${apiRoute.user.path}",),
+                    hasAnyAuthority(UserRole.ROLE_USER.name, UserRole.ROLE_ADMIN.name)
+                )
+                authorize("/${apiRoute.user.path}/**", hasAuthority(UserRole.ROLE_ADMIN.name))
+
+                authorize(pathMatchers(HttpMethod.GET, "/region/**"),)
+                authorize("/${apiRoute.offiAccount.path}/**", permitAll)
+                authorize("/${apiRoute.qanda.path}/**", hasAuthority(UserRole.ROLE_ADMIN.name))
+
+                authorize(anyExchange, authenticated)
             }
 
             formLogin {
