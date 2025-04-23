@@ -21,7 +21,6 @@ import mui.material.Stack
 import mui.material.StackDirection
 import mui.material.TextField
 import mui.system.responsive
-import org.w3c.dom.HTMLInputElement
 import react.FC
 import react.dom.events.FormEvent
 import react.dom.html.ReactHTML.form
@@ -30,6 +29,7 @@ import react.useState
 import web.cssom.px
 import web.html.ButtonType
 import web.html.HTMLElement
+import web.html.HTMLInputElement
 
 
 private val AddUserFC = FC {

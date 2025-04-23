@@ -1,7 +1,7 @@
 package cn.allin.ksp
 
+import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.closestClassDeclaration
-import com.google.devtools.ksp.containingFile
 import com.google.devtools.ksp.getConstructors
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
@@ -18,6 +18,7 @@ import com.squareup.kotlinpoet.ksp.writeTo
 /**
  * 生成字段名字
  */
+@OptIn(KspExperimental::class)
 fun generatorSerializationField(resolver: Resolver, codeGenerator: CodeGenerator, logger: KSPLogger) {
 
     val typeSpec = TypeSpec.objectBuilder("VoFieldName")
@@ -27,16 +28,20 @@ fun generatorSerializationField(resolver: Resolver, codeGenerator: CodeGenerator
 
     val stringType = String::class.asTypeName()
 
-    resolver.getSymbolsWithAnnotation("kotlinx.serialization.Serializable")
-        .flatMap { a ->
-            a.containingFile?.declarations?.mapNotNull {
-                it.closestClassDeclaration()
-            } ?: emptySequence()
+    resolver.getDeclarationsFromPackage("cn.allin.vo")
+        .mapNotNull {
+            it.closestClassDeclaration()
         }
+        .filter { declaration ->
+            declaration.annotations.any { it.shortName.getShortName() == "Serializable" }
+        }
+//    resolver.getSymbolsWithAnnotation("kotlinx.serialization.Serializable")
+//        .flatMap { a ->
+//            a.containingFile?.declarations?.mapNotNull {
+//                it.closestClassDeclaration()
+//            } ?: emptySequence()
+//        }
         .forEach { d ->
-
-            if (d.typeParameters.isNotEmpty())
-                return@forEach
 
             val className = d.simpleName.asString()
 //            val receiverType = ClassName(d.packageName.asString(), className, "Companion")

@@ -4,12 +4,12 @@ import cn.allin.VoFieldName
 import cn.allin.net.Req
 import cn.allin.net.deleteUser
 import cn.allin.net.getUserPage
-import cn.allin.utils.columnDefCell
-import cn.allin.utils.columnDefHeader
 import cn.allin.utils.getValue
 import cn.allin.utils.invokeFn
+import cn.allin.utils.selectColumnDef
 import cn.allin.utils.setState
 import cn.allin.utils.useCoroutineScope
+import cn.allin.utils.useRowSelectionState
 import cn.allin.vo.Gender
 import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
@@ -18,7 +18,6 @@ import js.objects.jso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import mui.material.Button
-import mui.material.Checkbox
 import mui.material.Snackbar
 import mui.material.SnackbarOriginHorizontal
 import mui.material.SnackbarOriginVertical
@@ -31,35 +30,13 @@ import react.useMemo
 import react.useState
 import tanstack.react.table.useReactTable
 import tanstack.table.core.ColumnDef
-import tanstack.table.core.RowSelectionState
 import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.TableOptions
-import tanstack.table.core.Updater
 import tanstack.table.core.getCoreRowModel
 
 
 private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
-    jso {
-        id = "select"
-        header = StringOrTemplateHeader(columnDefHeader {
-            Checkbox {
-                checked = it.table.getIsAllRowsSelected()
-                onChange = { e, b ->
-                    it.table.getToggleAllRowsSelectedHandler().invoke(e)
-                }
-            }
-        })
-
-        cell = columnDefCell {
-            Checkbox {
-                checked = it.row.getIsSelected()
-                disabled = !it.row.getCanSelect()
-                onChange = { e, b ->
-                    it.row.getToggleSelectedHandler().invoke(e)
-                }
-            }
-        }
-    },
+    selectColumnDef(),
     jso {
         id = "id"
         header = StringOrTemplateHeader("ID")
@@ -105,7 +82,7 @@ private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
 private val UserListFC = FC {
     val (pageParams, setPageParams) = useState(PageParams())
     var userPage: PageVO<UserVO>? by useState()
-    val (rowSelect, setRowSelect) = useState<Updater<RowSelectionState>>(jso())
+    val selectState = useRowSelectionState()
     val cs: CoroutineScope? by useCoroutineScope()
     var showMessage by useState(false)
 
@@ -114,7 +91,7 @@ private val UserListFC = FC {
     }
 
     val tableData: Array<UserVO> = useMemo(query.data) {
-        setRowSelect(jso<Updater<RowSelectionState>>())
+        selectState.clear()
         userPage = query.data
         query.data?.rows?.toTypedArray() ?: emptyArray()
     }
@@ -123,10 +100,10 @@ private val UserListFC = FC {
         options = TableOptions(
             columns = UserColumnDef,
             data = tableData,
-            onRowSelectionChange = setRowSelect.invokeFn,
+            onRowSelectionChange = selectState.onSelectChange,
             getCoreRowModel = getCoreRowModel(),
         ).setState(
-            rowSelection = rowSelect,
+            rowSelection = selectState.rows,
         )
     )
 

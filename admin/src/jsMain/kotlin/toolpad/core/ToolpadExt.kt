@@ -8,10 +8,7 @@ import seskar.js.JsValue
 import web.html.HTMLFormElement
 
 
-external interface AuthProvider {
-    var id: AuthProviderId
-    var name: String
-}
+
 
 sealed external interface AuthProviderId {
     companion object {
@@ -26,18 +23,9 @@ sealed external interface AuthProviderId {
 }
 
 
-external interface SignInSlot {
-    var emailField: TextFieldProps?
-    var passwordField: TextFieldProps?
-    var form: FormHTMLAttributes<HTMLFormElement>?
-    var rememberMe: FormControlLabelProps?
-
-}
-
-
 fun SignInProps.slotProps(
-    emailField: (TextFieldProps.() -> Unit) ? = null,
-    passwordField: (TextFieldProps.() -> Unit) ? = null,
+    emailField: (TextFieldProps.() -> Unit)? = null,
+    passwordField: (TextFieldProps.() -> Unit)? = null,
     form: (FormHTMLAttributes<HTMLFormElement>.() -> Unit)? = null,
     rememberMe: (FormControlLabelProps.() -> Unit)? = null,
 ) {
@@ -49,61 +37,42 @@ fun SignInProps.slotProps(
     }
 }
 
-external interface AuthResponse {
-    var error: String?
-    var type: String?
-}
-
 
 external interface Authentication {
     var signIn: () -> Unit
     var signOut: () -> Unit
 }
 
-external interface Notifications {
-    fun show(text: String, config: NotificationsConfig = definedExternally): Any
-    fun close(key: Any = definedExternally)
-}
 
-
-sealed external interface NCSeverity {
+sealed external interface SeverityStr {
     companion object {
         @JsValue("info")
-        val info: NCSeverity
+        val info: SeverityStr
 
         @JsValue("warning")
-        val warning: NCSeverity
+        val warning: SeverityStr
 
         @JsValue("error")
-        val error: NCSeverity
+        val error: SeverityStr
 
         @JsValue("success")
-        val success: NCSeverity
+        val success: SeverityStr
     }
-}
-
-
-external interface NotificationsConfig {
-    var severity: NCSeverity
-    var autoHideDuration: Int
-}
-
-external interface SignInPageLocaleText {
-    var signInTitle: String
-    var signInSubtitle: String
-    var signInRememberMe: String
-    // providerSignInTitle: (provider: string) => string;
-    var providerSignInTitle: (String) -> String
-    var email: String
-    var password: String
-    var or: String
-    var with: String
-    var passkey: String
-    var to: String
 }
 
 
 //(brandingTitle?: string) => string
 fun SignInPageLocaleText.signInTitle(title: (String) -> String) {
     signInTitle = title.asDynamic()
+}
+
+fun Notifications.show(
+    text: String,
+    autoHideDuration: Int = 1500,
+    severity: SeverityStr = SeverityStr.info,
+) {
+    show(text, jso {
+        this.autoHideDuration = autoHideDuration
+        this.severity = severity
+    })
 }

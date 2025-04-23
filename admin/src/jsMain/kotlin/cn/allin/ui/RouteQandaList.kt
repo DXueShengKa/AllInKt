@@ -9,18 +9,21 @@ import cn.allin.net.useQuery
 import cn.allin.utils.DATE_TIME_DEFAULT_FORMAT
 import cn.allin.utils.asyncFunction
 import cn.allin.utils.columnDefCell
-import cn.allin.utils.columnDefHeader
 import cn.allin.utils.getValue
 import cn.allin.utils.invokeFn
+import cn.allin.utils.reactNode
+import cn.allin.utils.selectColumnDef
+import cn.allin.utils.setState
 import cn.allin.utils.useCoroutineScope
+import cn.allin.utils.useRowSelectionState
 import cn.allin.vo.PageVO
 import cn.allin.vo.QandaVO
 import js.array.ReadonlyArray
 import js.objects.jso
+import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.datetime.format
 import mui.material.Button
-import mui.material.Checkbox
 import mui.material.IconButton
 import mui.material.Input
 import mui.material.Stack
@@ -28,45 +31,27 @@ import mui.material.StackDirection
 import mui.system.responsive
 import muix.icons.IconsDelete
 import react.FC
-import react.dom.html.ReactHTML.form
+import react.Props
 import react.useMemo
 import react.useRef
 import react.useState
 import tanstack.react.table.useReactTable
 import tanstack.table.core.ColumnDef
-import tanstack.table.core.RowSelectionState
 import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.TableOptions
 import tanstack.table.core.getCoreRowModel
+import toolpad.core.SeverityStr
+import toolpad.core.show
+import toolpad.core.useDialogs
 import toolpad.core.useNotifications
 import web.file.File
-import web.html.ButtonType
+import web.html.HTMLInputElement
 import web.html.InputType
 
 private fun qaListColumnDef(
     onDelete: (QandaVO) -> Unit,
 ): ReadonlyArray<ColumnDef<QandaVO, String?>> = arrayOf(
-    jso {
-        id = "select"
-        header = StringOrTemplateHeader(columnDefHeader {
-            Checkbox {
-                checked = it.table.getIsAllRowsSelected()
-                onChange = { e, b ->
-                    it.table.getToggleAllRowsSelectedHandler().invoke(e)
-                }
-            }
-        })
-
-        cell = columnDefCell {
-            Checkbox {
-                checked = it.row.getIsSelected()
-                disabled = !it.row.getCanSelect()
-                onChange = { e, b ->
-                    it.row.getToggleSelectedHandler().invoke(e)
-                }
-            }
-        }
-    },
+    selectColumnDef(),
     jso {
         id = "id"
         header = StringOrTemplateHeader(id)
@@ -120,30 +105,29 @@ private fun qaListColumnDef(
 private val QandaListFC = FC {
     val (pageParams, setPageParams) = useState(PageParams())
     var qaPage: PageVO<QandaVO>? by useState()
-    var rowSelect: RowSelectionState by useState(jso())
+    val selectState = useRowSelectionState()
     val cs by useCoroutineScope()
     val notifications = useNotifications()
-    val excelFile = useRef<File>()
 
 
     val query = useQuery(pageParams) {
         getQandaPage(pageParams)
     }
 
-    val onDelete: (QandaVO) -> Unit = {
+    val onDelete: (QandaVO) -> Unit = { vo ->
         cs.launch {
-            val msg = Req.deleteQanda(it.id ?: return@launch)
-            query.refresh()
-            if (msg.isSuccess) {
-                notifications.show("${it.question} 已删除", jso {
-                    autoHideDuration = 2000
-                })
-            }
+            Req.deleteQanda(vo.id ?: return@launch)
+                .onLeft {
+                    notifications.show("${vo.question} $it",severity = SeverityStr.error)
+                }.onRight {
+                    query.refresh()
+                    notifications.show("${vo.question} 已删除")
+                }
         }
     }
 
     val tableData: Array<QandaVO> = useMemo(query.data) {
-        rowSelect = jso()
+        selectState.clear()
         qaPage = query.data
         query.data?.rows?.toTypedArray() ?: emptyArray()
     }
@@ -155,48 +139,26 @@ private val QandaListFC = FC {
                 onDelete = onDelete
             ),
             data = tableData,
-            onRowSelectionChange = {
-                rowSelect = it.asDynamic()
-            },
+            onRowSelectionChange = selectState.onSelectChange,
             getCoreRowModel = getCoreRowModel(),
+        ).setState(
+            rowSelection = selectState.rows,
         )
     )
 
 
-    Stack {
-        component = form
-        direction = responsive(StackDirection.row)
-
-        onSubmit = asyncFunction { event ->
-            event.preventDefault()
-            val f = excelFile.current ?: return@asyncFunction
-
-            Req.uploadExcel(f)
-
-            notifications.show("已更新", jso {
-                autoHideDuration = 2000
-            })
-            query.refresh()
-        }
-
-        Input {
-            id = "excelFile"
-            type = InputType.file.toString()
-            name = "file"
-            onChange = { e ->
-                val t = e.target as web.html.HTMLInputElement
-                t.files?.also {
-                    excelFile.current = it[0]
-                }
+    TableMenu {
+        onRefresh = query::refresh
+        onDeleteSelect = {
+            val ids = qaTable.getSelectedRowModel().flatRows.mapNotNull { it.original.id }
+            if (ids.isNotEmpty()) cs.launch {
+                val count = Req.deleteQanda(ids).data
+                query.refresh()
+                notifications.show("删了 $count 条数据")
             }
-        }
 
-        Button {
-            type = ButtonType.submit
-            +"上传"
         }
     }
-
 
     AdminPageTable {
         table = qaTable
@@ -211,6 +173,69 @@ private val QandaListFC = FC {
         }
         onPageParams = setPageParams.invokeFn
     }
+}
+
+
+private external interface TableMenuProps : Props {
+    var onRefresh: () -> Unit
+
+    var onDeleteSelect: () -> Unit
+}
+
+
+private val TableMenu = FC<TableMenuProps> { props ->
+
+    val excelFile = useRef<File>()
+    val notifications = useNotifications()
+    val dialog = useDialogs()
+
+    Stack {
+        direction = responsive(StackDirection.row)
+        spacing = responsive(2)
+
+        Input {
+            type = InputType.file.toString()
+            onChange = {
+                val e = it.target as HTMLInputElement
+                excelFile.current = e.files?.get(0)
+            }
+        }
+
+        Button {
+            onClick = asyncFunction { event ->
+                event.preventDefault()
+                val f = excelFile.current ?: return@asyncFunction
+
+                Req.uploadExcel(f)
+
+                notifications.show("已更新")
+
+                props.onRefresh()
+            }
+
+            +"上传excel"
+        }
+
+        Button {
+
+            onClick = asyncFunction {
+                val b = dialog.confirm(reactNode("是否删除选中"), jso {
+//                    title = reactNode("")
+                    okText = reactNode("删除")
+                    cancelText = reactNode("取消")
+                }).await()
+
+                if (b) props.onDeleteSelect()
+
+            }.asDynamic()
+
+            IconsDelete()
+
+            +"删除选中"
+        }
+
+    }
+
 }
 
 

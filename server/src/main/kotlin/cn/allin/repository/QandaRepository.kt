@@ -1,10 +1,13 @@
 package cn.allin.repository
 
+import cn.allin.model.AutoAnswerRecordEntity
 import cn.allin.model.QAndAEntity
 import cn.allin.model.QaTagEntity
 import cn.allin.model.addBy
 import cn.allin.model.by
 import cn.allin.model.fetchBy
+import cn.allin.model.id
+import cn.allin.model.qaId
 import cn.allin.model.question
 import cn.allin.utils.toPageVO
 import cn.allin.utils.toQaTagVO
@@ -15,7 +18,12 @@ import cn.allin.vo.QandaVO
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
+import org.babyfish.jimmer.sql.kt.ast.expression.eq
+import org.babyfish.jimmer.sql.kt.ast.expression.exists
 import org.babyfish.jimmer.sql.kt.ast.expression.like
+import org.babyfish.jimmer.sql.kt.ast.expression.not
+import org.babyfish.jimmer.sql.kt.ast.expression.valueIn
+import org.babyfish.jimmer.sql.kt.exists
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.stereotype.Repository
 import java.util.stream.Stream
@@ -64,8 +72,27 @@ class QandaRepository(private val sqlClient: KSqlClient) {
     }
 
 
-    fun delete(id: Int) {
-        sqlClient.deleteById(QAndAEntity::class, id)
+    fun delete(deleteId: Int): Boolean {
+        return sqlClient.createDelete(QAndAEntity::class) {
+            where(
+                table.id eq deleteId,
+                exists(subQuery(AutoAnswerRecordEntity::class) {
+                    where(table.qaId eq deleteId)
+                    select(table.id)
+                }).not()
+            )
+        }.execute() > 0
+    }
+
+    fun delete(ids: List<Int>): Int {
+
+        if (
+            sqlClient.exists(AutoAnswerRecordEntity::class) {
+                where(table.qaId valueIn ids)
+            }
+        ) return -1
+
+        return sqlClient.deleteByIds(QAndAEntity::class, ids).totalAffectedRowCount
     }
 
     fun findTagPage(index: Int, size: Int): PageVO<QaTagVO> {
@@ -113,4 +140,5 @@ class QandaRepository(private val sqlClient: KSqlClient) {
         )
             .execute().totalAffectedRowCount
     }
+
 }

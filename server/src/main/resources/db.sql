@@ -83,7 +83,7 @@ execute procedure update_timestamp_column();
 create table qa_tag
 (
     id          serial primary key,
-    tag_name    varchar(64)                         not null,
+    tag_name    varchar(64) unique                  not null,
     description text,
     create_time timestamp default CURRENT_TIMESTAMP not null
 );
@@ -111,7 +111,7 @@ create table accept_msg_record
     from_user_name varchar(200) not null,
     msg_type       varchar(32)  not null,
     event          varchar(32),
-    msg_id         bigint,
+    msg_id         bigint unique,
     content        text,
     pic_url        varchar(255),
     media_id       bigint,

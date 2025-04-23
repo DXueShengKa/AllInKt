@@ -2,6 +2,7 @@
 
 package cn.allin.net
 
+import arrow.core.Either
 import cn.allin.ServerParams
 import cn.allin.ValidatorError
 import cn.allin.apiRoute
@@ -68,6 +69,8 @@ object Req {
             url(SERVER_BASE_URL)
             accept(ContentType.Application.Json)
             contentType(ContentType.Application.Json)
+//            accept(ContentTypeXProtobuf)
+//            contentType(ContentTypeXProtobuf)
             headers {
                 authToken()?.also {
                     append(HttpHeaders.Authorization, it)
@@ -169,11 +172,17 @@ suspend fun Req.addQanda(vo: QandaVO): MsgVO<Int> {
     return response.body()
 }
 
-suspend fun Req.deleteQanda(id: Int): MsgVO<String> {
+suspend fun Req.deleteQanda(id: Int): Either<String, Unit> {
     val response = http.delete(apiRoute.qanda.path(id))
     return response.body()
 }
 
+suspend fun Req.deleteQanda(ids: List<Int>): MsgVO<Int> {
+    val response = http.delete(apiRoute.qanda.path){
+        parameter("ids", ids.joinToString())
+    }
+    return response.body()
+}
 
 suspend fun Req.getQaTagPage(pageParams: PageParams?): PageVO<QaTagVO> {
     return http.get(apiRoute.qanda.tag.page.path) {

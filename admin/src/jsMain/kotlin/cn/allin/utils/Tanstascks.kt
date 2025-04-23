@@ -2,6 +2,7 @@ package cn.allin.utils
 
 import js.array.ReadonlyArray
 import js.objects.jso
+import mui.material.Checkbox
 import mui.material.TableBody
 import mui.material.TableCell
 import mui.material.TableHead
@@ -10,29 +11,72 @@ import mui.material.TableRow
 import react.ChildrenBuilder
 import react.FC
 import react.ReactDsl
+import react.useState
 import tanstack.react.table.renderCell
 import tanstack.react.table.renderHeader
 import tanstack.table.core.CellContext
+import tanstack.table.core.ColumnDef
 import tanstack.table.core.ColumnDefTemplate
 import tanstack.table.core.HeaderContext
 import tanstack.table.core.HeaderGroup
 import tanstack.table.core.Row
 import tanstack.table.core.RowData
 import tanstack.table.core.RowSelectionState
+import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.TableOptions
 import tanstack.table.core.Updater
 
 
-fun <T> Updater<T>.updaterFn(old:T):T{
-    return unsafeCast<(T)->T>()(old)
+fun <T> Updater<T>.updaterFn(old: T): T {
+    return unsafeCast<(T) -> T>()(old)
 }
+
+
+class SelectState(
+    val rows: Updater<RowSelectionState>,
+    val onSelectChange: (Updater<js.objects.ReadonlyRecord<String, Boolean>>) -> Unit,
+) {
+    fun clear() {
+        onSelectChange(jso())
+    }
+}
+
+fun useRowSelectionState(): SelectState {
+    val (rowSelect, setRowSelect) = useState<Updater<RowSelectionState>>(jso())
+    return SelectState(rowSelect, setRowSelect.invokeFn)
+}
+
+fun <T : Any> selectColumnDef(): ColumnDef<T, String?> {
+    return jso {
+        id = "select"
+        header = StringOrTemplateHeader(columnDefHeader { context ->
+            Checkbox {
+                checked = context.table.getIsAllRowsSelected()
+                onChange = { e, b ->
+                    context.table.getToggleAllRowsSelectedHandler().invoke(e)
+                }
+            }
+        })
+
+        cell = columnDefCell { context ->
+            Checkbox {
+                checked = context.row.getIsSelected()
+                disabled = !context.row.getCanSelect()
+                onChange = { e, b ->
+                    context.row.getToggleSelectedHandler().invoke(e)
+                }
+            }
+        }
+    }
+}
+
 
 /**
  * tanstack包装器缺少api手动增加
  */
-fun <Data: Any> TableOptions<Data>.setState(
+fun <Data : Any> TableOptions<Data>.setState(
     rowSelection: Updater<RowSelectionState>
-):TableOptions<Data>{
+): TableOptions<Data> {
     asDynamic()["state"] = jso {
         this.rowSelection = rowSelection
     }

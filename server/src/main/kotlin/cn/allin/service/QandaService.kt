@@ -14,11 +14,16 @@ class QandaService(private val qandaRepository: QandaRepository) {
     }
 
     fun add(pageVO: QandaVO): Int {
-       return qandaRepository.add(pageVO)
+        return qandaRepository.add(pageVO)
     }
 
-    fun delete(id: Int) {
-        qandaRepository.delete(id)
+    fun delete(id: Int): Boolean {
+        return qandaRepository.delete(id)
+    }
+
+    fun delete(ids: List<Int>?): Int {
+        if (ids == null || ids.isEmpty()) return 0
+        return qandaRepository.delete(ids)
     }
 
     fun tagPage(index: Int, size: Int): PageVO<QaTagVO> {

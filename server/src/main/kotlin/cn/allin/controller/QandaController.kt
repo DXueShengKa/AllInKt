@@ -1,5 +1,8 @@
 package cn.allin.controller
 
+import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
 import cn.allin.ServerParams
 import cn.allin.apiRoute
 import cn.allin.service.QandaService
@@ -50,11 +53,25 @@ class QandaController(
         return MsgVO.success(qandaService.add(qandaVO))
     }
 
+
     @DeleteMapping(apiRoute.PATH_ID)
-    fun delete(@PathVariable id: Int): MsgVO<String> {
-        qandaService.delete(id)
-        return MsgVO.success(MsgVO.delete)
+    fun delete(@PathVariable id: Int): Either<String,Unit> {
+        return if (qandaService.delete(id)) {
+            Unit.right()
+        } else {
+            "该问题已存在回复记录".left()
+        }
     }
+
+
+    @DeleteMapping
+    fun deleteList(@RequestParam ids: List<Int>?): MsgVO<Int> {
+
+        return MsgVO.success(
+            qandaService.delete(ids)
+        )
+    }
+
 
     @GetMapping(apiRoute.qanda.tag.page.TAG_PAGE)
     fun tagPage(
@@ -111,8 +128,8 @@ class QandaController(
 
             qaList.add(
                 QandaVO(
-                    question = q?:continue,
-                    answer = a?:continue,
+                    question = q ?: continue,
+                    answer = a ?: continue,
                     tagList = tags,
                 )
             )
