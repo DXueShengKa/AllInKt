@@ -1,9 +1,7 @@
 package cn.allin.ui
 
 import cn.allin.VoFieldName
-import cn.allin.net.Req
-import cn.allin.net.deleteUser
-import cn.allin.net.getUserPage
+import cn.allin.net.ReqUser
 import cn.allin.utils.getValue
 import cn.allin.utils.invokeFn
 import cn.allin.utils.selectColumnDef
@@ -87,7 +85,7 @@ private val UserListFC = FC {
     var showMessage by useState(false)
 
     val query = cn.allin.net.useQuery(pageParams) {
-        Req.getUserPage(it)
+        ReqUser.page(pageIndex =  it?.index, pageSize = it?.size)
     }
 
     val tableData: Array<UserVO> = useMemo(query.data) {
@@ -129,7 +127,7 @@ private val UserListFC = FC {
             onClick = {
                 cs?.launch {
                     val ids = uTable.getSelectedRowModel().flatRows.map { it.original.id }
-                    if (Req.deleteUser(ids)) {
+                    if (ReqUser.deleteAll(ids) > 0) {
                         showMessage = true
                         query.refresh()
                     }

@@ -3,8 +3,8 @@ package cn.allin.ui
 import SessionContextValue
 import cn.allin.VoFieldName
 import cn.allin.net.Req
+import cn.allin.net.ReqUser
 import cn.allin.net.auth
-import cn.allin.net.currentUser
 import cn.allin.utils.getValue
 import cn.allin.utils.setValue
 import cn.allin.utils.useCoroutineScope
@@ -43,7 +43,7 @@ private suspend fun login(nav: NavigateFunction, sessionContext: SessionContextV
     )
     val result = Req.auth(vo,remember)
     if (result.isSuccess){
-        val u = Req.currentUser()
+        val u = ReqUser.userSession()
         sessionContext.set(jso {
             user = u
         })

@@ -17,13 +17,6 @@ interface apiRoute {
         const val PATH_ID = "/{id}"
     }
 
-    object user : apiRoute {
-        const val USER = "user"
-
-        override val path: String = USER
-        const val page = "$USER/${PAGE}"
-        fun path(userId: String) = "$USER/$userId"
-    }
 
     object auth : apiRoute {
         const val AUTH = "auth"
@@ -35,40 +28,6 @@ interface apiRoute {
         override val path: String = OFFI_ACCOUNT
     }
 
-    object region : apiRoute {
-        const val REGION = "region"
-        const val PROVINCE = "province"
-
-        override val path: String = REGION
-
-        val province = object : apiRoute {
-            override val path: String = "$REGION/$PROVINCE"
-        }
-
-        class City : apiRoute {
-            companion object {
-                const val PROVINCE_ID = "provinceId"
-                const val CITY = "city"
-            }
-
-            override val path: String = "$REGION/$CITY/{$PROVINCE_ID}"
-            fun path(provinceId: Int) = "$REGION/$CITY/$provinceId"
-        }
-
-        val city = City()
-
-        class Country : apiRoute {
-            companion object {
-                const val CITY_ID = "cityId"
-                const val COUNTRY = "country"
-            }
-            override val path: String = "$REGION/$COUNTRY/{$CITY_ID}"
-            fun path(cityId: Int) = "$REGION/$COUNTRY/$cityId"
-        }
-
-        val country = Country()
-
-    }
 
     object qanda : apiRoute {
         const val QANDA = "qanda"

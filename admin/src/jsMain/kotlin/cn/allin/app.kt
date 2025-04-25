@@ -3,7 +3,7 @@ package cn.allin
 
 import SessionContext
 import cn.allin.net.Req
-import cn.allin.net.currentUser
+import cn.allin.net.ReqUser
 import cn.allin.net.deleteAuth
 import cn.allin.ui.RouteAuth
 import cn.allin.ui.RouteAuthFC
@@ -90,7 +90,7 @@ private val AppLayout = FC {
 
     useEffectOnce {
         Req.authToken()?.let {
-            val u = Req.currentUser()
+            val u = ReqUser.userSession()
             sessionContext.set(jso {
                 user = u
             })

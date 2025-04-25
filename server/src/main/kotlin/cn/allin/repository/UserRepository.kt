@@ -99,7 +99,7 @@ class UserRepository(
     }
 
 
-    fun delete(ids: List<Long>): Boolean {
-        return sqlClient.deleteByIds(UserEntity::class,ids).totalAffectedRowCount > 0
+    fun delete(ids: List<Long>): Int {
+        return sqlClient.deleteByIds(UserEntity::class,ids).totalAffectedRowCount
     }
 }

@@ -1,6 +1,7 @@
 package cn.allin.config.security
 
 import cn.allin.AllJson
+import cn.allin.api.ApiUser
 import cn.allin.apiRoute
 import cn.allin.config.UserRole
 import cn.allin.service.UserService
@@ -144,12 +145,13 @@ class SecurityConfig {
                 authorize("/${apiRoute.auth.AUTH}/**", permitAll)
 
                 authorize(
-                    pathMatchers(HttpMethod.GET, "/${apiRoute.user.path}",),
+                    pathMatchers(HttpMethod.GET, "/${ApiUser.USER}",),
                     hasAnyAuthority(UserRole.ROLE_USER.name, UserRole.ROLE_ADMIN.name)
                 )
-                authorize("/${apiRoute.user.path}/**", hasAuthority(UserRole.ROLE_ADMIN.name))
+                authorize("/${ApiUser.USER}/**", hasAuthority(UserRole.ROLE_ADMIN.name))
 
-                authorize(pathMatchers(HttpMethod.GET, "/region/**"),)
+                authorize(pathMatchers(HttpMethod.GET, "/region/**"), permitAll)
+
                 authorize("/${apiRoute.offiAccount.path}/**", permitAll)
                 authorize("/${apiRoute.qanda.path}/**", hasAuthority(UserRole.ROLE_ADMIN.name))
 

@@ -5,7 +5,9 @@ package cn.allin.net
 import arrow.core.Either
 import cn.allin.ServerParams
 import cn.allin.ValidatorError
+import cn.allin.api.ApiRegion
 import cn.allin.apiRoute
+import cn.allin.net.Req.http
 import cn.allin.ui.PageParams
 import cn.allin.vo.MsgVO
 import cn.allin.vo.PageVO
@@ -21,10 +23,8 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
-import js.objects.jso
 import js.typedarrays.Uint8Array
 import js.typedarrays.toByteArray
-import toolpad.core.UserSession
 import web.file.File
 
 
@@ -87,26 +87,6 @@ object Req {
     }
 }
 
-suspend fun Req.getUserPage(pageParams: PageParams?): PageVO<UserVO> {
-    val response = http.get(apiRoute.user.page) {
-        parameter(ServerParams.PAGE_SIZE, pageParams?.size)
-        parameter(ServerParams.PAGE_INDEX, pageParams?.index)
-    }
-    return response.body()
-}
-
-
-suspend fun Req.deleteUser(ids: List<Long>): Boolean {
-    return http.delete(apiRoute.user.path) {
-        parameter("ids", ids.joinToString())
-    }.body()
-}
-
-suspend fun Req.addUser(addUser: UserVO) {
-    http.post(apiRoute.user.path) {
-        setBody(addUser)
-    }
-}
 
 
 suspend fun Req.auth(baseVO: UserVO, remember: Boolean): MsgVO<String> {
@@ -123,16 +103,6 @@ suspend fun Req.auth(baseVO: UserVO, remember: Boolean): MsgVO<String> {
     return msgVO
 }
 
-suspend fun Req.currentUser(): UserSession? {
-    val user: UserVO? = http.get(apiRoute.user.path).body()
-    return if (user != null) {
-        jso {
-            id = user.id.toString()
-            name = user.name
-            email = user.email
-        }
-    } else null
-}
 
 suspend fun Req.deleteAuth() {
     val msgVO: MsgVO<String> = http.delete(apiRoute.auth.path).body()
@@ -144,16 +114,18 @@ suspend fun Req.deleteAuth() {
 }
 
 
-suspend fun Req.regionProvince(): List<RegionVO> {
-    return http.get(apiRoute.region.province.path).body()
-}
+object ReqRegion : ApiRegion {
+    override suspend fun getAllProvince(): List<RegionVO> {
+        return http.get(ApiRegion.pathProvince()).body()
+    }
 
-suspend fun Req.regionCity(provinceId: Int): List<RegionVO> {
-    return http.get(apiRoute.region.city.path(provinceId)).body()
-}
+    override suspend fun getCity(provinceId: Int): List<RegionVO> {
+        return http.get(ApiRegion.pathCity(provinceId)).body()
+    }
 
-suspend fun Req.regionCounty(cityId: Int): List<RegionVO> {
-    return http.get(apiRoute.region.country.path(cityId)).body()
+    override suspend fun getCounty(cityId: Int): List<RegionVO> {
+        return http.get(ApiRegion.pathCountry(cityId)).body()
+    }
 }
 
 
@@ -178,7 +150,7 @@ suspend fun Req.deleteQanda(id: Int): Either<String, Unit> {
 }
 
 suspend fun Req.deleteQanda(ids: List<Int>): MsgVO<Int> {
-    val response = http.delete(apiRoute.qanda.path){
+    val response = http.delete(apiRoute.qanda.path) {
         parameter("ids", ids.joinToString())
     }
     return response.body()

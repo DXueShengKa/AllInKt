@@ -47,7 +47,8 @@ subprojects {
             optIn.addAll(
                 "kotlin.RequiresOptIn",
                 "org.jetbrains.compose.resources.ExperimentalResourceApi",
-                "org.koin.core.annotation.KoinExperimentalAPI"
+                "org.koin.core.annotation.KoinExperimentalAPI",
+                "kotlin.js.ExperimentalJsStatic"
             )
 
             freeCompilerArgs.addAll(
