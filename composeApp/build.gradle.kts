@@ -81,8 +81,8 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(projects.shared)
-            implementation(projects.client.ui)
-            implementation(projects.client.data)
+//            implementation(projects.client.ui)
+//            implementation(projects.client.data)
             implementation(projects.client.components)
             implementation(projects.ksp.annotation)
 
@@ -90,7 +90,7 @@ kotlin {
         }
 
         iosMain.dependencies {
-            implementation(libs.ktorClient.darwin)
+//            implementation(libs.ktorClient.darwin)
         }
 
         commonTest.dependencies {
@@ -144,9 +144,7 @@ android {
 
 fun DependencyHandler.kspAll(dependencyNotation: Any) {
     add("kspAndroid", dependencyNotation)
-    add("kspDesktop", dependencyNotation)
     if (isMacOS){
-        add("kspIosSimulatorArm64", dependencyNotation)
         add("kspIosArm64", dependencyNotation)
         add("kspIosX64", dependencyNotation)
     }

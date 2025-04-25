@@ -22,12 +22,12 @@ dependencyResolutionManagement {
 
 include(
     ":composeApp",
-    ":server",
+//    ":server",
     ":shared",
-    ":admin",
-    ":kt-ai",
+//    ":admin",
+//    ":kt-ai",
     ":ksp:annotation",
-    ":ksp:server",
+//    ":ksp:server",
     ":ksp:shared",
     ":ksp:composeApp",
     ":client:net",

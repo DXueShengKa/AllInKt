@@ -5,6 +5,8 @@ import jlLib.JL_OTAManager
 import jlLib.JL_OTAManagerDelegateProtocol
 import jlLib.JL_OTAResult
 import kotlinx.cinterop.ExperimentalForeignApi
+import platform.CoreBluetooth.CBCharacteristic
+import platform.CoreBluetooth.CBPeripheral
 import platform.Foundation.NSData
 import platform.darwin.NSObject
 
@@ -39,9 +41,13 @@ actual class JlOta {
     }
 
 
-//    override fun otaDataSend(data: NSData) {
-//
-//    }
+    fun updateData(characteristic: CBCharacteristic) {
+
+    }
+
+    fun pair(peripheral: CBPeripheral, characteristicUuid: String){
+
+    }
 //
 //    override fun hashOnPairOutputData(data: NSData) {
 //
