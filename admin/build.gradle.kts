@@ -71,7 +71,9 @@ kotlin {
             implementation(npm("@emotion/styled","11.14.0"))
             implementation(projects.shared)
             implementation(projects.client.net)
+            implementation(projects.client.data)
             implementation(libs.ktorClient.logging)
+            implementation(libs.koin.core)
         }
 
         jsTest.dependencies {

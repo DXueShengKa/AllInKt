@@ -5,15 +5,13 @@ package cn.allin.net
 import arrow.core.Either
 import cn.allin.ServerParams
 import cn.allin.ValidatorError
-import cn.allin.api.ApiRegion
 import cn.allin.apiRoute
-import cn.allin.net.Req.http
+import cn.allin.data.repository.UserRepository
 import cn.allin.ui.PageParams
 import cn.allin.vo.MsgVO
 import cn.allin.vo.PageVO
 import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
-import cn.allin.vo.RegionVO
 import cn.allin.vo.UserVO
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -23,8 +21,10 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+import js.objects.jso
 import js.typedarrays.Uint8Array
 import js.typedarrays.toByteArray
+import toolpad.core.UserSession
 import web.file.File
 
 
@@ -113,21 +113,16 @@ suspend fun Req.deleteAuth() {
 
 }
 
-
-object ReqRegion : ApiRegion {
-    override suspend fun getAllProvince(): List<RegionVO> {
-        return http.get(ApiRegion.pathProvince()).body()
-    }
-
-    override suspend fun getCity(provinceId: Int): List<RegionVO> {
-        return http.get(ApiRegion.pathCity(provinceId)).body()
-    }
-
-    override suspend fun getCounty(cityId: Int): List<RegionVO> {
-        return http.get(ApiRegion.pathCountry(cityId)).body()
-    }
+suspend fun UserRepository.userSession(): UserSession? {
+    val user: UserVO? = get()
+    return if (user != null) {
+        jso {
+            id = user.id.toString()
+            name = user.name
+            email = user.email
+        }
+    } else null
 }
-
 
 suspend fun Req.getQandaPage(pageParams: PageParams?): PageVO<QandaVO> {
     val response = http.get(apiRoute.qanda.page) {

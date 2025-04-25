@@ -1,7 +1,8 @@
 package cn.allin.ui
 
 import cn.allin.VoFieldName
-import cn.allin.net.ReqUser
+import cn.allin.data.repository.UserRepository
+import cn.allin.utils.getKoin
 import cn.allin.utils.getValue
 import cn.allin.utils.invokeFn
 import cn.allin.utils.selectColumnDef
@@ -84,8 +85,10 @@ private val UserListFC = FC {
     val cs: CoroutineScope? by useCoroutineScope()
     var showMessage by useState(false)
 
+    val userRepository: UserRepository = getKoin().get()
+
     val query = cn.allin.net.useQuery(pageParams) {
-        ReqUser.page(pageIndex =  it?.index, pageSize = it?.size)
+        userRepository.page(pageIndex =  it?.index, pageSize = it?.size)
     }
 
     val tableData: Array<UserVO> = useMemo(query.data) {
@@ -127,7 +130,7 @@ private val UserListFC = FC {
             onClick = {
                 cs?.launch {
                     val ids = uTable.getSelectedRowModel().flatRows.map { it.original.id }
-                    if (ReqUser.deleteAll(ids) > 0) {
+                    if (userRepository.deleteAll(ids) > 0) {
                         showMessage = true
                         query.refresh()
                     }

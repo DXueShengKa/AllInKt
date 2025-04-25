@@ -3,8 +3,9 @@ package cn.allin.ui
 import cn.allin.ValidatorError
 import cn.allin.VoFieldName
 import cn.allin.VoValidatorMessage
-import cn.allin.net.ReqUser
+import cn.allin.data.repository.UserRepository
 import cn.allin.utils.dayjs
+import cn.allin.utils.getKoin
 import cn.allin.utils.getValue
 import cn.allin.utils.reactNode
 import cn.allin.utils.toLocalDate
@@ -52,6 +53,8 @@ private val AddUserFC = FC {
     var addResult: Pair<AlertColor, String>? by useState()
     var errorHelperText: VoValidatorMessage? by useState()
 
+    val userRepository:UserRepository = getKoin().get()
+
     val handle: (FormEvent<HTMLElement>) -> Unit = {
         val t = it.target as HTMLInputElement
         when (t.name) {
@@ -96,7 +99,7 @@ private val AddUserFC = FC {
 
                         addResult = AlertColor.error to "添加失败"
                     }) {
-                        ReqUser.add(it)
+                        userRepository.add(it)
                         addResult = AlertColor.success to "已添加"
                         delay(2000)
                         addResult = null

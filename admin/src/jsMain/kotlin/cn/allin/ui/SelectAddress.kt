@@ -1,7 +1,8 @@
 package cn.allin.ui
 
-import cn.allin.net.ReqRegion
+import cn.allin.data.repository.RegionRepository
 import cn.allin.utils.reactNode
+import cn.allin.utils.useInject
 import cn.allin.vo.RegionVO
 import js.objects.jso
 import mui.material.Box
@@ -28,9 +29,11 @@ val SelectAddress = FC<SelectAddressProps> { props ->
     var cityList by useState<List<RegionVO>>(emptyList())
     var countyList by useState<List<RegionVO>>(emptyList())
 
+    val regionRepository: RegionRepository = useInject()
+
 
     useEffect(Unit) {
-        val province: List<RegionVO> = ReqRegion.getAllProvince()
+        val province: List<RegionVO> = regionRepository.getAllProvince()
         selectProvince = province[0]
         provinceList = province
     }
@@ -39,7 +42,7 @@ val SelectAddress = FC<SelectAddressProps> { props ->
         val p = selectProvince
         if (p == null) return@useEffect
 
-        cityList = ReqRegion.getCity(p.id).also {
+        cityList = regionRepository.getCity(p.id).also {
             selectCity = it[0]
         }
     }
@@ -48,7 +51,7 @@ val SelectAddress = FC<SelectAddressProps> { props ->
         val c = selectCity
         if (c == null) return@useEffect
 
-        countyList = ReqRegion.getCounty(c.id).also {
+        countyList = regionRepository.getCounty(c.id).also {
             selectCounty = it[0]
         }
     }

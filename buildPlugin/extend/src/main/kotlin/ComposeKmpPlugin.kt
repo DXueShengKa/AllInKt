@@ -1,9 +1,11 @@
+
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 
 /**
  * compose多平台配置，不含web
@@ -16,6 +18,9 @@ class ComposeKmpPlugin : Plugin<Project> {
             kmp()
         }
         project.androidConfigure()
+
+        project.kotlinExtension.jvmToolchain(21)
+        project.tasks.kotlinCompilerOptions()
     }
 
     private fun Project.applyPlugin() {

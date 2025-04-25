@@ -17,6 +17,8 @@ val isMacOS = System.getProperty("os.name").startsWith("Mac OS")
 
 kotlin {
 
+    jvmToolchain(21)
+
     androidTarget()
 
     jvm("desktop")

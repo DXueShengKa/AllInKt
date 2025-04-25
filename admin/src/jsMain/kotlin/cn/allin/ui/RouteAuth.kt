@@ -2,9 +2,11 @@ package cn.allin.ui
 
 import SessionContextValue
 import cn.allin.VoFieldName
+import cn.allin.data.repository.UserRepository
 import cn.allin.net.Req
-import cn.allin.net.ReqUser
 import cn.allin.net.auth
+import cn.allin.net.userSession
+import cn.allin.utils.getKoin
 import cn.allin.utils.getValue
 import cn.allin.utils.setValue
 import cn.allin.utils.useCoroutineScope
@@ -33,17 +35,23 @@ private val providers: Array<AuthProvider> = arrayOf(
     }
 )
 
-private suspend fun login(nav: NavigateFunction, sessionContext: SessionContextValue, formData: FormData,remember: Boolean): AuthResponse {
-    formData.forEach { a,s ->
-        console.log(a,s)
+private suspend fun login(
+    nav: NavigateFunction,
+    userRepository: UserRepository,
+    sessionContext: SessionContextValue,
+    formData: FormData,
+    remember: Boolean
+): AuthResponse {
+    formData.forEach { a, s ->
+        console.log(a, s)
     }
     val vo = UserVO(
         name = formData.get(VoFieldName.UserVO_name)?.toString(),
         password = formData.get(VoFieldName.UserVO_password)?.toString(),
     )
-    val result = Req.auth(vo,remember)
-    if (result.isSuccess){
-        val u = ReqUser.userSession()
+    val result = Req.auth(vo, remember)
+    if (result.isSuccess) {
+        val u = userRepository.userSession()
         sessionContext.set(jso {
             user = u
         })
@@ -62,6 +70,7 @@ val RouteAuthFC = FC {
     var sessionContext = useSessionContext()
     val cs by useCoroutineScope()
     var remember by useRef(false)
+    val userRepository: UserRepository = getKoin().get()
 
     SignInPage {
 
@@ -76,7 +85,7 @@ val RouteAuthFC = FC {
 
         signIn = { provider, formData ->
             cs.promise {
-                login(nav, sessionContext, formData, remember)
+                login(nav, userRepository, sessionContext, formData, remember)
             }
         }
 
@@ -96,7 +105,7 @@ val RouteAuthFC = FC {
             },
             rememberMe = {
                 disabled = false
-                onChange = { e,b ->
+                onChange = { e, b ->
                     remember = b
                 }
             }

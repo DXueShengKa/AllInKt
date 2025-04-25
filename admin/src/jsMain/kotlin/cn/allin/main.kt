@@ -1,12 +1,17 @@
 package cn.allin
 
+import cn.allin.net.MainDI
 import cn.allin.utils.DayLocalZhCn
+import cn.allin.utils.KoinFC
 import cn.allin.utils.dayjs
+import cn.allin.utils.useKoinApplication
 import muix.pickers.AdapterDayjs
 import muix.pickers.LocalizationProvider
+import org.koin.dsl.koinApplication
+import org.koin.ksp.generated.defaultModule
+import react.FC
 import react.create
 import react.dom.client.createRoot
-import react.router.RouterProvider
 import web.dom.document
 import web.html.HTML.div
 
@@ -19,11 +24,23 @@ fun main() {
     val reactElement = LocalizationProvider.create {
         dateAdapter = AdapterDayjs
         adapterLocale = "zh-cn"
-        RouterProvider {
-            router = AppBrowserRouter
-        }
+        MainFC()
     }
 
     createRoot(root)
         .render(reactElement)
+}
+
+
+private val MainFC = FC {
+    val koin = useKoinApplication(koinApplication {
+        modules(MainDI, defaultModule)
+    })
+
+    KoinFC(koin) {
+
+        react.router.RouterProvider {
+            router = AppBrowserRouter
+        }
+    }
 }

@@ -4,9 +4,14 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.api.tasks.TaskContainer
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 
 val isMacOs = System.getProperty("os.name").startsWith("Mac OS")
@@ -45,6 +50,30 @@ fun DependencyHandler.kspNoJsAll(dependencyNotation: Any) {
     kspAndroid(dependencyNotation)
     kspJvm(dependencyNotation)
     kspIos(dependencyNotation)
+}
+
+
+fun TaskContainer.kotlinCompilerOptions() {
+    withType(KotlinCompilationTask::class) {
+        compilerOptions {
+            if (this is KotlinJvmCompilerOptions) {
+                jvmTarget.set(JvmTarget.JVM_21)
+                freeCompilerArgs.add("-Xjvm-default=all")
+            }
+
+            optIn.addAll(
+                "kotlin.RequiresOptIn",
+                "org.jetbrains.compose.resources.ExperimentalResourceApi",
+                "org.koin.core.annotation.KoinExperimentalAPI",
+                "kotlin.js.ExperimentalJsStatic"
+            )
+
+            freeCompilerArgs.addAll(
+                "-Xexpect-actual-classes"
+            )
+
+        }
+    }
 }
 
 

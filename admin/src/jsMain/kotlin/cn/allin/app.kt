@@ -2,9 +2,10 @@ package cn.allin
 
 
 import SessionContext
+import cn.allin.data.repository.UserRepository
 import cn.allin.net.Req
-import cn.allin.net.ReqUser
 import cn.allin.net.deleteAuth
+import cn.allin.net.userSession
 import cn.allin.ui.RouteAuth
 import cn.allin.ui.RouteAuthFC
 import cn.allin.ui.RouteQandaAdd
@@ -13,6 +14,7 @@ import cn.allin.ui.RouteTagList
 import cn.allin.ui.RouteUserAdd
 import cn.allin.ui.RouteUserList
 import cn.allin.utils.asyncFunction
+import cn.allin.utils.getKoin
 import colorSchemes
 import cssVariables
 import js.objects.jso
@@ -87,10 +89,11 @@ private val appNavigation: Navigation = arrayOf(
 private val AppLayout = FC {
     val navigate = useNavigate()
     val sessionContext = useSessionContext()
+    val userRepository: UserRepository = getKoin().get()
 
     useEffectOnce {
         Req.authToken()?.let {
-            val u = ReqUser.userSession()
+            val u = userRepository.userSession()
             sessionContext.set(jso {
                 user = u
             })

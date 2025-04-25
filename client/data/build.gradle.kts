@@ -1,5 +1,5 @@
 plugins {
-    id("allin.noJsKmp")
+    id("allin.sharedKmp")
     alias(libs.plugins.ksp)
 }
 
@@ -19,7 +19,7 @@ kotlin {
 }
 
 dependencies {
-    kspNoJsAll(libs.koin.compiler)
+    kspAll(libs.koin.compiler)
 }
 
 android {
