@@ -26,9 +26,9 @@ class UserRepository(
     }
 
 
-    override suspend fun add(userVO: UserVO) {
+    override suspend fun add(user: UserVO) {
         http.post(ApiUser.USER) {
-            setBody(userVO)
+            setBody(user)
         }
     }
 

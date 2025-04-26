@@ -12,7 +12,6 @@ import cn.allin.utils.toLocalDate
 import cn.allin.utils.useCoroutineScope
 import cn.allin.vo.Gender
 import cn.allin.vo.UserVO
-import js.objects.jso
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,9 +27,8 @@ import mui.material.RadioGroup
 import mui.material.Stack
 import mui.material.StackDirection
 import mui.material.TextField
-import mui.material.styles.Theme
-import mui.material.styles.useTheme
 import mui.system.responsive
+import mui.system.sx
 import muix.pickers.DatePicker
 import react.FC
 import react.create
@@ -38,7 +36,6 @@ import react.dom.events.FormEvent
 import react.dom.html.ReactHTML.form
 import react.dom.onChange
 import react.useState
-import web.cssom.Color
 import web.cssom.px
 import web.html.ButtonType
 import web.html.HTMLElement
@@ -47,13 +44,12 @@ import web.html.InputType
 
 
 private val AddUserFC = FC {
-    val theme = useTheme<Theme>()
     val cs by useCoroutineScope()
     var userForm: UserVO by useState { UserVO() }
     var addResult: Pair<AlertColor, String>? by useState()
     var errorHelperText: VoValidatorMessage? by useState()
 
-    val userRepository:UserRepository = getKoin().get()
+    val userRepository: UserRepository = getKoin().get()
 
     val handle: (FormEvent<HTMLElement>) -> Unit = {
         val t = it.target as HTMLInputElement
@@ -73,9 +69,8 @@ private val AddUserFC = FC {
     }
 
     Stack {
-        sx = jso {
+        sx {
             width = 600.px
-            backgroundColor = Color(theme.palette.background.default)
         }
 
         spacing = responsive(2)

@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import cn.allin.ServerParams
+import cn.allin.api.ApiQanda
 import cn.allin.apiRoute
 import cn.allin.service.QandaService
 import cn.allin.vo.MsgVO
@@ -31,15 +32,15 @@ import kotlin.io.path.deleteExisting
 import kotlin.io.path.div
 
 @RestController
-@RequestMapping(value = [apiRoute.qanda.QANDA])
+@RequestMapping(value = [ApiQanda.QANDA])
 class QandaController(
     val qandaService: QandaService
-) {
+) : ApiQanda {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     @GetMapping(apiRoute.PAGE)
-    fun page(
+    override suspend fun page(
         @RequestParam(ServerParams.PAGE_INDEX) pageIndex: Int?,
         @RequestParam(ServerParams.PAGE_SIZE) pageSize: Int?
     ): PageVO<QandaVO> {
@@ -47,15 +48,15 @@ class QandaController(
     }
 
     @PostMapping
-    fun post(
+    override suspend fun add(
         @Validated @RequestBody qandaVO: QandaVO,
-    ): MsgVO<Int> {
-        return MsgVO.success(qandaService.add(qandaVO))
+    ): Int {
+        return qandaService.add(qandaVO)
     }
 
 
     @DeleteMapping(apiRoute.PATH_ID)
-    fun delete(@PathVariable id: Int): Either<String,Unit> {
+    override suspend fun delete(@PathVariable id: Int): Either<String, Unit> {
         return if (qandaService.delete(id)) {
             Unit.right()
         } else {
@@ -65,11 +66,8 @@ class QandaController(
 
 
     @DeleteMapping
-    fun deleteList(@RequestParam ids: List<Int>?): MsgVO<Int> {
-
-        return MsgVO.success(
-            qandaService.delete(ids)
-        )
+    override suspend fun delete(@RequestParam ids: List<Int>?): Int {
+        return qandaService.delete(ids)
     }
 
 
@@ -82,7 +80,7 @@ class QandaController(
     }
 
 
-    @PostMapping(apiRoute.qanda.excel.EXCEL)
+    @PostMapping(ApiQanda.EXCEL)
     suspend fun excel(@RequestPart("file") file: FilePart): MsgVO<String> {
 
         val tmpdir = Paths.get(System.getProperty("java.io.tmpdir"))

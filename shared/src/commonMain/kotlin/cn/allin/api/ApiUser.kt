@@ -11,7 +11,7 @@ interface ApiUser {
 
     suspend fun get(): UserVO?
 
-    suspend fun add(userVO: UserVO)
+    suspend fun add(user: UserVO)
 
     suspend fun update(user: UserVO)
 

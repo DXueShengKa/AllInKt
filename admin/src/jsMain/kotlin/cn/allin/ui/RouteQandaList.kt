@@ -12,6 +12,7 @@ import cn.allin.utils.columnDefCell
 import cn.allin.utils.getValue
 import cn.allin.utils.invokeFn
 import cn.allin.utils.reactNode
+import cn.allin.utils.rsv
 import cn.allin.utils.selectColumnDef
 import cn.allin.utils.setState
 import cn.allin.utils.useCoroutineScope
@@ -24,14 +25,22 @@ import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.datetime.format
 import mui.material.Button
+import mui.material.Grid
+import mui.material.GridDirection
 import mui.material.IconButton
 import mui.material.Input
+import mui.material.List
+import mui.material.ListItemButton
+import mui.material.ListItemText
 import mui.material.Stack
 import mui.material.StackDirection
 import mui.system.responsive
+import mui.system.sx
 import muix.icons.IconsDelete
 import react.FC
 import react.Props
+import react.dom.aria.AriaRole
+import react.dom.html.ReactHTML.div
 import react.useMemo
 import react.useRef
 import react.useState
@@ -44,6 +53,8 @@ import toolpad.core.SeverityStr
 import toolpad.core.show
 import toolpad.core.useDialogs
 import toolpad.core.useNotifications
+import web.cssom.AlignItems
+import web.cssom.JustifyContent
 import web.file.File
 import web.html.HTMLInputElement
 import web.html.InputType
@@ -118,7 +129,7 @@ private val QandaListFC = FC {
         cs.launch {
             Req.deleteQanda(vo.id ?: return@launch)
                 .onLeft {
-                    notifications.show("${vo.question} $it",severity = SeverityStr.error)
+                    notifications.show("${vo.question} $it", severity = SeverityStr.error)
                 }.onRight {
                     query.refresh()
                     notifications.show("${vo.question} 已删除")
@@ -238,6 +249,70 @@ private val TableMenu = FC<TableMenuProps> { props ->
 
 }
 
+private val SelectTab = FC {
+    Grid {
+        container = true
+        spacing = 2.rsv
+        sx {
+            justifyContent = JustifyContent.center
+            alignItems = AlignItems.center
+        }
+        Grid {
+            item = true
+            TagList{
+
+            }
+        }
+        Grid {
+            item = true
+
+        }
+        Grid {
+            item = true
+            TagList{
+
+            }
+        }
+    }
+}
+
+private external interface TagListProps : Props {
+    var items: List<String>
+    var onItem: (String) -> Unit
+}
+
+private val TagList = FC<TagListProps> { props ->
+    List {
+        component = div
+        role = AriaRole.list
+
+        props.items.forEach { v ->
+            ListItemButton {
+                key = v
+                role = AriaRole.listitem
+                onClick = {
+                    props.onItem(v)
+                }
+                ListItemText {
+                    primary = reactNode(v)
+                }
+            }
+        }
+    }
+}
+
+private val G = FC {
+    Grid {
+        container = true
+        direction = GridDirection.column.rsv
+        sx {
+            alignItems = AlignItems.center
+        }
+        Button {
+
+        }
+    }
+}
 
 val RouteQandaList = routes(
     "list", "问题列表", QandaListFC

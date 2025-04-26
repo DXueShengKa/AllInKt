@@ -1,10 +1,15 @@
+package cn.allin.utils
 
 import js.objects.jso
 import mui.material.styles.ThemeOptions
+import mui.system.responsive
 import react.createContext
 import react.use
 import toolpad.core.Session
 
+
+val <T : Any> T.rsv
+    get() = responsive(this)
 
 fun ThemeOptions.cssVariables(
     colorSchemeSelector: String? = null
