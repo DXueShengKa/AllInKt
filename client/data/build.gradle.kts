@@ -18,6 +18,10 @@ kotlin {
     }
 }
 
+ksp {
+    arg("KOIN_DEFAULT_MODULE", "false")
+}
+
 dependencies {
     kspAll(libs.koin.compiler)
 }

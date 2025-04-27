@@ -3,7 +3,6 @@ package cn.allin.data.repository
 import arrow.core.Either
 import cn.allin.ServerParams
 import cn.allin.api.ApiQanda
-import cn.allin.apiRoute
 import cn.allin.vo.PageVO
 import cn.allin.vo.QandaVO
 import io.ktor.client.*
@@ -34,7 +33,7 @@ internal class QandaRepository(
     }
 
     override suspend fun delete(ids: List<Int>): Int {
-        return http.delete(apiRoute.qanda.path) {
+        return http.delete(ApiQanda.QANDA) {
             parameter("ids", ids.joinToString())
         }.body()
     }

@@ -1,5 +1,6 @@
 package cn.allin
 
+import cn.allin.data.DataDI
 import cn.allin.net.MainDI
 import cn.allin.utils.DayLocalZhCn
 import cn.allin.utils.KoinFC
@@ -8,7 +9,7 @@ import cn.allin.utils.useKoinApplication
 import muix.pickers.AdapterDayjs
 import muix.pickers.LocalizationProvider
 import org.koin.dsl.koinApplication
-import org.koin.ksp.generated.defaultModule
+import org.koin.ksp.generated.module
 import react.FC
 import react.create
 import react.dom.client.createRoot
@@ -34,7 +35,7 @@ fun main() {
 
 private val MainFC = FC {
     val koin = useKoinApplication(koinApplication {
-        modules(MainDI, defaultModule)
+        modules(MainDI, DataDI.module)
     })
 
     KoinFC(koin) {

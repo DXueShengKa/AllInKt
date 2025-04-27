@@ -3,10 +3,10 @@ package cn.allin
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import cn.allin.data.dataModule
+import cn.allin.data.DataDI
 import cn.allin.navigation.appNavGraphs
 import cn.allin.theme.MainTheme
-import org.koin.ksp.generated.defaultModule
+import org.koin.ksp.generated.module
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
             MainTheme {
                 MainApp(
                     application = {
-                        modules(dataModule, defaultModule, AppKoinViewModel)
+                        modules(DataDI.module, AppKoinViewModel)
                     }
                 ) {
                     appNavGraphs()
