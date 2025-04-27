@@ -23,7 +23,7 @@ external interface DialogOptions<R> {
 external interface ConfirmOptions : DialogOptions<Boolean> {
     var title: ReactNode?
     var okText: ReactNode?
-    var severity: SeverityStr?
+    var severity: SeverityMui?
     var cancelText: ReactNode?
 }
 

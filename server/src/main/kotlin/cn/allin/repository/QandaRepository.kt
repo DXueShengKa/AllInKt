@@ -65,6 +65,14 @@ class QandaRepository(private val sqlClient: KSqlClient) {
             QAndAEntity {
                 question = vo.question
                 answer = vo.answer
+                vo.tagIds?.map {
+                    QaTagEntity {
+                        id = it
+                    }
+                }?.also {
+                    tags = it
+                }
+
             }, SaveMode.INSERT_ONLY
         ).execute().modifiedEntity.id
     }

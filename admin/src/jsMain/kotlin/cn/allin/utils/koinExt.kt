@@ -11,7 +11,6 @@ import react.ReactDsl
 import react.createContext
 import react.use
 import react.useEffectWithCleanup
-import react.useRef
 
 fun useKoinApplication(koinApplication: KoinApplication): Koin {
     val koin = useRefInit { koinApplication.koin }
@@ -39,10 +38,6 @@ inline fun <reified T : Any> useInject(): T {
     return useRefInit { getKoin().get<T>() }
 }
 
-fun <T : Any> useRefInit(init: () -> T): T {
-    val useRef = useRef<T>()
-    return useRef.current ?: return init().also { useRef.current = it }
-}
 
 val KoinContext = createContext<Koin>()
 

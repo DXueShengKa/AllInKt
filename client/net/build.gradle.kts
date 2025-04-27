@@ -8,10 +8,10 @@ kotlin {
             dependencies {
                 implementation(projects.shared)
                 implementation(libs.kotlinx.datetime)
-
                 api(libs.ktorClient.core)
                 implementation(libs.ktorClient.content.negotiation)
                 implementation(libs.ktorClient.serialization.json)
+                implementation(libs.ktorClient.logging)
             }
         }
 
@@ -20,8 +20,9 @@ kotlin {
         }
 
         jsMain.dependencies {
-            api(libs.ktorClient.js)
+
         }
+
         jvmMain.dependencies {
             implementation(libs.ktorClient.java)
         }

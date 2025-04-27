@@ -5,7 +5,6 @@ import cn.allin.VoFieldName
 import cn.allin.VoValidatorMessage
 import cn.allin.api.ApiUser
 import cn.allin.utils.dayjs
-import cn.allin.utils.getValue
 import cn.allin.utils.reactNode
 import cn.allin.utils.toLocalDate
 import cn.allin.utils.useCoroutineScope
@@ -44,7 +43,7 @@ import web.html.InputType
 
 
 private val AddUserFC = FC {
-    val cs by useCoroutineScope()
+    val cs = useCoroutineScope()
     var userForm: UserVO by useState { UserVO() }
     var addResult: Pair<AlertColor, String>? by useState()
     var errorHelperText: VoValidatorMessage? by useState()

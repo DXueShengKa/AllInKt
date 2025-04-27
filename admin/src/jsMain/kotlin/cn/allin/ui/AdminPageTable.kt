@@ -34,6 +34,8 @@ val AdminPageTable = FC<AdminTableProps> { props ->
     TableContainer {
         component = Paper
         Table {
+            stickyHeader = true
+            ariaLabel = "sticky table"
 
             TableHead {
                 val headerGroups = props.table.getHeaderGroups()

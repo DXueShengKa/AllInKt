@@ -18,7 +18,7 @@ external interface NotificationsProps : PropsWithChildren {
 
 
 external interface NotificationsConfig {
-    var severity: SeverityStr
+    var severity: SeverityMui
     var autoHideDuration: Int
 }
 

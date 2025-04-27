@@ -3,6 +3,7 @@ package cn.allin
 
 import cn.allin.api.ApiUser
 import cn.allin.net.Req
+import cn.allin.net.WEKV
 import cn.allin.net.deleteAuth
 import cn.allin.net.userSession
 import cn.allin.ui.RouteAuth
@@ -95,7 +96,7 @@ private val AppLayout = FC {
     val apiUser: ApiUser = useInject()
 
     useEffectOnce {
-        Req.authToken()?.let {
+        WEKV.authorization.getOrNull()?.let {
             val u = apiUser.userSession()
             sessionContext.set(jso {
                 user = u

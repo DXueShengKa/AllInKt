@@ -23,7 +23,7 @@ internal class QandaRepository(
     }
 
     override suspend fun add(qanda: QandaVO): Int {
-        return http.post(ApiQanda.pathPage) {
+        return http.post(ApiQanda.QANDA) {
             setBody(qanda)
         }.body()
     }

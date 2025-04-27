@@ -68,7 +68,7 @@ private suspend fun login(
 val RouteAuthFC = FC {
     val nav = useNavigate()
     var sessionContext = useSessionContext()
-    val cs by useCoroutineScope()
+    val cs = useCoroutineScope()
     var remember by useRef(false)
     val apiUser: ApiUser = useInject()
 

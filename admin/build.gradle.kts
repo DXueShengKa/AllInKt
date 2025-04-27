@@ -72,7 +72,6 @@ kotlin {
             implementation(projects.shared)
             implementation(projects.client.net)
             implementation(projects.client.data)
-            implementation(libs.ktorClient.logging)
             implementation(libs.koin.core)
         }
 

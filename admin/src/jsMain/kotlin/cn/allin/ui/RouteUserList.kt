@@ -2,7 +2,6 @@ package cn.allin.ui
 
 import cn.allin.VoFieldName
 import cn.allin.api.ApiUser
-import cn.allin.utils.getValue
 import cn.allin.utils.invokeFn
 import cn.allin.utils.selectColumnDef
 import cn.allin.utils.setState
@@ -14,7 +13,6 @@ import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
 import js.array.ReadonlyArray
 import js.objects.jso
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import mui.material.Button
 import mui.material.Snackbar
@@ -82,7 +80,7 @@ private val UserListFC = FC {
     val (pageParams, setPageParams) = useState(PageParams())
     var userPage: PageVO<UserVO>? by useState()
     val selectState = useRowSelectionState()
-    val cs: CoroutineScope? by useCoroutineScope()
+    val cs = useCoroutineScope()
     var showMessage by useState(false)
 
     val apiUser: ApiUser = useInject()
@@ -128,7 +126,7 @@ private val UserListFC = FC {
 
         Button {
             onClick = {
-                cs?.launch {
+                cs.launch {
                     val ids = uTable.getSelectedRowModel().flatRows.map { it.original.id }
                     if (apiUser.deleteAll(ids) > 0) {
                         showMessage = true

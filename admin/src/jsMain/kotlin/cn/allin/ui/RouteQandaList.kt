@@ -2,17 +2,14 @@ package cn.allin.ui
 
 import cn.allin.VoFieldName
 import cn.allin.api.ApiQanda
-import cn.allin.api.ApiQandaTag
 import cn.allin.net.Req
 import cn.allin.net.uploadExcel
 import cn.allin.net.useQuery
 import cn.allin.utils.DATE_TIME_DEFAULT_FORMAT
 import cn.allin.utils.asyncFunction
 import cn.allin.utils.columnDefCell
-import cn.allin.utils.getValue
 import cn.allin.utils.invokeFn
 import cn.allin.utils.reactNode
-import cn.allin.utils.rsv
 import cn.allin.utils.selectColumnDef
 import cn.allin.utils.setState
 import cn.allin.utils.useCoroutineScope
@@ -26,22 +23,14 @@ import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.datetime.format
 import mui.material.Button
-import mui.material.Grid
-import mui.material.GridDirection
 import mui.material.IconButton
 import mui.material.Input
-import mui.material.List
-import mui.material.ListItemButton
-import mui.material.ListItemText
 import mui.material.Stack
 import mui.material.StackDirection
 import mui.system.responsive
-import mui.system.sx
 import muix.icons.IconsDelete
 import react.FC
 import react.Props
-import react.dom.aria.AriaRole
-import react.dom.html.ReactHTML.div
 import react.useMemo
 import react.useRef
 import react.useState
@@ -50,12 +39,10 @@ import tanstack.table.core.ColumnDef
 import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.TableOptions
 import tanstack.table.core.getCoreRowModel
-import toolpad.core.SeverityStr
+import toolpad.core.SeverityMui
 import toolpad.core.show
 import toolpad.core.useDialogs
 import toolpad.core.useNotifications
-import web.cssom.AlignItems
-import web.cssom.JustifyContent
 import web.file.File
 import web.html.HTMLInputElement
 import web.html.InputType
@@ -118,10 +105,9 @@ private val QandaListFC = FC {
     val (pageParams, setPageParams) = useState(PageParams())
     var qaPage: PageVO<QandaVO>? by useState()
     val selectState = useRowSelectionState()
-    val cs by useCoroutineScope()
+    val cs = useCoroutineScope()
     val notifications = useNotifications()
     val apiQanda: ApiQanda = useInject()
-    val apiQandaTag: ApiQandaTag = useInject()
 
 
     val query = useQuery(pageParams) {
@@ -132,7 +118,7 @@ private val QandaListFC = FC {
         cs.launch {
             apiQanda.delete(vo.id ?: return@launch)
                 .onLeft {
-                    notifications.show("${vo.question} $it", severity = SeverityStr.error)
+                    notifications.show("${vo.question} $it", severity = SeverityMui.error)
                 }.onRight {
                     query.refresh()
                     notifications.show("${vo.question} 已删除")
@@ -252,70 +238,7 @@ private val TableMenu = FC<TableMenuProps> { props ->
 
 }
 
-private val SelectTab = FC {
-    Grid {
-        container = true
-        spacing = 2.rsv
-        sx {
-            justifyContent = JustifyContent.center
-            alignItems = AlignItems.center
-        }
-        Grid {
-            item = true
-            TagList{
 
-            }
-        }
-        Grid {
-            item = true
-
-        }
-        Grid {
-            item = true
-            TagList{
-
-            }
-        }
-    }
-}
-
-private external interface TagListProps : Props {
-    var items: List<String>
-    var onItem: (String) -> Unit
-}
-
-private val TagList = FC<TagListProps> { props ->
-    List {
-        component = div
-        role = AriaRole.list
-
-        props.items.forEach { v ->
-            ListItemButton {
-                key = v
-                role = AriaRole.listitem
-                onClick = {
-                    props.onItem(v)
-                }
-                ListItemText {
-                    primary = reactNode(v)
-                }
-            }
-        }
-    }
-}
-
-private val G = FC {
-    Grid {
-        container = true
-        direction = GridDirection.column.rsv
-        sx {
-            alignItems = AlignItems.center
-        }
-        Button {
-
-        }
-    }
-}
 
 val RouteQandaList = routes(
     "list", "问题列表", QandaListFC

@@ -7,20 +7,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.promise
 import react.RefObject
 import react.useEffect
-import react.useEffectOnceWithCleanup
-import react.useRef
+import react.useEffectWithCleanup
 import react.useState
 import kotlin.reflect.KProperty
 
 
-fun useCoroutineScope(): RefObject<CoroutineScope> {
-    val c = useRef(IsolatedCoroutineScope())
-    useEffectOnceWithCleanup {
-        onCleanup {
-            c.current?.cancel()
-        }
+fun useCoroutineScope(): CoroutineScope {
+    val coroutineScope = useRefInit { IsolatedCoroutineScope() }
+    useEffectWithCleanup(coroutineScope){
+        onCleanup(coroutineScope::cancel)
     }
-    return c
+    return coroutineScope
 }
 
 fun asyncFunction(block: suspend CoroutineScope.() -> Unit): () -> dynamic {

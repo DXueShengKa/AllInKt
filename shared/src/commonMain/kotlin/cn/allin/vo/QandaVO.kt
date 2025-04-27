@@ -15,6 +15,7 @@ data class QandaVO(
     val answer: String,
     val createTime: LocalDateTime? = null,
     val tagList: List<String>? = null,
+    val tagIds: List<Int>? = null,
 ) {
     companion object {
         fun valid(vo: QandaVO): Either<VoValidatorMessage, QandaVO> = either {
