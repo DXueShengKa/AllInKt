@@ -7,7 +7,7 @@ import org.koin.dsl.module
 
 
 val dataModule = module {
-    single<HttpClient> {
+    single<HttpClient>(createdAtStart = true) {
         HttpClient(ktorEngineFactory){
             commonConfig()
         }

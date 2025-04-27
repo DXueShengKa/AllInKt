@@ -16,7 +16,7 @@ class QueryData<D : Any>(
 
 fun <D : Any, P> useQuery(
     params: P? = null,
-    queryFn: suspend Req.(P?) -> D?
+    queryFn: suspend (P?) -> D?
 ): QueryData<D> {
     var data by useState<D>()
     var count by useState(0)
@@ -25,7 +25,7 @@ fun <D : Any, P> useQuery(
     }
 
     useEffect(params, count) {
-        data = queryFn(Req, params)
+        data = queryFn(params)
     }
 
     return QueryData<D>(

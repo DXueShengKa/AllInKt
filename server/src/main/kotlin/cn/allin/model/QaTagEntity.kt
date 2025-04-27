@@ -8,6 +8,7 @@ import org.babyfish.jimmer.sql.GeneratedValue
 import org.babyfish.jimmer.sql.GenerationType
 import org.babyfish.jimmer.sql.Id
 import org.babyfish.jimmer.sql.Key
+import org.babyfish.jimmer.sql.ManyToMany
 import org.babyfish.jimmer.sql.Table
 import java.time.LocalDateTime
 
@@ -25,4 +26,7 @@ interface QaTagEntity {
     val tagName: String
     val description: String?
     val createTime: LocalDateTime
+
+    @ManyToMany(mappedBy = "tags")
+    val qaList: List<QAndAEntity>
 }

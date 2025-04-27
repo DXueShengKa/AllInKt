@@ -7,14 +7,14 @@ import org.koin.core.context.stopKoin
 import org.koin.core.scope.Scope
 import org.koin.mp.KoinPlatformTools
 import react.ChildrenBuilder
+import react.ReactDsl
 import react.createContext
 import react.use
 import react.useEffectWithCleanup
 import react.useRef
-import react.useState
 
 fun useKoinApplication(koinApplication: KoinApplication): Koin {
-    val koinRef = useRef(koinApplication.koin)
+    val koin = useRefInit { koinApplication.koin }
 
     useEffectWithCleanup(koinApplication) {
         onCleanup {
@@ -22,7 +22,7 @@ fun useKoinApplication(koinApplication: KoinApplication): Koin {
         }
     }
 
-    return koinRef.current ?: error("koinApplication not initialized")
+    return koin
 }
 
 fun useKoinScope(scope: Scope): Scope {
@@ -36,7 +36,12 @@ fun useKoinScope(scope: Scope): Scope {
 }
 
 inline fun <reified T : Any> useInject(): T {
-    return useState { getKoin().get<T>() }.component1()
+    return useRefInit { getKoin().get<T>() }
+}
+
+fun <T : Any> useRefInit(init: () -> T): T {
+    val useRef = useRef<T>()
+    return useRef.current ?: return init().also { useRef.current = it }
 }
 
 val KoinContext = createContext<Koin>()
@@ -60,7 +65,7 @@ fun currentKoinScope(): Scope {
 }
 
 
-fun ChildrenBuilder.KoinFC(koin: Koin, scope: Scope, f: ChildrenBuilder.() -> Unit) {
+fun ChildrenBuilder.KoinFC(koin: Koin, scope: Scope, f: @ReactDsl ChildrenBuilder.() -> Unit) {
     KoinContext.Provider {
         value = koin
         KoinScopeContext.Provider {
@@ -71,6 +76,6 @@ fun ChildrenBuilder.KoinFC(koin: Koin, scope: Scope, f: ChildrenBuilder.() -> Un
 }
 
 @OptIn(KoinInternalApi::class)
-fun ChildrenBuilder.KoinFC(koin: Koin, f: ChildrenBuilder.() -> Unit) {
+fun ChildrenBuilder.KoinFC(koin: Koin, f:@ReactDsl ChildrenBuilder.() -> Unit) {
     KoinFC(koin, koin.scopeRegistry.rootScope, f)
 }

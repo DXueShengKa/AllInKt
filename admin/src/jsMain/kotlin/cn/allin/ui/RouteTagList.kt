@@ -1,9 +1,10 @@
 package cn.allin.ui
 
 import cn.allin.VoFieldName
-import cn.allin.net.getQaTagPage
+import cn.allin.api.ApiQandaTag
 import cn.allin.net.useQuery
 import cn.allin.utils.DATE_TIME_DEFAULT_FORMAT
+import cn.allin.utils.useInject
 import cn.allin.vo.PageVO
 import cn.allin.vo.QaTagVO
 import js.array.ReadonlyArray
@@ -47,7 +48,7 @@ private fun tagListColumnDef(
         id = VoFieldName.QaTagVO_createTime
         header = StringOrTemplateHeader("创建时间")
         accessorFn = { tag, _ ->
-            tag.createTime.format(DATE_TIME_DEFAULT_FORMAT)
+            tag.createTime?.format(DATE_TIME_DEFAULT_FORMAT)
         }
     }
 )
@@ -55,9 +56,10 @@ private fun tagListColumnDef(
 private val TagListFC = FC {
     val (pageParams, setPageParams) = useState(PageParams())
     var userPage: PageVO<QaTagVO>? by useState()
+    val apiQandaTag: ApiQandaTag = useInject()
 
     val query = useQuery(pageParams) {
-        getQaTagPage(pageParams)
+        apiQandaTag.page(pageParams.index,pageParams.size)
     }
 
     val tableData: Array<QaTagVO> = useMemo(query.data) {

@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class QaTagVO(
-    val id: Int,
+    val id: Int = 0,
     val tagName: String,
-    val description: String?,
-    val createTime: LocalDateTime,
+    val description: String? = null,
+    val createTime: LocalDateTime? = null,
 )

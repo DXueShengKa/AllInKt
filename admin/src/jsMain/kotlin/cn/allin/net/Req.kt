@@ -2,16 +2,16 @@
 
 package cn.allin.net
 
-import arrow.core.Either
 import cn.allin.ServerParams
 import cn.allin.ValidatorError
+import cn.allin.api.ApiQanda
+import cn.allin.api.ApiQandaTag
+import cn.allin.api.ApiUser
 import cn.allin.apiRoute
-import cn.allin.data.repository.UserRepository
 import cn.allin.ui.PageParams
 import cn.allin.vo.MsgVO
 import cn.allin.vo.PageVO
 import cn.allin.vo.QaTagVO
-import cn.allin.vo.QandaVO
 import cn.allin.vo.UserVO
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -113,7 +113,7 @@ suspend fun Req.deleteAuth() {
 
 }
 
-suspend fun UserRepository.userSession(): UserSession? {
+suspend fun ApiUser.userSession(): UserSession? {
     val user: UserVO? = get()
     return if (user != null) {
         jso {
@@ -124,35 +124,9 @@ suspend fun UserRepository.userSession(): UserSession? {
     } else null
 }
 
-suspend fun Req.getQandaPage(pageParams: PageParams?): PageVO<QandaVO> {
-    val response = http.get(apiRoute.qanda.page) {
-        parameter(ServerParams.PAGE_SIZE, pageParams?.size)
-        parameter(ServerParams.PAGE_INDEX, pageParams?.index)
-    }
-    return response.body()
-}
-
-suspend fun Req.addQanda(vo: QandaVO): MsgVO<Int> {
-    val response = http.post(apiRoute.qanda.path) {
-        setBody(vo)
-    }
-    return response.body()
-}
-
-suspend fun Req.deleteQanda(id: Int): Either<String, Unit> {
-    val response = http.delete(apiRoute.qanda.path(id))
-    return response.body()
-}
-
-suspend fun Req.deleteQanda(ids: List<Int>): MsgVO<Int> {
-    val response = http.delete(apiRoute.qanda.path) {
-        parameter("ids", ids.joinToString())
-    }
-    return response.body()
-}
 
 suspend fun Req.getQaTagPage(pageParams: PageParams?): PageVO<QaTagVO> {
-    return http.get(apiRoute.qanda.tag.page.path) {
+    return http.get(ApiQandaTag.QA_TAG) {
         parameter(ServerParams.PAGE_SIZE, pageParams?.size)
         parameter(ServerParams.PAGE_INDEX, pageParams?.index)
     }.body()
@@ -161,7 +135,7 @@ suspend fun Req.getQaTagPage(pageParams: PageParams?): PageVO<QaTagVO> {
 suspend fun Req.uploadExcel(file: File): Boolean {
     val bytes = file.arrayBuffer()
 
-    val msg: MsgVO<String> = http.submitFormWithBinaryData(apiRoute.qanda.excel.path, formData {
+    val msg: MsgVO<String> = http.submitFormWithBinaryData(ApiQanda.pathExcel, formData {
         append("file", file.name) {
             val ba = Uint8Array(bytes).toByteArray()
             write(ba, 0, ba.size)

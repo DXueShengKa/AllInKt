@@ -9,8 +9,8 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import org.koin.core.annotation.Single
 
-@Single
-class UserRepository(
+@Single([ApiUser::class])
+internal class UserRepository(
     private val http: HttpClient
 ): ApiUser {
 

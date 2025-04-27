@@ -3,11 +3,11 @@ package cn.allin.ui
 import cn.allin.ValidatorError
 import cn.allin.VoFieldName
 import cn.allin.VoValidatorMessage
-import cn.allin.net.Req
-import cn.allin.net.addQanda
+import cn.allin.api.ApiQanda
 import cn.allin.utils.getValue
 import cn.allin.utils.reactNode
 import cn.allin.utils.useCoroutineScope
+import cn.allin.utils.useInject
 import cn.allin.vo.QandaVO
 import js.objects.jso
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -37,6 +37,7 @@ private val AddUserFC = FC {
     var userForm: QandaVO by useState { QandaVO(null, "", "") }
     var addResult: Pair<AlertColor, String>? by useState()
     var errorHelperText: VoValidatorMessage? by useState()
+    val apiQanda: ApiQanda = useInject()
 
     val handle: (FormEvent<HTMLElement>) -> Unit = {
         val t = it.target as HTMLInputElement
@@ -80,7 +81,7 @@ private val AddUserFC = FC {
                 console.error(t)
                 addResult = AlertColor.error to "添加失败"
             }) {
-                Req.addQanda(userForm)
+                apiQanda.add(userForm)
                 addResult = AlertColor.success to "已添加"
                 delay(2000)
                 addResult = null

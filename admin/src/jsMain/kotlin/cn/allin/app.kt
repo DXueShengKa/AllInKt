@@ -1,8 +1,7 @@
 package cn.allin
 
 
-import cn.allin.utils.SessionContext
-import cn.allin.data.repository.UserRepository
+import cn.allin.api.ApiUser
 import cn.allin.net.Req
 import cn.allin.net.deleteAuth
 import cn.allin.net.userSession
@@ -14,10 +13,12 @@ import cn.allin.ui.RouteTagAdd
 import cn.allin.ui.RouteTagList
 import cn.allin.ui.RouteUserAdd
 import cn.allin.ui.RouteUserList
+import cn.allin.utils.SessionContext
 import cn.allin.utils.asyncFunction
 import cn.allin.utils.colorSchemes
 import cn.allin.utils.cssVariables
-import cn.allin.utils.getKoin
+import cn.allin.utils.useInject
+import cn.allin.utils.useSessionContext
 import js.objects.jso
 import mui.material.PaletteMode
 import mui.material.styles.createTheme
@@ -36,7 +37,6 @@ import toolpad.core.PageContainer
 import toolpad.core.Session
 import toolpad.core.react_router.ReactRouterAppProvider
 import toolpad.core.useSession
-import cn.allin.utils.useSessionContext
 
 private val RootLayoutRoutes = arrayOf<RouteObject>(
     jso {
@@ -92,11 +92,11 @@ private val appNavigation: Navigation = arrayOf(
 private val AppLayout = FC {
     val navigate = useNavigate()
     val sessionContext = useSessionContext()
-    val userRepository: UserRepository = getKoin().get()
+    val apiUser: ApiUser = useInject()
 
     useEffectOnce {
         Req.authToken()?.let {
-            val u = userRepository.userSession()
+            val u = apiUser.userSession()
             sessionContext.set(jso {
                 user = u
             })

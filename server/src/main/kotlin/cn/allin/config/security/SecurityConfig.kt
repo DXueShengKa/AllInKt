@@ -148,14 +148,12 @@ class SecurityConfig {
                     pathMatchers(HttpMethod.GET, "/${ApiUser.USER}",),
                     hasAnyAuthority(UserRole.ROLE_USER.name, UserRole.ROLE_ADMIN.name)
                 )
-                authorize("/${ApiUser.USER}/**", hasAuthority(UserRole.ROLE_ADMIN.name))
 
                 authorize(pathMatchers(HttpMethod.GET, "/region/**"), permitAll)
 
                 authorize("/${apiRoute.offiAccount.path}/**", permitAll)
-                authorize("/${apiRoute.qanda.path}/**", hasAuthority(UserRole.ROLE_ADMIN.name))
 
-                authorize(anyExchange, authenticated)
+                authorize(anyExchange, hasAuthority(UserRole.ROLE_ADMIN.name))
             }
 
             formLogin {

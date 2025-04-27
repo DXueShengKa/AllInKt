@@ -2,7 +2,6 @@ package cn.allin.controller
 
 import cn.allin.PostUserValidator
 import cn.allin.PutUserValidator
-import cn.allin.ServerParams
 import cn.allin.api.ApiUser
 import cn.allin.apiRoute
 import cn.allin.repository.UserRepository
@@ -36,10 +35,7 @@ class UserController(
      * 获取用户列表
      */
     @GetMapping(apiRoute.PAGE)
-    override suspend fun page(
-        @RequestParam(ServerParams.PAGE_INDEX) pageIndex: Int?,
-        @RequestParam(ServerParams.PAGE_SIZE) pageSize: Int?
-    ): PageVO<UserVO> {
+    override suspend fun page(pageIndex: Int?, pageSize: Int?): PageVO<UserVO> {
         return userRepository.getUsers(pageIndex ?: 0, pageSize ?: 10)
     }
 

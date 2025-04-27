@@ -7,8 +7,8 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import org.koin.core.annotation.Factory
 
-@Factory
-class RegionRepository(
+@Factory([ApiRegion::class])
+internal class RegionRepository(
     private val http: HttpClient
 ): ApiRegion {
     override suspend fun getAllProvince(): List<RegionVO> {

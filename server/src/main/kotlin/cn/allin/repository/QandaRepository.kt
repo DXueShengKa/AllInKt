@@ -10,10 +10,8 @@ import cn.allin.model.id
 import cn.allin.model.qaId
 import cn.allin.model.question
 import cn.allin.utils.toPageVO
-import cn.allin.utils.toQaTagVO
 import cn.allin.utils.toQandaVO
 import cn.allin.vo.PageVO
-import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
@@ -93,13 +91,6 @@ class QandaRepository(private val sqlClient: KSqlClient) {
         ) return -1
 
         return sqlClient.deleteByIds(QAndAEntity::class, ids).totalAffectedRowCount
-    }
-
-    fun findTagPage(index: Int, size: Int): PageVO<QaTagVO> {
-        return sqlClient.createQuery(QaTagEntity::class) {
-            select(table)
-        }.fetchPage(index, size)
-            .toPageVO { it.toQaTagVO() }
     }
 
     fun add(qaList: List<QandaVO>): Int {

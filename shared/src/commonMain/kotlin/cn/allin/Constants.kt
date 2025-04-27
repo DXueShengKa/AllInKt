@@ -27,34 +27,6 @@ interface apiRoute {
         const val OFFI_ACCOUNT = "offiaccount"
         override val path: String = OFFI_ACCOUNT
     }
-
-
-    object qanda : apiRoute {
-        const val QANDA = "qanda"
-
-        const val page = "$QANDA/${PAGE}"
-        override val path: String = QANDA
-        fun path(id: Int) = "$QANDA/$id"
-
-
-        object excel:apiRoute {
-            const val EXCEL = "excel"
-            override val path: String = "$QANDA/$EXCEL"
-        }
-
-
-        object tag : apiRoute {
-            const val TAG = "tag"
-
-            override val path: String = TAG
-
-            object page : apiRoute {
-                const val TAG_PAGE = "$TAG/${PAGE}"
-
-                override val path: String = "$QANDA/$TAG_PAGE"
-            }
-        }
-    }
 }
 
 object ServerParams {

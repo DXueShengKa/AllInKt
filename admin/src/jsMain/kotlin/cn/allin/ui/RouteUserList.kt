@@ -1,13 +1,13 @@
 package cn.allin.ui
 
 import cn.allin.VoFieldName
-import cn.allin.data.repository.UserRepository
-import cn.allin.utils.getKoin
+import cn.allin.api.ApiUser
 import cn.allin.utils.getValue
 import cn.allin.utils.invokeFn
 import cn.allin.utils.selectColumnDef
 import cn.allin.utils.setState
 import cn.allin.utils.useCoroutineScope
+import cn.allin.utils.useInject
 import cn.allin.utils.useRowSelectionState
 import cn.allin.vo.Gender
 import cn.allin.vo.PageVO
@@ -85,10 +85,10 @@ private val UserListFC = FC {
     val cs: CoroutineScope? by useCoroutineScope()
     var showMessage by useState(false)
 
-    val userRepository: UserRepository = getKoin().get()
+    val apiUser: ApiUser = useInject()
 
     val query = cn.allin.net.useQuery(pageParams) {
-        userRepository.page(pageIndex =  it?.index, pageSize = it?.size)
+        apiUser.page(pageIndex =  it?.index, pageSize = it?.size)
     }
 
     val tableData: Array<UserVO> = useMemo(query.data) {
@@ -130,7 +130,7 @@ private val UserListFC = FC {
             onClick = {
                 cs?.launch {
                     val ids = uTable.getSelectedRowModel().flatRows.map { it.original.id }
-                    if (userRepository.deleteAll(ids) > 0) {
+                    if (apiUser.deleteAll(ids) > 0) {
                         showMessage = true
                         query.refresh()
                     }

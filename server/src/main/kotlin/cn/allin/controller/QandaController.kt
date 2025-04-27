@@ -9,7 +9,6 @@ import cn.allin.apiRoute
 import cn.allin.service.QandaService
 import cn.allin.vo.MsgVO
 import cn.allin.vo.PageVO
-import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.apache.poi.ss.usermodel.Cell
@@ -66,18 +65,11 @@ class QandaController(
 
 
     @DeleteMapping
-    override suspend fun delete(@RequestParam ids: List<Int>?): Int {
+    override suspend fun delete(@RequestParam ids: List<Int>): Int {
         return qandaService.delete(ids)
     }
 
 
-    @GetMapping(apiRoute.qanda.tag.page.TAG_PAGE)
-    fun tagPage(
-        @RequestParam(ServerParams.PAGE_INDEX) pageIndex: Int?,
-        @RequestParam(ServerParams.PAGE_SIZE) pageSize: Int?
-    ): PageVO<QaTagVO> {
-        return qandaService.tagPage(pageIndex ?: 0, pageSize ?: 10)
-    }
 
 
     @PostMapping(ApiQanda.EXCEL)

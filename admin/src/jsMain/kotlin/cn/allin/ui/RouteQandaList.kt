@@ -1,9 +1,9 @@
 package cn.allin.ui
 
 import cn.allin.VoFieldName
+import cn.allin.api.ApiQanda
+import cn.allin.api.ApiQandaTag
 import cn.allin.net.Req
-import cn.allin.net.deleteQanda
-import cn.allin.net.getQandaPage
 import cn.allin.net.uploadExcel
 import cn.allin.net.useQuery
 import cn.allin.utils.DATE_TIME_DEFAULT_FORMAT
@@ -16,6 +16,7 @@ import cn.allin.utils.rsv
 import cn.allin.utils.selectColumnDef
 import cn.allin.utils.setState
 import cn.allin.utils.useCoroutineScope
+import cn.allin.utils.useInject
 import cn.allin.utils.useRowSelectionState
 import cn.allin.vo.PageVO
 import cn.allin.vo.QandaVO
@@ -119,15 +120,17 @@ private val QandaListFC = FC {
     val selectState = useRowSelectionState()
     val cs by useCoroutineScope()
     val notifications = useNotifications()
+    val apiQanda: ApiQanda = useInject()
+    val apiQandaTag: ApiQandaTag = useInject()
 
 
     val query = useQuery(pageParams) {
-        getQandaPage(pageParams)
+        apiQanda.page(pageParams.index,pageParams.size)
     }
 
     val onDelete: (QandaVO) -> Unit = { vo ->
         cs.launch {
-            Req.deleteQanda(vo.id ?: return@launch)
+            apiQanda.delete(vo.id ?: return@launch)
                 .onLeft {
                     notifications.show("${vo.question} $it", severity = SeverityStr.error)
                 }.onRight {
@@ -163,7 +166,7 @@ private val QandaListFC = FC {
         onDeleteSelect = {
             val ids = qaTable.getSelectedRowModel().flatRows.mapNotNull { it.original.id }
             if (ids.isNotEmpty()) cs.launch {
-                val count = Req.deleteQanda(ids).data
+                val count = apiQanda.delete(ids)
                 query.refresh()
                 notifications.show("删了 $count 条数据")
             }

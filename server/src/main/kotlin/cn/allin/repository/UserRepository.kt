@@ -13,6 +13,7 @@ import cn.allin.utils.toPageVO
 import cn.allin.utils.toUserVO
 import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
+import io.netty.channel.unix.NativeInetAddress.address
 import kotlinx.datetime.toJavaLocalDate
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
@@ -76,7 +77,7 @@ class UserRepository(
 
 
     fun findById(id: Long): UserEntity? {
-        return sqlClient.findById(UserEntity::class, id)
+        return sqlClient.findOneById(UserEntity::class, id)
     }
 
     fun update(user: UserVO) {

@@ -1,15 +1,16 @@
 package cn.allin.ui
 
-import cn.allin.utils.SessionContextValue
 import cn.allin.VoFieldName
-import cn.allin.data.repository.UserRepository
+import cn.allin.api.ApiUser
 import cn.allin.net.Req
 import cn.allin.net.auth
 import cn.allin.net.userSession
-import cn.allin.utils.getKoin
+import cn.allin.utils.SessionContextValue
 import cn.allin.utils.getValue
 import cn.allin.utils.setValue
 import cn.allin.utils.useCoroutineScope
+import cn.allin.utils.useInject
+import cn.allin.utils.useSessionContext
 import cn.allin.vo.UserVO
 import js.objects.jso
 import kotlinx.coroutines.promise
@@ -22,7 +23,6 @@ import toolpad.core.AuthProviderId
 import toolpad.core.AuthResponse
 import toolpad.core.SignInPage
 import toolpad.core.slotProps
-import cn.allin.utils.useSessionContext
 import web.form.FormData
 import web.html.InputType
 
@@ -37,7 +37,7 @@ private val providers: Array<AuthProvider> = arrayOf(
 
 private suspend fun login(
     nav: NavigateFunction,
-    userRepository: UserRepository,
+    apiUser: ApiUser,
     sessionContext: SessionContextValue,
     formData: FormData,
     remember: Boolean
@@ -51,7 +51,7 @@ private suspend fun login(
     )
     val result = Req.auth(vo, remember)
     if (result.isSuccess) {
-        val u = userRepository.userSession()
+        val u = apiUser.userSession()
         sessionContext.set(jso {
             user = u
         })
@@ -70,7 +70,7 @@ val RouteAuthFC = FC {
     var sessionContext = useSessionContext()
     val cs by useCoroutineScope()
     var remember by useRef(false)
-    val userRepository: UserRepository = getKoin().get()
+    val apiUser: ApiUser = useInject()
 
     SignInPage {
 
@@ -85,7 +85,7 @@ val RouteAuthFC = FC {
 
         signIn = { provider, formData ->
             cs.promise {
-                login(nav, userRepository, sessionContext, formData, remember)
+                login(nav, apiUser, sessionContext, formData, remember)
             }
         }
 
