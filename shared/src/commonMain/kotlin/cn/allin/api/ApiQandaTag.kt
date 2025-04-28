@@ -9,6 +9,8 @@ interface ApiQandaTag {
 
     suspend fun page(pageIndex: Int?, pageSize: Int?): PageVO<QaTagVO>
 
+    suspend fun getAll(): List<QaTagVO>
+
     suspend fun add(tag: QaTagVO)
 
     suspend fun delete(id: Int): Either<String, Unit>
@@ -16,8 +18,11 @@ interface ApiQandaTag {
 
     companion object {
         const val QA_TAG = "qanda/tag"
+        const val ALL = "all"
 
         const val pathPage = "$QA_TAG/$PAGE"
+
+        const val pathAll = "$QA_TAG/$ALL"
 
         fun path(id: Int) = "$QA_TAG/$id"
 

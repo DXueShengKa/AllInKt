@@ -8,7 +8,7 @@ import kotlin.jvm.JvmStatic
 
 interface ApiQanda {
 
-    suspend fun page(pageIndex: Int?, pageSize: Int?): PageVO<QandaVO>
+    suspend fun page(pageIndex: Int?, pageSize: Int?, isAsc: Boolean?, tagId: Int?): PageVO<QandaVO>
 
     suspend fun add(qanda: QandaVO): Int
 

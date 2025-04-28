@@ -1,6 +1,7 @@
 package cn.allin.repository
 
 import cn.allin.model.QaTagEntity
+import cn.allin.model.by
 import cn.allin.model.id
 import cn.allin.utils.toPageVO
 import cn.allin.utils.toQaTagVO
@@ -12,6 +13,7 @@ import org.babyfish.jimmer.sql.kt.ast.expression.eq
 import org.babyfish.jimmer.sql.kt.ast.expression.exists
 import org.babyfish.jimmer.sql.kt.ast.table.source
 import org.babyfish.jimmer.sql.kt.ast.table.sourceId
+import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -47,5 +49,11 @@ class QandaTagRepository(
                 select(table.source.id)
             }))
         }.execute()
+    }
+
+    fun findAllTag(): List<QaTagEntity> {
+        return sqlClient.findAll(newFetcher(QaTagEntity::class).by {
+            tagName()
+        })
     }
 }

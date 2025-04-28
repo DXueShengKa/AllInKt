@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service
 @Service
 class QandaService(private val qandaRepository: QandaRepository) {
 
-    fun page(index: Int, size: Int): PageVO<QandaVO> {
-        return qandaRepository.findPage(index, size)
+    fun page(index: Int?, size: Int?, isAsc: Boolean?, tagId: Int?): PageVO<QandaVO> {
+        return qandaRepository.findPage(index ?: 0, size ?: 10, isAsc ?: true, tagId)
     }
 
     fun add(pageVO: QandaVO): Int {

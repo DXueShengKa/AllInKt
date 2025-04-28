@@ -1,18 +1,29 @@
 package cn.allin.net
 
 import react.useEffect
+import react.useEffectOnce
 import react.useState
 
 
 class QueryData<D : Any>(
     val data: D?,
-    private val refresh: () -> Unit,
+    private val refresh: (() -> Unit)?,
 ) {
     fun refresh() {
-        refresh.invoke()
+        refresh?.invoke()
     }
 }
 
+
+fun <D : Any> useQuery(
+    queryFn: suspend () -> D
+): QueryData<D> {
+    var data by useState<D>()
+    useEffectOnce {
+        data = queryFn()
+    }
+    return QueryData(data, null)
+}
 
 fun <D : Any, P> useQuery(
     params: P? = null,

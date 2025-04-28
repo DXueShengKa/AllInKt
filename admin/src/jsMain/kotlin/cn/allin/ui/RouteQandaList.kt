@@ -2,6 +2,7 @@ package cn.allin.ui
 
 import cn.allin.VoFieldName
 import cn.allin.api.ApiQanda
+import cn.allin.api.ApiQandaTag
 import cn.allin.net.Req
 import cn.allin.net.uploadExcel
 import cn.allin.net.useQuery
@@ -16,6 +17,7 @@ import cn.allin.utils.useCoroutineScope
 import cn.allin.utils.useInject
 import cn.allin.utils.useRowSelectionState
 import cn.allin.vo.PageVO
+import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import js.array.ReadonlyArray
 import js.objects.jso
@@ -23,16 +25,24 @@ import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.datetime.format
 import mui.material.Button
+import mui.material.FormControl
+import mui.material.FormControlLabel
 import mui.material.IconButton
-import mui.material.Input
+import mui.material.InputLabel
+import mui.material.LabelPlacement
+import mui.material.MenuItem
+import mui.material.Select
 import mui.material.Stack
 import mui.material.StackDirection
+import mui.material.Switch
 import mui.system.responsive
+import mui.system.sx
+import muix.fileInput.MuiFileInputSingle
 import muix.icons.IconsDelete
 import react.FC
 import react.Props
+import react.create
 import react.useMemo
-import react.useRef
 import react.useState
 import tanstack.react.table.useReactTable
 import tanstack.table.core.ColumnDef
@@ -43,9 +53,8 @@ import toolpad.core.SeverityMui
 import toolpad.core.show
 import toolpad.core.useDialogs
 import toolpad.core.useNotifications
+import web.cssom.px
 import web.file.File
-import web.html.HTMLInputElement
-import web.html.InputType
 
 private fun qaListColumnDef(
     onDelete: (QandaVO) -> Unit,
@@ -69,7 +78,11 @@ private fun qaListColumnDef(
         id = VoFieldName.QandaVO_answer
         header = StringOrTemplateHeader("回答")
         accessorFn = { qa, _ ->
-            qa.answer
+            if (qa.answer.length > 9) {
+                qa.answer + "..."
+            } else {
+                qa.answer
+            }
         }
     },
     jso {
@@ -100,9 +113,16 @@ private fun qaListColumnDef(
     }
 )
 
+private data class QaFilter(
+    val page: PageParams,
+    val isAsc: Boolean?,
+    val tagId: Int?,
+)
 
 private val QandaListFC = FC {
-    val (pageParams, setPageParams) = useState(PageParams())
+    val (params, setParams) = useState {
+        QaFilter(PageParams(), null, null)
+    }
     var qaPage: PageVO<QandaVO>? by useState()
     val selectState = useRowSelectionState()
     val cs = useCoroutineScope()
@@ -110,8 +130,8 @@ private val QandaListFC = FC {
     val apiQanda: ApiQanda = useInject()
 
 
-    val query = useQuery(pageParams) {
-        apiQanda.page(pageParams.index,pageParams.size)
+    val query = useQuery(params) {
+        apiQanda.page(params.page.index, params.page.size, params.isAsc, params.tagId)
     }
 
     val onDelete: (QandaVO) -> Unit = { vo ->
@@ -156,22 +176,29 @@ private val QandaListFC = FC {
                 query.refresh()
                 notifications.show("删了 $count 条数据")
             }
-
+        }
+        onTagId = {
+            setParams(params.copy(tagId = it))
+        }
+        onAsc = {
+            setParams(params.copy(isAsc = it))
         }
     }
 
     AdminPageTable {
         table = qaTable
         pageCount = qaPage?.totalRow
-        page = pageParams
+        page = params.page
         onPage = {
-            setPageParams(
-                pageParams.copy(
-                    index = it
+            setParams(
+                params.copy(
+                    page = params.page.copy(index = it),
                 )
             )
         }
-        onPageParams = setPageParams.invokeFn
+        onPageParams = {
+            setParams(params.copy(page = it))
+        }
     }
 }
 
@@ -180,12 +207,16 @@ private external interface TableMenuProps : Props {
     var onRefresh: () -> Unit
 
     var onDeleteSelect: () -> Unit
+
+    var onTagId: (Int?) -> Unit
+
+    var onAsc: (Boolean?) -> Unit
 }
 
 
 private val TableMenu = FC<TableMenuProps> { props ->
 
-    val excelFile = useRef<File>()
+    val (excelFile, setFile) = useState<File>()
     val notifications = useNotifications()
     val dialog = useDialogs()
 
@@ -193,18 +224,22 @@ private val TableMenu = FC<TableMenuProps> { props ->
         direction = responsive(StackDirection.row)
         spacing = responsive(2)
 
-        Input {
-            type = InputType.file.toString()
-            onChange = {
-                val e = it.target as HTMLInputElement
-                excelFile.current = e.files?.get(0)
+        MuiFileInputSingle {
+            sx {
+                width = 180.px
+            }
+            placeholder = "点击选择文件"
+            valueFile = excelFile
+            onChange = setFile.invokeFn
+            clearIconButtonProps = jso {
+                children = IconsDelete.create()
             }
         }
 
         Button {
             onClick = asyncFunction { event ->
                 event.preventDefault()
-                val f = excelFile.current ?: return@asyncFunction
+                val f = excelFile ?: return@asyncFunction
 
                 Req.uploadExcel(f)
 
@@ -220,7 +255,6 @@ private val TableMenu = FC<TableMenuProps> { props ->
 
             onClick = asyncFunction {
                 val b = dialog.confirm(reactNode("是否删除选中"), jso {
-//                    title = reactNode("")
                     okText = reactNode("删除")
                     cancelText = reactNode("取消")
                 }).await()
@@ -234,10 +268,70 @@ private val TableMenu = FC<TableMenuProps> { props ->
             +"删除选中"
         }
 
+        FormControlLabel {
+            label = reactNode("倒序")
+            labelPlacement = LabelPlacement.bottom
+            control = Switch.create {
+                onChange = { e, b ->
+                    props.onAsc(!b)
+                }
+            }
+        }
+
+        FilterTag {
+            onTagId = props.onTagId
+        }
+
     }
 
 }
 
+external interface FilterTagProps : Props {
+    var onTagId: (Int?) -> Unit
+}
+
+
+private val FilterTag: FC<FilterTagProps> = FC { props ->
+    val apiQandaTag: ApiQandaTag = useInject()
+    val tags = useQuery<List<QaTagVO>> { apiQandaTag.getAll() }
+    var tagId: Any by useState("")
+
+    FormControl {
+        InputLabel {
+            id = ""
+            htmlFor = "select"
+            +"过滤标签"
+        }
+        Select {
+            sx = jso {
+                minWidth = 200.px
+            }
+            value = tagId
+            label = reactNode("过滤标签")
+            onChange = { e, r ->
+                val n: Any = e.target.value
+                tagId = n
+                if (n is Int) {
+                    props.onTagId(n)
+                } else {
+                    props.onTagId(null)
+                }
+            }
+            MenuItem {
+                value = ""
+                +"请选择标签"
+            }
+            tags.data?.forEach {
+                MenuItem {
+                    key = it.id.toString()
+                    value = it.id
+                    +it.tagName
+                }
+            }
+        }
+
+    }
+}
 
 
 val RouteQandaList = routes(

@@ -15,10 +15,12 @@ internal class QandaRepository(
     private val http: HttpClient,
 ) : ApiQanda {
 
-    override suspend fun page(pageIndex: Int?, pageSize: Int?): PageVO<QandaVO> {
+    override suspend fun page(pageIndex: Int?, pageSize: Int?,isAsc: Boolean?, tagId: Int?): PageVO<QandaVO> {
         return http.get(ApiQanda.pathPage) {
             parameter(ServerParams.PAGE_INDEX, pageIndex)
             parameter(ServerParams.PAGE_SIZE, pageSize)
+            parameter("tagId", tagId)
+            parameter("isAsc", isAsc)
         }.body()
     }
 

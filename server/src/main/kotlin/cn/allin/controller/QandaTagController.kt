@@ -31,6 +31,11 @@ class QandaTagController(
         return qandaTagService.findTagPage(pageIndex, pageSize)
     }
 
+    @GetMapping(ApiQandaTag.ALL)
+    override suspend fun getAll(): List<QaTagVO> {
+        return qandaTagService.findAllTag()
+    }
+
     @PostMapping
     override suspend fun add(@RequestBody tag: QaTagVO) {
         qandaTagService.addTag(tag)

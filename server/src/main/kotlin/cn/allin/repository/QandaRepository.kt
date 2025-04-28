@@ -4,11 +4,14 @@ import cn.allin.model.AutoAnswerRecordEntity
 import cn.allin.model.QAndAEntity
 import cn.allin.model.QaTagEntity
 import cn.allin.model.addBy
+import cn.allin.model.answer
 import cn.allin.model.by
 import cn.allin.model.fetchBy
 import cn.allin.model.id
 import cn.allin.model.qaId
 import cn.allin.model.question
+import cn.allin.model.tags
+import cn.allin.utils.substring
 import cn.allin.utils.toPageVO
 import cn.allin.utils.toQandaVO
 import cn.allin.vo.PageVO
@@ -16,7 +19,10 @@ import cn.allin.vo.QandaVO
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
+import org.babyfish.jimmer.sql.kt.ast.expression.asc
+import org.babyfish.jimmer.sql.kt.ast.expression.desc
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
+import org.babyfish.jimmer.sql.kt.ast.expression.`eq?`
 import org.babyfish.jimmer.sql.kt.ast.expression.exists
 import org.babyfish.jimmer.sql.kt.ast.expression.like
 import org.babyfish.jimmer.sql.kt.ast.expression.not
@@ -39,23 +45,48 @@ class QandaRepository(private val sqlClient: KSqlClient) {
     }
 
 
-    fun findPage(pageIndex: Int, size: Int): PageVO<QandaVO> {
-        return sqlClient.createQuery(QAndAEntity::class) {
-            select(table.fetchBy {
+    fun getQanda(qaId: Long): QandaVO {
+        return sqlClient.findOneById(
+            newFetcher(QAndAEntity::class).by {
                 allScalarFields()
-                tags {
-                    tagName()
-                }
+                tags { tagName() }
+            },
+            qaId
+        ).run {
+            QandaVO(
+                id,
+                question,
+                answer,
+                createTime.toKotlinLocalDateTime(),
+                tags.takeIf { it.isNotEmpty() }?.map { tag -> tag.tagName },
+            )
+        }
+    }
+
+    fun findPage(pageIndex: Int, size: Int, isAsc: Boolean, tagId: Int?): PageVO<QandaVO> {
+        return sqlClient.createQuery(QAndAEntity::class) {
+            where(table.tags {
+                id `eq?` tagId
             })
+            orderBy(if (isAsc) table.id.asc() else table.id.desc())
+            select(
+                table.fetchBy {
+                    allScalarFields()
+                    tags {
+                        tagName()
+                    }
+                },
+                table.answer substring 1..10,
+            )
         }
             .fetchPage(pageIndex, size)
-            .toPageVO {
+            .toPageVO { (qa, a) ->
                 QandaVO(
-                    it.id,
-                    it.question,
-                    it.answer,
-                    it.createTime.toKotlinLocalDateTime(),
-                    it.tags.takeIf { it.isNotEmpty() }?.map { tag -> tag.tagName },
+                    qa.id,
+                    qa.question,
+                    a,
+                    qa.createTime.toKotlinLocalDateTime(),
+                    qa.tags.takeIf { it.isNotEmpty() }?.map { tag -> tag.tagName },
                 )
             }
     }

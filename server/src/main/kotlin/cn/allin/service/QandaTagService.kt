@@ -31,4 +31,10 @@ class QandaTagService(
             "这个标签已经绑定问题".left()
         }
     }
+
+    fun findAllTag(): List<QaTagVO> {
+        return qandaTagRepository.findAllTag().map {
+            QaTagVO(it.id,it.tagName)
+        }
+    }
 }

@@ -16,6 +16,9 @@ dayjs = "1.11.13"
 mui-toolpad = "^0.12.1"
 #https://v6.mui.com/material-ui/getting-started/
 mui-material = "^6"
+#https://github.com/viclafouch/mui-file-input
+mui-fileInput = "7.0.0"
+emotionStyled = "11.14.0"
 
 
 #https://github.com/Kotlin/kotlinx.coroutines

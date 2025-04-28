@@ -14,21 +14,18 @@ import react.FC
 import react.create
 import react.dom.client.createRoot
 import web.dom.document
-import web.html.HTML.div
 
 
 fun main() {
-    val root = document.createElement(div)
-    document.body.append(root)
-    dayjs.locale(DayLocalZhCn)
 
+    dayjs.locale(DayLocalZhCn)
     val reactElement = LocalizationProvider.create {
         dateAdapter = AdapterDayjs
         adapterLocale = "zh-cn"
         MainFC()
     }
 
-    createRoot(root)
+    createRoot(document.getElementById("root")!!)
         .render(reactElement)
 }
 

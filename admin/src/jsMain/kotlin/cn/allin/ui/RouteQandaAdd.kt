@@ -6,6 +6,7 @@ import cn.allin.VoValidatorMessage
 import cn.allin.api.ApiQanda
 import cn.allin.api.ApiQandaTag
 import cn.allin.net.useQuery
+import cn.allin.utils.invokeFn
 import cn.allin.utils.reactNode
 import cn.allin.utils.rsv
 import cn.allin.utils.useCoroutineScope
@@ -16,58 +17,28 @@ import js.objects.jso
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mui.material.Alert
-import mui.material.AlertColor
-import mui.material.Button
-import mui.material.Card
-import mui.material.CardHeader
-import mui.material.Divider
-import mui.material.FormControl
-import mui.material.Grid
-import mui.material.List
-import mui.material.ListItemButton
-import mui.material.ListItemText
-import mui.material.Stack
-import mui.material.StackDirection
-import mui.material.TextField
+import mui.material.*
 import mui.system.responsive
 import mui.system.sx
 import react.FC
 import react.Props
 import react.dom.aria.AriaRole
-import react.dom.events.FormEvent
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.form
-import react.dom.onChange
 import react.useState
 import web.cssom.Auto
+import web.cssom.pct
 import web.cssom.px
+import web.form.FormData
 import web.html.ButtonType
-import web.html.HTMLElement
-import web.html.HTMLInputElement
 
 
 private val AddUserFC = FC {
     val cs = useCoroutineScope()
-    var userForm: QandaVO by useState { QandaVO(null, "", "") }
     var addResult: Pair<AlertColor, String>? by useState()
     var errorHelperText: VoValidatorMessage? by useState()
     val apiQanda: ApiQanda = useInject()
-
-    val handle: (FormEvent<HTMLElement>) -> Unit = {
-        val t = it.target as HTMLInputElement
-        when (t.name) {
-            VoFieldName.QandaVO_answer -> {
-                userForm = userForm.copy(answer = t.value)
-            }
-
-            VoFieldName.QandaVO_question -> {
-                userForm = userForm.copy(question = t.value)
-            }
-        }
-
-        errorHelperText = QandaVO.valid(userForm).leftOrNull()
-    }
+    val (tagIds, setTagIds) = useState<List<Int>>()
 
     Stack {
         sx = jso {
@@ -80,15 +51,20 @@ private val AddUserFC = FC {
 
         component = form
 
-        onSubmit = submit@{
-            it.preventDefault()
-            val v = VoValidatorMessage.validator(userForm)
-            if (v != null) {
-                errorHelperText = v
+        onSubmit = submit@{ formEvent ->
+            formEvent.preventDefault()
+            val fa = FormData(formEvent.target)
+            val userForm = QandaVO(
+                question = fa.get(VoFieldName.QandaVO_question)?.toString() ?: "",
+                answer = fa.get(VoFieldName.QandaVO_answer)?.toString() ?: "",
+            )
+
+            QandaVO.valid(userForm).onLeft {
+                errorHelperText = it
                 return@submit
-            } else {
-                errorHelperText = null
             }
+
+            errorHelperText = null
 
             cs.launch(CoroutineExceptionHandler { _, t ->
                 if (t is ValidatorError)
@@ -109,7 +85,6 @@ private val AddUserFC = FC {
                     +"问题"
                 }
                 name = VoFieldName.QandaVO_question
-                onChange = handle
 
                 errorHelperText?.also {
                     if (it.field == VoFieldName.QandaVO_question) {
@@ -123,17 +98,21 @@ private val AddUserFC = FC {
         }
 
         FormControl {
-            TextField {
-                label = reactNode {
-                    +"回答"
+            FormLabel {
+                +"回答"
+            }
+            TextareaAutosize {
+                minRows = 3
+                style = jso {
+                    width = 100.pct
                 }
                 name = VoFieldName.QandaVO_answer
-                onChange = handle
-
+            }
+            FormHelperText {
                 errorHelperText?.also {
                     if (it.field == VoFieldName.QandaVO_answer) {
                         error = true
-                        helperText = reactNode("${it.code},${it.message}")
+                        +"${it.code},${it.message}"
                     } else {
                         error = false
                     }
@@ -142,9 +121,7 @@ private val AddUserFC = FC {
         }
 
         SelectTab {
-            onTabs = {
-                userForm = userForm.copy(tagIds = it)
-            }
+            onTags = setTagIds.invokeFn
         }
 
         Button {
@@ -163,15 +140,15 @@ private val AddUserFC = FC {
 }
 
 private external interface SelectTabProps : Props {
-    var onTabs: (List<Int>) -> Unit
+    var onTags: (List<Int>) -> Unit
 }
 
 private val SelectTab = FC<SelectTabProps> { props ->
     val apiQandaTag: ApiQandaTag = useInject()
     var tagSelect: List<QaTagVO> by useState(emptyList())
 
-    val query = useQuery(null) {
-        apiQandaTag.page(0, 100).rows
+    val query = useQuery<List<QaTagVO>> {
+        apiQandaTag.getAll()
     }
 
     Grid {
@@ -185,7 +162,7 @@ private val SelectTab = FC<SelectTabProps> { props ->
                 onItem = { tag ->
                     if (tag !in tagSelect) {
                         val tags = tagSelect + tag
-                        props.onTabs(tags.map { it.id })
+                        props.onTags(tags.map { it.id })
                         tagSelect = tags
                     }
 
@@ -200,7 +177,7 @@ private val SelectTab = FC<SelectTabProps> { props ->
                 data = tagSelect
                 onItem = { tag ->
                     val tags = tagSelect - tag
-                    props.onTabs(tags.map { it.id })
+                    props.onTags(tags.map { it.id })
                     tagSelect = tags
                 }
             }

@@ -1,6 +1,8 @@
 package cn.allin.utils
 
 import js.objects.jso
+import mui.material.BaseTextFieldProps
+import mui.material.InputProps
 import mui.material.styles.ThemeOptions
 import mui.system.responsive
 import react.createContext
@@ -45,4 +47,15 @@ val SessionContext = createContext<SessionContextValue>(jso {
 
 fun useSessionContext(): SessionContextValue {
     return use(SessionContext)
+}
+
+
+fun BaseTextFieldProps.slotProps(
+    input: InputProps? = null,
+){
+    asDynamic().slotProps = jso {
+        if (input != null) {
+            this.input = input
+        }
+    }
 }

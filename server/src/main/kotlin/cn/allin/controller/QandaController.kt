@@ -3,7 +3,6 @@ package cn.allin.controller
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import cn.allin.ServerParams
 import cn.allin.api.ApiQanda
 import cn.allin.apiRoute
 import cn.allin.service.QandaService
@@ -40,10 +39,9 @@ class QandaController(
 
     @GetMapping(apiRoute.PAGE)
     override suspend fun page(
-        @RequestParam(ServerParams.PAGE_INDEX) pageIndex: Int?,
-        @RequestParam(ServerParams.PAGE_SIZE) pageSize: Int?
+        pageIndex: Int?, pageSize: Int?,isAsc: Boolean?, tagId: Int?
     ): PageVO<QandaVO> {
-        return qandaService.page(pageIndex ?: 0, pageSize ?: 10)
+        return qandaService.page(pageIndex, pageSize,isAsc,tagId)
     }
 
     @PostMapping
@@ -68,8 +66,6 @@ class QandaController(
     override suspend fun delete(@RequestParam ids: List<Int>): Int {
         return qandaService.delete(ids)
     }
-
-
 
 
     @PostMapping(ApiQanda.EXCEL)
