@@ -10,7 +10,11 @@ interface ApiQanda {
 
     suspend fun page(pageIndex: Int?, pageSize: Int?, isAsc: Boolean?, tagId: Int?): PageVO<QandaVO>
 
+    suspend fun get(id:Int): QandaVO
+
     suspend fun add(qanda: QandaVO): Int
+
+    suspend fun update(qanda: QandaVO)
 
     suspend fun delete(id: Int): Either<String, Unit>
 

@@ -95,6 +95,7 @@ create table qa_tag_relation
         constraint qa_tag_relation_qa references q_and_a,
     tag_id      int                                 not null
         constraint qa_tag_relation_tag references qa_tag,
+    constraint qa_and_tag unique (qa_id, tag_id),
     create_time timestamp default current_timestamp not null
 );
 

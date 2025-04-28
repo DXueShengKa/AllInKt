@@ -8,6 +8,7 @@ import cn.allin.apiRoute
 import cn.allin.service.QandaService
 import cn.allin.vo.MsgVO
 import cn.allin.vo.PageVO
+import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.apache.poi.ss.usermodel.Cell
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -44,11 +46,21 @@ class QandaController(
         return qandaService.page(pageIndex, pageSize,isAsc,tagId)
     }
 
+    @GetMapping(apiRoute.PATH_ID)
+    override suspend fun get(@PathVariable id: Int): QandaVO {
+        return qandaService.get(id)
+    }
+
     @PostMapping
     override suspend fun add(
         @Validated @RequestBody qandaVO: QandaVO,
     ): Int {
         return qandaService.add(qandaVO)
+    }
+
+    @PutMapping
+    override suspend fun update(@Validated @RequestBody qanda: QandaVO) {
+        qandaService.update(qanda)
     }
 
 
@@ -87,7 +99,7 @@ class QandaController(
 
             var q: String? = null
             var a: String? = null
-            var tags: List<String>? = null
+            var tags: List<QaTagVO>? = null
 
             for (cell in row) {
                 when (cell.columnIndex) {
@@ -101,7 +113,7 @@ class QandaController(
 
                     2 -> {
                         tags = cell.value?.let {
-                            listOf(it)
+                            listOf(QaTagVO(tagName = it))
                         }
                     }
 

@@ -39,9 +39,11 @@ import mui.system.responsive
 import mui.system.sx
 import muix.fileInput.MuiFileInputSingle
 import muix.icons.IconsDelete
+import muix.icons.IconsEdit
 import react.FC
 import react.Props
 import react.create
+import react.router.useNavigate
 import react.useMemo
 import react.useState
 import tanstack.react.table.useReactTable
@@ -57,6 +59,7 @@ import web.cssom.px
 import web.file.File
 
 private fun qaListColumnDef(
+    onEdit: (QandaVO) -> Unit,
     onDelete: (QandaVO) -> Unit,
 ): ReadonlyArray<ColumnDef<QandaVO, String?>> = arrayOf(
     selectColumnDef(),
@@ -89,7 +92,7 @@ private fun qaListColumnDef(
         id = VoFieldName.QandaVO_tagList
         header = StringOrTemplateHeader("标签")
         accessorFn = { qa, _ ->
-            qa.tagList?.joinToString(",")
+            qa.tagList?.joinToString(","){ it.tagName }
         }
     },
     jso {
@@ -103,6 +106,12 @@ private fun qaListColumnDef(
         id = "操作"
         header = StringOrTemplateHeader(id)
         cell = columnDefCell { cellContext ->
+            IconButton {
+                onClick = {
+                    onEdit(cellContext.row.original)
+                }
+                IconsEdit()
+            }
             IconButton {
                 onClick = {
                     onDelete(cellContext.row.original)
@@ -134,6 +143,12 @@ private val QandaListFC = FC {
         apiQanda.page(params.page.index, params.page.size, params.isAsc, params.tagId)
     }
 
+    val reactNavigate = useNavigate()
+
+    val onEdit: (QandaVO) -> Unit = { vo ->
+        reactNavigate("/qanda/add/${vo.id}")
+    }
+
     val onDelete: (QandaVO) -> Unit = { vo ->
         cs.launch {
             apiQanda.delete(vo.id ?: return@launch)
@@ -156,6 +171,7 @@ private val QandaListFC = FC {
     val qaTable = useReactTable(
         TableOptions<QandaVO>(
             columns = qaListColumnDef(
+                onEdit = onEdit,
                 onDelete = onDelete
             ),
             data = tableData,

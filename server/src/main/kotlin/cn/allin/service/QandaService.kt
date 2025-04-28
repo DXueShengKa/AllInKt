@@ -28,4 +28,13 @@ class QandaService(private val qandaRepository: QandaRepository) {
     fun addList(qaList: List<QandaVO>): Int {
         return qandaRepository.add(qaList)
     }
+
+    fun get(id: Int): QandaVO{
+
+        return qandaRepository.find(id)
+    }
+
+    fun update(qanda: QandaVO) {
+        qandaRepository.update(qanda)
+    }
 }

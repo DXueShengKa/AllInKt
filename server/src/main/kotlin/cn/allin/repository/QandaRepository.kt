@@ -15,8 +15,10 @@ import cn.allin.utils.substring
 import cn.allin.utils.toPageVO
 import cn.allin.utils.toQandaVO
 import cn.allin.vo.PageVO
+import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import kotlinx.datetime.toKotlinLocalDateTime
+import org.babyfish.jimmer.sql.ast.mutation.AssociatedSaveMode
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.asc
@@ -45,7 +47,7 @@ class QandaRepository(private val sqlClient: KSqlClient) {
     }
 
 
-    fun getQanda(qaId: Long): QandaVO {
+    fun find(qaId: Int): QandaVO {
         return sqlClient.findOneById(
             newFetcher(QAndAEntity::class).by {
                 allScalarFields()
@@ -58,7 +60,7 @@ class QandaRepository(private val sqlClient: KSqlClient) {
                 question,
                 answer,
                 createTime.toKotlinLocalDateTime(),
-                tags.takeIf { it.isNotEmpty() }?.map { tag -> tag.tagName },
+                tags.takeIf { it.isNotEmpty() }?.map { tag -> QaTagVO(tag.id, tag.tagName) },
             )
         }
     }
@@ -86,7 +88,7 @@ class QandaRepository(private val sqlClient: KSqlClient) {
                     qa.question,
                     a,
                     qa.createTime.toKotlinLocalDateTime(),
-                    qa.tags.takeIf { it.isNotEmpty() }?.map { tag -> tag.tagName },
+                    qa.tags.takeIf { it.isNotEmpty() }?.map { tag -> QaTagVO(tagName = tag.tagName) },
                 )
             }
     }
@@ -96,9 +98,9 @@ class QandaRepository(private val sqlClient: KSqlClient) {
             QAndAEntity {
                 question = vo.question
                 answer = vo.answer
-                vo.tagIds?.map {
+                vo.tagList?.map {
                     QaTagEntity {
-                        id = it
+                        id = it.id
                     }
                 }?.also {
                     tags = it
@@ -139,7 +141,7 @@ class QandaRepository(private val sqlClient: KSqlClient) {
             .distinct()
             .map {
                 QaTagEntity {
-                    tagName = it
+                    tagName = it.tagName
                 }
             }
             .toList()
@@ -157,7 +159,7 @@ class QandaRepository(private val sqlClient: KSqlClient) {
                     answer = qa.answer
 
                     qa.tagList?.forEach { t ->
-                        val dbTagId = dbTags.find { it.tagName == t }?.id
+                        val dbTagId = dbTags.find { it.tagName == t.tagName }?.id
                         if (dbTagId != null) {
                             tags().addBy {
                                 id = dbTagId
@@ -169,6 +171,19 @@ class QandaRepository(private val sqlClient: KSqlClient) {
             SaveMode.INSERT_ONLY
         )
             .execute().totalAffectedRowCount
+    }
+
+    fun update(qanda: QandaVO) {
+        sqlClient.save(QAndAEntity {
+            id = qanda.id
+            question = qanda.question
+            answer = qanda.answer
+            qanda.tagList?.forEach {
+                tags().addBy {
+                    id = it.id
+                }
+            }
+        }, SaveMode.UPDATE_ONLY, AssociatedSaveMode.REPLACE)
     }
 
 }

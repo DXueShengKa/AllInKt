@@ -17,6 +17,8 @@ import js.objects.jso
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import mui.base.Button
+import mui.base.TextareaAutosize
 import mui.material.*
 import mui.system.responsive
 import mui.system.sx
@@ -25,11 +27,15 @@ import react.Props
 import react.dom.aria.AriaRole
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.form
+import react.dom.onChange
+import react.router.RouteObject
+import react.router.useParams
+import react.useEffectOnce
 import react.useState
+import toolpad.core.NavigationObj
 import web.cssom.Auto
 import web.cssom.pct
 import web.cssom.px
-import web.form.FormData
 import web.html.ButtonType
 
 
@@ -38,7 +44,21 @@ private val AddUserFC = FC {
     var addResult: Pair<AlertColor, String>? by useState()
     var errorHelperText: VoValidatorMessage? by useState()
     val apiQanda: ApiQanda = useInject()
-    val (tagIds, setTagIds) = useState<List<Int>>()
+    val (tags, setTags) = useState<List<QaTagVO>>(emptyList())
+    var qaForm by useState<QandaVO> {
+        QandaVO(0, "", "")
+    }
+
+    val qaId = useParams()["qaId"]
+
+    useEffectOnce {
+        if (qaId.isNullOrBlank()) return@useEffectOnce
+        val id = qaId.toInt()
+        if (id < 1) return@useEffectOnce
+        val qa = apiQanda.get(id)
+        setTags(qa.tagList ?: emptyList())
+        qaForm = qa
+    }
 
     Stack {
         sx = jso {
@@ -53,13 +73,9 @@ private val AddUserFC = FC {
 
         onSubmit = submit@{ formEvent ->
             formEvent.preventDefault()
-            val fa = FormData(formEvent.target)
-            val userForm = QandaVO(
-                question = fa.get(VoFieldName.QandaVO_question)?.toString() ?: "",
-                answer = fa.get(VoFieldName.QandaVO_answer)?.toString() ?: "",
-            )
+            val qa = qaForm.copy(tagList = tags)
 
-            QandaVO.valid(userForm).onLeft {
+            QandaVO.valid(qa).onLeft {
                 errorHelperText = it
                 return@submit
             }
@@ -72,8 +88,13 @@ private val AddUserFC = FC {
                 console.error(t)
                 addResult = AlertColor.error to "添加失败"
             }) {
-                apiQanda.add(userForm)
-                addResult = AlertColor.success to "已添加"
+                if (qa.id > 0) {
+                    apiQanda.update(qa)
+                    addResult = AlertColor.success to "已更新"
+                } else {
+                    apiQanda.add(qa)
+                    addResult = AlertColor.success to "已添加"
+                }
                 delay(2000)
                 addResult = null
             }
@@ -85,7 +106,10 @@ private val AddUserFC = FC {
                     +"问题"
                 }
                 name = VoFieldName.QandaVO_question
-
+                value = qaForm.question
+                onChange = {
+                    qaForm = qaForm.copy(question = it.target.asDynamic().value)
+                }
                 errorHelperText?.also {
                     if (it.field == VoFieldName.QandaVO_question) {
                         error = true
@@ -107,6 +131,12 @@ private val AddUserFC = FC {
                     width = 100.pct
                 }
                 name = VoFieldName.QandaVO_answer
+                value = qaForm.answer
+                onChange = {
+                    qaForm = qaForm.copy(
+                        answer = it.target.value
+                    )
+                }
             }
             FormHelperText {
                 errorHelperText?.also {
@@ -121,12 +151,14 @@ private val AddUserFC = FC {
         }
 
         SelectTab {
-            onTags = setTagIds.invokeFn
+            tagSelect = tags
+            onTags = setTags.invokeFn
         }
 
         Button {
             type = ButtonType.submit
-            +"添加"
+
+            +if (qaForm.id != null) "更新" else "添加"
         }
 
         addResult?.let { (color, str) ->
@@ -140,12 +172,12 @@ private val AddUserFC = FC {
 }
 
 private external interface SelectTabProps : Props {
-    var onTags: (List<Int>) -> Unit
+    var tagSelect: List<QaTagVO>
+    var onTags: (List<QaTagVO>) -> Unit
 }
 
 private val SelectTab = FC<SelectTabProps> { props ->
     val apiQandaTag: ApiQandaTag = useInject()
-    var tagSelect: List<QaTagVO> by useState(emptyList())
 
     val query = useQuery<List<QaTagVO>> {
         apiQandaTag.getAll()
@@ -160,10 +192,9 @@ private val SelectTab = FC<SelectTabProps> { props ->
                 title = "标题列表"
                 data = query.data
                 onItem = { tag ->
-                    if (tag !in tagSelect) {
-                        val tags = tagSelect + tag
-                        props.onTags(tags.map { it.id })
-                        tagSelect = tags
+                    if (tag !in props.tagSelect) {
+                        val tags = props.tagSelect + tag
+                        props.onTags(tags)
                     }
 
                 }
@@ -174,11 +205,10 @@ private val SelectTab = FC<SelectTabProps> { props ->
             item = true
             TagList {
                 title = "已添加的标签"
-                data = tagSelect
+                data = props.tagSelect
                 onItem = { tag ->
-                    val tags = tagSelect - tag
-                    props.onTags(tags.map { it.id })
-                    tagSelect = tags
+                    val tags = props.tagSelect - tag
+                    props.onTags(tags)
                 }
             }
         }
@@ -224,4 +254,17 @@ private val TagList = FC<TagListProps> { props ->
     }
 }
 
-val RouteQandaAdd = routes("add", "添加问答", AddUserFC)
+val RouteQandaAdd = object : Routes {
+
+    override val routePath: String = "add/:qaId"
+
+    override val navigation: NavigationObj = jso {
+        title = "添加问答"
+        segment = "add/-1"
+    }
+
+    override val routeObj: RouteObject = jso {
+        Component = AddUserFC
+        path = routePath
+    }
+}

@@ -24,10 +24,20 @@ internal class QandaRepository(
         }.body()
     }
 
+    override suspend fun get(id: Int): QandaVO {
+        return http.get("${ApiQanda.QANDA}/$id").body()
+    }
+
     override suspend fun add(qanda: QandaVO): Int {
         return http.post(ApiQanda.QANDA) {
             setBody(qanda)
         }.body()
+    }
+
+    override suspend fun update(qanda: QandaVO) {
+        http.put(ApiQanda.QANDA) {
+            setBody(qanda)
+        }
     }
 
     override suspend fun delete(id: Int): Either<String, Unit> {

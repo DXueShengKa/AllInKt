@@ -16,6 +16,8 @@ import mui.system.responsive
 import mui.system.sx
 import react.FC
 import react.dom.html.ReactHTML.form
+import toolpad.core.show
+import toolpad.core.useNotifications
 import web.cssom.px
 import web.form.FormData
 import web.html.ButtonType
@@ -23,6 +25,7 @@ import web.html.ButtonType
 private val TagAddFC = FC {
     val cs = useCoroutineScope()
     val apiQandaTag: ApiQandaTag = useInject()
+    val notifications = useNotifications()
 
     Stack {
         sx {
@@ -41,6 +44,7 @@ private val TagAddFC = FC {
             )
             cs.launch {
                 apiQandaTag.add(tag)
+                notifications.show("已添加")
             }
         }
 
