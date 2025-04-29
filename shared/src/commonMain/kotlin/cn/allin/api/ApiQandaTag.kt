@@ -11,7 +11,11 @@ interface ApiQandaTag {
 
     suspend fun getAll(): List<QaTagVO>
 
+    suspend fun get(id: Int): QaTagVO
+
     suspend fun add(tag: QaTagVO)
+
+    suspend fun update(tag: QaTagVO)
 
     suspend fun delete(id: Int): Either<String, Unit>
 

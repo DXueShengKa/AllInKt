@@ -1,103 +1,77 @@
 package cn.allin.ui
 
-import cn.allin.ValidatorError
 import cn.allin.VoFieldName
-import cn.allin.VoValidatorMessage
 import cn.allin.api.ApiQanda
 import cn.allin.api.ApiQandaTag
+import cn.allin.components.AdminForm
+import cn.allin.components.useAdminForm
 import cn.allin.net.useQuery
 import cn.allin.utils.invokeFn
 import cn.allin.utils.reactNode
 import cn.allin.utils.rsv
-import cn.allin.utils.useCoroutineScope
 import cn.allin.utils.useInject
 import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import js.objects.jso
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import mui.base.Button
-import mui.base.TextareaAutosize
-import mui.material.*
-import mui.system.responsive
+import mui.material.Card
+import mui.material.CardHeader
+import mui.material.Divider
+import mui.material.FormControl
+import mui.material.FormHelperText
+import mui.material.FormLabel
+import mui.material.Grid
+import mui.material.List
+import mui.material.ListItemButton
+import mui.material.ListItemText
+import mui.material.TextField
+import mui.material.TextareaAutosize
 import mui.system.sx
 import react.FC
 import react.Props
 import react.dom.aria.AriaRole
 import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.form
-import react.dom.onChange
 import react.router.RouteObject
-import react.router.useParams
-import react.useEffectOnce
 import react.useState
 import toolpad.core.NavigationObj
 import web.cssom.Auto
 import web.cssom.pct
 import web.cssom.px
-import web.html.ButtonType
 
 
-private val AddUserFC = FC {
-    val cs = useCoroutineScope()
-    var addResult: Pair<AlertColor, String>? by useState()
-    var errorHelperText: VoValidatorMessage? by useState()
+private val AddQandaFC = FC {
     val apiQanda: ApiQanda = useInject()
     val (tags, setTags) = useState<List<QaTagVO>>(emptyList())
-    var qaForm by useState<QandaVO> {
+    var qaForm by useState {
         QandaVO(0, "", "")
     }
 
-    val qaId = useParams()["qaId"]
+    val adminForm = useAdminForm()
 
-    useEffectOnce {
-        if (qaId.isNullOrBlank()) return@useEffectOnce
-        val id = qaId.toInt()
-        if (id < 1) return@useEffectOnce
-        val qa = apiQanda.get(id)
-        setTags(qa.tagList ?: emptyList())
-        qaForm = qa
-    }
-
-    Stack {
-        sx = jso {
-            width = 600.px
+    AdminForm {
+        formState = adminForm
+        dataId = "qaId"
+        getData = { id ->
+            val qa = apiQanda.get(id.toInt())
+            setTags(qa.tagList ?: emptyList())
+            qaForm = qa
         }
-
-        spacing = responsive(2)
-
-        direction = responsive(StackDirection.column)
-
-        component = form
-
-        onSubmit = submit@{ formEvent ->
-            formEvent.preventDefault()
-            val qa = qaForm.copy(tagList = tags)
-
-            QandaVO.valid(qa).onLeft {
-                errorHelperText = it
-                return@submit
-            }
-
-            errorHelperText = null
-
-            cs.launch(CoroutineExceptionHandler { _, t ->
-                if (t is ValidatorError)
-                    errorHelperText = t.validatorMessage
-                console.error(t)
-                addResult = AlertColor.error to "添加失败"
-            }) {
-                if (qa.id > 0) {
-                    apiQanda.update(qa)
-                    addResult = AlertColor.success to "已更新"
-                } else {
-                    apiQanda.add(qa)
-                    addResult = AlertColor.success to "已添加"
+        onSubmit = {
+            QandaVO.valid(qaForm.copy(tagList = tags))
+                .onLeft {
+                    adminForm.setErrorHelper(it)
                 }
-                delay(2000)
-                addResult = null
-            }
+                .onRight { qa ->
+                    adminForm.setErrorHelper(null)
+
+                    if (qa.id > 0) {
+                        apiQanda.update(qa)
+                    } else {
+                        apiQanda.add(qa)
+                        qaForm = QandaVO(0, "", "")
+                        setTags(emptyList())
+                    }
+                }
+
         }
 
         FormControl {
@@ -105,18 +79,8 @@ private val AddUserFC = FC {
                 label = reactNode {
                     +"问题"
                 }
-                name = VoFieldName.QandaVO_question
-                value = qaForm.question
-                onChange = {
-                    qaForm = qaForm.copy(question = it.target.asDynamic().value)
-                }
-                errorHelperText?.also {
-                    if (it.field == VoFieldName.QandaVO_question) {
-                        error = true
-                        helperText = reactNode("${it.code},${it.message}")
-                    } else {
-                        error = false
-                    }
+                adminForm.register(this, VoFieldName.QandaVO_question, qaForm.question) {
+                    qaForm = qaForm.copy(question = it)
                 }
             }
         }
@@ -139,14 +103,7 @@ private val AddUserFC = FC {
                 }
             }
             FormHelperText {
-                errorHelperText?.also {
-                    if (it.field == VoFieldName.QandaVO_answer) {
-                        error = true
-                        +"${it.code},${it.message}"
-                    } else {
-                        error = false
-                    }
-                }
+                +adminForm.register(this, VoFieldName.QandaVO_answer)
             }
         }
 
@@ -154,21 +111,7 @@ private val AddUserFC = FC {
             tagSelect = tags
             onTags = setTags.invokeFn
         }
-
-        Button {
-            type = ButtonType.submit
-
-            +if (qaForm.id != null) "更新" else "添加"
-        }
-
-        addResult?.let { (color, str) ->
-            Alert {
-                severity = color.asDynamic()
-                +str
-            }
-        }
     }
-
 }
 
 private external interface SelectTabProps : Props {
@@ -256,15 +199,13 @@ private val TagList = FC<TagListProps> { props ->
 
 val RouteQandaAdd = object : Routes {
 
-    override val routePath: String = "add/:qaId"
-
     override val navigation: NavigationObj = jso {
         title = "添加问答"
         segment = "add/-1"
     }
 
     override val routeObj: RouteObject = jso {
-        Component = AddUserFC
-        path = routePath
+        Component = AddQandaFC
+        path = "add/:qaId"
     }
 }

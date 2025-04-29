@@ -1,4 +1,4 @@
-package cn.allin.ui
+package cn.allin.components
 
 import cn.allin.api.ApiRegion
 import cn.allin.utils.reactNode

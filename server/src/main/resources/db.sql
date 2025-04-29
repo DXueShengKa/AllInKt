@@ -85,9 +85,15 @@ create table qa_tag
     id          serial primary key,
     tag_name    varchar(64) unique                  not null,
     description text,
+    update_time timestamp                           not null,
     create_time timestamp default CURRENT_TIMESTAMP not null
 );
 comment on table qa_tag is '问题标签';
+create trigger qa_tag_update_timestamp
+    before insert or update
+    on qa_tag
+    for each row
+execute procedure update_timestamp_column();
 
 create table qa_tag_relation
 (

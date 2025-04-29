@@ -25,8 +25,18 @@ class QaTagRepository(
         return http.get(ApiQandaTag.pathAll).body()
     }
 
+    override suspend fun get(id: Int): QaTagVO {
+        return http.get(ApiQandaTag.path(id)).body()
+    }
+
     override suspend fun add(tag: QaTagVO) {
         http.post(ApiQandaTag.QA_TAG){
+            setBody(tag)
+        }
+    }
+
+    override suspend fun update(tag: QaTagVO) {
+        http.put(ApiQandaTag.QA_TAG){
             setBody(tag)
         }
     }

@@ -26,6 +26,7 @@ interface QAndAEntity {
     val answer: String
     val createTime: LocalDateTime
 
+    val updateTime: LocalDateTime
 
     @ManyToMany
     @JoinTable(

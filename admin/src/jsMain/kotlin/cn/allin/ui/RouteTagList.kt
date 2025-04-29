@@ -15,7 +15,9 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.format
 import mui.material.IconButton
 import muix.icons.IconsDelete
+import muix.icons.IconsEdit
 import react.FC
+import react.router.useNavigate
 import react.useMemo
 import react.useState
 import tanstack.react.table.useReactTable
@@ -29,6 +31,7 @@ import toolpad.core.useNotifications
 
 
 private fun tagListColumnDef(
+    onEdit: (QaTagVO) -> Unit,
     onDelete: (QaTagVO) -> Unit,
 ): ReadonlyArray<ColumnDef<QaTagVO, String?>> = arrayOf(
     jso {
@@ -66,6 +69,12 @@ private fun tagListColumnDef(
         cell = columnDefCell { cellContext ->
             IconButton {
                 onClick = {
+                    onEdit(cellContext.row.original)
+                }
+                IconsEdit()
+            }
+            IconButton {
+                onClick = {
                     onDelete(cellContext.row.original)
                 }
                 IconsDelete()
@@ -78,10 +87,11 @@ private val TagListFC = FC {
     var userPage: PageVO<QaTagVO>? by useState()
     val apiQandaTag: ApiQandaTag = useInject()
     val notification = useNotifications()
+    val reactNavigate = useNavigate()
     val cs = useCoroutineScope()
 
     val query = useQuery(pageParams) {
-        apiQandaTag.page(pageParams.index,pageParams.size)
+        apiQandaTag.page(pageParams.index, pageParams.size)
     }
 
     val tableData: Array<QaTagVO> = useMemo(query.data) {
@@ -89,22 +99,28 @@ private val TagListFC = FC {
         query.data?.rows?.toTypedArray() ?: emptyArray()
     }
 
-    val tagTable = useReactTable<QaTagVO>(TableOptions(
-        columns = tagListColumnDef(onDelete = { tag ->
-            cs.launch {
-                apiQandaTag.delete(tag.id)
-                    .onLeft {
-                        notification.show(it, severity = SeverityMui.error)
+    val tagTable = useReactTable<QaTagVO>(
+        TableOptions(
+            columns = tagListColumnDef(
+                onEdit = { tag ->
+                    reactNavigate("/qanda/tag/add/${tag.id}")
+                },
+                onDelete = { tag ->
+                    cs.launch {
+                        apiQandaTag.delete(tag.id)
+                            .onLeft {
+                                notification.show(it, severity = SeverityMui.error)
+                            }
+                            .onRight {
+                                query.refresh()
+                                notification.show("删除${tag.tagName}")
+                            }
                     }
-                    .onRight {
-                        query.refresh()
-                        notification.show("删除${tag.tagName}")
-                    }
-            }
-        }),
-        data = tableData,
-        getCoreRowModel = getCoreRowModel()
-    ))
+                }),
+            data = tableData,
+            getCoreRowModel = getCoreRowModel()
+        )
+    )
 
     AdminPageTable {
         table = tagTable

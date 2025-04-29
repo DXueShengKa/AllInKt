@@ -2,80 +2,74 @@ package cn.allin.ui
 
 import cn.allin.VoFieldName
 import cn.allin.api.ApiQandaTag
+import cn.allin.components.AdminForm
+import cn.allin.components.useAdminForm
 import cn.allin.utils.reactNode
-import cn.allin.utils.useCoroutineScope
 import cn.allin.utils.useInject
 import cn.allin.vo.QaTagVO
-import kotlinx.coroutines.launch
-import mui.material.Button
+import js.objects.jso
 import mui.material.FormControl
-import mui.material.Stack
-import mui.material.StackDirection
 import mui.material.TextField
-import mui.system.responsive
-import mui.system.sx
 import react.FC
-import react.dom.html.ReactHTML.form
-import toolpad.core.show
-import toolpad.core.useNotifications
-import web.cssom.px
-import web.form.FormData
-import web.html.ButtonType
+import react.router.RouteObject
+import react.useState
+import toolpad.core.NavigationObj
 
 private val TagAddFC = FC {
-    val cs = useCoroutineScope()
     val apiQandaTag: ApiQandaTag = useInject()
-    val notifications = useNotifications()
-
-    Stack {
-        sx {
-            width = 600.px
+    var tagForm by useState {
+        QaTagVO(0, "")
+    }
+    val adminForm = useAdminForm()
+    AdminForm {
+        formState = adminForm
+        dataId = "tagId"
+        getData = {
+            tagForm = apiQandaTag.get(it.toInt())
         }
-        spacing = responsive(2)
-        direction = responsive(StackDirection.column)
-        component = form
-
-        onSubmit = {
-            it.preventDefault()
-            val fa = FormData(it.target)
-            val tag = QaTagVO(
-                tagName = fa.get(VoFieldName.QaTagVO_tagName).toString(),
-                description = fa.get(VoFieldName.QaTagVO_description)?.toString()
-            )
-            cs.launch {
-                apiQandaTag.add(tag)
-                notifications.show("已添加")
+        onSubmit = { fa ->
+            if (tagForm.id < 1) {
+                apiQandaTag.add(tagForm)
+                tagForm = QaTagVO(0, "")
+            } else {
+                apiQandaTag.update(tagForm)
             }
         }
 
         FormControl {
             TextField {
-                label = reactNode {
-                    +"标签名"
+                label = reactNode("标签名")
+
+                adminForm.register(this, VoFieldName.QaTagVO_tagName, tagForm.tagName) {
+                    tagForm = tagForm.copy(tagName = it)
                 }
-                name = VoFieldName.QaTagVO_tagName
-//                onChange = handle
             }
         }
 
         FormControl {
             TextField {
-                label = reactNode {
-                    +"介绍标签"
+                label = reactNode("介绍标签")
+
+                adminForm.register(this, VoFieldName.QaTagVO_description, tagForm.description) {
+                    tagForm = tagForm.copy(description = it)
                 }
-                name = VoFieldName.QaTagVO_description
-//                onChange = handle
-
             }
-        }
-
-        Button {
-            type = ButtonType.submit
-            +"添加"
         }
 
     }
 }
 
 
-val RouteTagAdd = routes("tag/add", "添加标签", TagAddFC)
+val RouteTagAdd = object : Routes {
+
+    override val navigation: NavigationObj = jso {
+        title = "添加标签"
+        segment = "tag/add/-1"
+    }
+
+    override val routeObj: RouteObject = jso {
+        Component = TagAddFC
+        path = "tag/add/:tagId"
+    }
+}
+

@@ -27,6 +27,8 @@ interface QaTagEntity {
     val description: String?
     val createTime: LocalDateTime
 
+    val updateTime: LocalDateTime
+
     @ManyToMany(mappedBy = "tags")
     val qaList: List<QAndAEntity>
 }

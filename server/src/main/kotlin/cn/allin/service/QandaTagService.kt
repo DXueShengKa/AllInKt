@@ -37,4 +37,12 @@ class QandaTagService(
             QaTagVO(it.id,it.tagName)
         }
     }
+
+    fun getTag(id: Int): QaTagVO {
+        return qandaTagRepository.findTag(id)
+    }
+
+    fun update(tag: QaTagVO) {
+        qandaTagRepository.update(tag)
+    }
 }

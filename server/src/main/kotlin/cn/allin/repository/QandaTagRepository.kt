@@ -9,6 +9,7 @@ import cn.allin.vo.PageVO
 import cn.allin.vo.QaTagVO
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
+import org.babyfish.jimmer.sql.kt.ast.expression.asc
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
 import org.babyfish.jimmer.sql.kt.ast.expression.exists
 import org.babyfish.jimmer.sql.kt.ast.table.source
@@ -22,6 +23,7 @@ class QandaTagRepository(
 ) {
     fun findTagPage(index: Int, size: Int): PageVO<QaTagVO> {
         return sqlClient.createQuery(QaTagEntity::class) {
+            orderBy(table.id.asc())
             select(table)
         }.fetchPage(index, size)
             .toPageVO { it.toQaTagVO() }
@@ -55,5 +57,18 @@ class QandaTagRepository(
         return sqlClient.findAll(newFetcher(QaTagEntity::class).by {
             tagName()
         })
+    }
+
+    fun findTag(id: Int): QaTagVO {
+      return  sqlClient.findOneById(QaTagEntity::class,id).toQaTagVO()
+    }
+
+
+    fun update(tag: QaTagVO) {
+        sqlClient.save(QaTagEntity {
+            id = tag.id
+            tagName = tag.tagName
+            description = tag.description
+        }, SaveMode.UPDATE_ONLY)
     }
 }
