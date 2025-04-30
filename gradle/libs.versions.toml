@@ -43,7 +43,7 @@ jetbrains-navigation = "2.8.0-alpha11"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
 jetbrains-core-bundle = "1.0.1"
 #https://developer.android.google.cn/jetpack/androidx/releases/datastore?hl=zh-cn
-datastore = "1.1.4"
+datastore = "1.1.5"
 
 #https://github.com/square/okhttp
 okhttp3 = "4.12.0"
@@ -66,7 +66,7 @@ exposed = "0.60.0"
 #https://github.com/turansky/seskar
 seskar = "4.7.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.76"
+jimmer = "0.9.81"
 #https://developer.android.google.cn/jetpack/androidx/releases/activity?hl=zh-cn
 activity = "1.10.1"
 #https://developer.android.google.cn/jetpack/androidx/releases/paging?hl=zh-cn

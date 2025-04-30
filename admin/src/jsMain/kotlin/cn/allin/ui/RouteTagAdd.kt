@@ -39,9 +39,10 @@ private val TagAddFC = FC {
         FormControl {
             TextField {
                 label = reactNode("标签名")
-
-                adminForm.register(this, VoFieldName.QaTagVO_tagName, tagForm.tagName) {
-                    tagForm = tagForm.copy(tagName = it)
+                with(adminForm) {
+                    register(VoFieldName.QaTagVO_tagName, tagForm.tagName) {
+                        tagForm = tagForm.copy(tagName = it)
+                    }
                 }
             }
         }
@@ -50,8 +51,10 @@ private val TagAddFC = FC {
             TextField {
                 label = reactNode("介绍标签")
 
-                adminForm.register(this, VoFieldName.QaTagVO_description, tagForm.description) {
-                    tagForm = tagForm.copy(description = it)
+                adminForm.apply {
+                    register(VoFieldName.QaTagVO_description, tagForm.description) {
+                        tagForm = tagForm.copy(description = it)
+                    }
                 }
             }
         }

@@ -44,31 +44,31 @@ class AdminFormState(
     val errorHelperState: StateInstance<VoValidatorMessage?>
 ) {
 
-    fun register(p: BaseTextFieldProps, fieldName: String, value: Any?,onChange: (String) -> Unit) {
-        p.name = fieldName
-        if (value != null) {
-            p.value = value
+    fun BaseTextFieldProps.register(fieldName: String, fieldValue: Any?, onValue: (String) -> Unit) {
+        name = fieldName
+        if (fieldValue != null) {
+            value = fieldValue
         }
-        p.onChange = {
-            onChange(it.target.asDynamic().value)
+        onChange = {
+            onValue(it.target.asDynamic().value)
         }
         errorHelperState.component1()?.also {
            if (it.field == fieldName) {
-               p.error = true
-               p.helperText = "${it.code},${it.message}".asDynamic()
+               error = true
+               helperText = "${it.code},${it.message}".asDynamic()
            } else {
-               p.error = false
+               error = false
            }
         }
     }
 
-    fun register(p: FormHelperTextOwnProps, fieldName: String): String? {
+    fun FormHelperTextOwnProps.register(fieldName: String): String? {
         errorHelperState.component1()?.also {
             if (it.field == fieldName) {
-                p.error = true
+                error = true
                 return "${it.code},${it.message}"
             } else {
-                p.error = false
+                error = false
             }
         }
         return null

@@ -79,9 +79,13 @@ private val AddQandaFC = FC {
                 label = reactNode {
                     +"问题"
                 }
-                adminForm.register(this, VoFieldName.QandaVO_question, qaForm.question) {
-                    qaForm = qaForm.copy(question = it)
+
+                with(adminForm) {
+                    register(VoFieldName.QandaVO_question, qaForm.question) {
+                        qaForm = qaForm.copy(question = it)
+                    }
                 }
+
             }
         }
 
@@ -103,7 +107,7 @@ private val AddQandaFC = FC {
                 }
             }
             FormHelperText {
-                +adminForm.register(this, VoFieldName.QandaVO_answer)
+                +adminForm.run { register(VoFieldName.QandaVO_answer) }
             }
         }
 
