@@ -3,7 +3,7 @@ package cn.allin.controller
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import cn.allin.ServerParams
+import cn.allin.api.ApiQanda
 import cn.allin.apiRoute
 import cn.allin.service.QandaService
 import cn.allin.vo.MsgVO
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -31,31 +32,40 @@ import kotlin.io.path.deleteExisting
 import kotlin.io.path.div
 
 @RestController
-@RequestMapping(value = [apiRoute.qanda.QANDA])
+@RequestMapping(value = [ApiQanda.QANDA])
 class QandaController(
     val qandaService: QandaService
-) {
+) : ApiQanda {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     @GetMapping(apiRoute.PAGE)
-    fun page(
-        @RequestParam(ServerParams.PAGE_INDEX) pageIndex: Int?,
-        @RequestParam(ServerParams.PAGE_SIZE) pageSize: Int?
+    override suspend fun page(
+        pageIndex: Int?, pageSize: Int?,isAsc: Boolean?, tagId: Int?
     ): PageVO<QandaVO> {
-        return qandaService.page(pageIndex ?: 0, pageSize ?: 10)
+        return qandaService.page(pageIndex, pageSize,isAsc,tagId)
+    }
+
+    @GetMapping(apiRoute.PATH_ID)
+    override suspend fun get(@PathVariable id: Int): QandaVO {
+        return qandaService.get(id)
     }
 
     @PostMapping
-    fun post(
+    override suspend fun add(
         @Validated @RequestBody qandaVO: QandaVO,
-    ): MsgVO<Int> {
-        return MsgVO.success(qandaService.add(qandaVO))
+    ): Int {
+        return qandaService.add(qandaVO)
+    }
+
+    @PutMapping
+    override suspend fun update(@Validated @RequestBody qanda: QandaVO) {
+        qandaService.update(qanda)
     }
 
 
     @DeleteMapping(apiRoute.PATH_ID)
-    fun delete(@PathVariable id: Int): Either<String,Unit> {
+    override suspend fun delete(@PathVariable id: Int): Either<String, Unit> {
         return if (qandaService.delete(id)) {
             Unit.right()
         } else {
@@ -65,24 +75,12 @@ class QandaController(
 
 
     @DeleteMapping
-    fun deleteList(@RequestParam ids: List<Int>?): MsgVO<Int> {
-
-        return MsgVO.success(
-            qandaService.delete(ids)
-        )
+    override suspend fun delete(@RequestParam ids: List<Int>): Int {
+        return qandaService.delete(ids)
     }
 
 
-    @GetMapping(apiRoute.qanda.tag.page.TAG_PAGE)
-    fun tagPage(
-        @RequestParam(ServerParams.PAGE_INDEX) pageIndex: Int?,
-        @RequestParam(ServerParams.PAGE_SIZE) pageSize: Int?
-    ): PageVO<QaTagVO> {
-        return qandaService.tagPage(pageIndex ?: 0, pageSize ?: 10)
-    }
-
-
-    @PostMapping(apiRoute.qanda.excel.EXCEL)
+    @PostMapping(ApiQanda.EXCEL)
     suspend fun excel(@RequestPart("file") file: FilePart): MsgVO<String> {
 
         val tmpdir = Paths.get(System.getProperty("java.io.tmpdir"))
@@ -101,7 +99,7 @@ class QandaController(
 
             var q: String? = null
             var a: String? = null
-            var tags: List<String>? = null
+            var tags: List<QaTagVO>? = null
 
             for (cell in row) {
                 when (cell.columnIndex) {
@@ -115,7 +113,7 @@ class QandaController(
 
                     2 -> {
                         tags = cell.value?.let {
-                            listOf(it)
+                            listOf(QaTagVO(tagName = it))
                         }
                     }
 

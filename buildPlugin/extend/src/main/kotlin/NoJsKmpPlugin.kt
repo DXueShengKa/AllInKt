@@ -5,6 +5,7 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 
 /**
  * 不含js的多平台配置
@@ -19,6 +20,9 @@ class NoJsKmpPlugin : Plugin<Project> {
         }
 
         project.androidConfigure()
+
+        project.kotlinExtension.jvmToolchain(21)
+        project.tasks.kotlinCompilerOptions()
     }
 
     private fun Project.applyPlugin() {

@@ -1,15 +1,23 @@
 package cn.allin.ui
 
 import cn.allin.VoFieldName
-import cn.allin.net.getQaTagPage
+import cn.allin.api.ApiQandaTag
 import cn.allin.net.useQuery
 import cn.allin.utils.DATE_TIME_DEFAULT_FORMAT
+import cn.allin.utils.columnDefCell
+import cn.allin.utils.useCoroutineScope
+import cn.allin.utils.useInject
 import cn.allin.vo.PageVO
 import cn.allin.vo.QaTagVO
 import js.array.ReadonlyArray
 import js.objects.jso
+import kotlinx.coroutines.launch
 import kotlinx.datetime.format
+import mui.material.IconButton
+import muix.icons.IconsDelete
+import muix.icons.IconsEdit
 import react.FC
+import react.router.useNavigate
 import react.useMemo
 import react.useState
 import tanstack.react.table.useReactTable
@@ -17,10 +25,14 @@ import tanstack.table.core.ColumnDef
 import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.TableOptions
 import tanstack.table.core.getCoreRowModel
+import toolpad.core.SeverityMui
+import toolpad.core.show
+import toolpad.core.useNotifications
 
 
 private fun tagListColumnDef(
-
+    onEdit: (QaTagVO) -> Unit,
+    onDelete: (QaTagVO) -> Unit,
 ): ReadonlyArray<ColumnDef<QaTagVO, String?>> = arrayOf(
     jso {
         id = "id"
@@ -47,17 +59,39 @@ private fun tagListColumnDef(
         id = VoFieldName.QaTagVO_createTime
         header = StringOrTemplateHeader("创建时间")
         accessorFn = { tag, _ ->
-            tag.createTime.format(DATE_TIME_DEFAULT_FORMAT)
+            tag.createTime?.format(DATE_TIME_DEFAULT_FORMAT)
         }
-    }
-)
+    },
+
+    jso {
+        id = "操作"
+        header = StringOrTemplateHeader(id)
+        cell = columnDefCell { cellContext ->
+            IconButton {
+                onClick = {
+                    onEdit(cellContext.row.original)
+                }
+                IconsEdit()
+            }
+            IconButton {
+                onClick = {
+                    onDelete(cellContext.row.original)
+                }
+                IconsDelete()
+            }
+        }
+    })
 
 private val TagListFC = FC {
     val (pageParams, setPageParams) = useState(PageParams())
     var userPage: PageVO<QaTagVO>? by useState()
+    val apiQandaTag: ApiQandaTag = useInject()
+    val notification = useNotifications()
+    val reactNavigate = useNavigate()
+    val cs = useCoroutineScope()
 
     val query = useQuery(pageParams) {
-        getQaTagPage(pageParams)
+        apiQandaTag.page(pageParams.index, pageParams.size)
     }
 
     val tableData: Array<QaTagVO> = useMemo(query.data) {
@@ -65,11 +99,28 @@ private val TagListFC = FC {
         query.data?.rows?.toTypedArray() ?: emptyArray()
     }
 
-    val tagTable = useReactTable<QaTagVO>(TableOptions(
-        columns = tagListColumnDef(),
-        data = tableData,
-        getCoreRowModel = getCoreRowModel()
-    ))
+    val tagTable = useReactTable<QaTagVO>(
+        TableOptions(
+            columns = tagListColumnDef(
+                onEdit = { tag ->
+                    reactNavigate("/qanda/tag/add/${tag.id}")
+                },
+                onDelete = { tag ->
+                    cs.launch {
+                        apiQandaTag.delete(tag.id)
+                            .onLeft {
+                                notification.show(it, severity = SeverityMui.error)
+                            }
+                            .onRight {
+                                query.refresh()
+                                notification.show("删除${tag.tagName}")
+                            }
+                    }
+                }),
+            data = tableData,
+            getCoreRowModel = getCoreRowModel()
+        )
+    )
 
     AdminPageTable {
         table = tagTable

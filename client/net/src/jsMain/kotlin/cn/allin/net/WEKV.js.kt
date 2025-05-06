@@ -52,4 +52,9 @@ actual class Data<T>(private val key: String, val defaultValue: T) {
         return v
     }
 
+
+    fun setNotStorage(v:T){
+        this.value = v
+    }
+
 }

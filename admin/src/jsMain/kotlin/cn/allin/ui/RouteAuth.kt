@@ -1,13 +1,16 @@
 package cn.allin.ui
 
-import SessionContextValue
 import cn.allin.VoFieldName
+import cn.allin.api.ApiUser
 import cn.allin.net.Req
 import cn.allin.net.auth
-import cn.allin.net.currentUser
+import cn.allin.net.userSession
+import cn.allin.utils.SessionContextValue
 import cn.allin.utils.getValue
 import cn.allin.utils.setValue
 import cn.allin.utils.useCoroutineScope
+import cn.allin.utils.useInject
+import cn.allin.utils.useSessionContext
 import cn.allin.vo.UserVO
 import js.objects.jso
 import kotlinx.coroutines.promise
@@ -20,7 +23,6 @@ import toolpad.core.AuthProviderId
 import toolpad.core.AuthResponse
 import toolpad.core.SignInPage
 import toolpad.core.slotProps
-import useSessionContext
 import web.form.FormData
 import web.html.InputType
 
@@ -33,17 +35,23 @@ private val providers: Array<AuthProvider> = arrayOf(
     }
 )
 
-private suspend fun login(nav: NavigateFunction, sessionContext: SessionContextValue, formData: FormData,remember: Boolean): AuthResponse {
-    formData.forEach { a,s ->
-        console.log(a,s)
+private suspend fun login(
+    nav: NavigateFunction,
+    apiUser: ApiUser,
+    sessionContext: SessionContextValue,
+    formData: FormData,
+    remember: Boolean
+): AuthResponse {
+    formData.forEach { a, s ->
+        console.log(a, s)
     }
     val vo = UserVO(
         name = formData.get(VoFieldName.UserVO_name)?.toString(),
         password = formData.get(VoFieldName.UserVO_password)?.toString(),
     )
-    val result = Req.auth(vo,remember)
-    if (result.isSuccess){
-        val u = Req.currentUser()
+    val result = Req.auth(vo, remember)
+    if (result.isSuccess) {
+        val u = apiUser.userSession()
         sessionContext.set(jso {
             user = u
         })
@@ -60,8 +68,9 @@ private suspend fun login(nav: NavigateFunction, sessionContext: SessionContextV
 val RouteAuthFC = FC {
     val nav = useNavigate()
     var sessionContext = useSessionContext()
-    val cs by useCoroutineScope()
+    val cs = useCoroutineScope()
     var remember by useRef(false)
+    val apiUser: ApiUser = useInject()
 
     SignInPage {
 
@@ -76,7 +85,7 @@ val RouteAuthFC = FC {
 
         signIn = { provider, formData ->
             cs.promise {
-                login(nav, sessionContext, formData, remember)
+                login(nav, apiUser, sessionContext, formData, remember)
             }
         }
 
@@ -96,7 +105,7 @@ val RouteAuthFC = FC {
             },
             rememberMe = {
                 disabled = false
-                onChange = { e,b ->
+                onChange = { e, b ->
                     remember = b
                 }
             }

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.spring)
@@ -15,7 +17,10 @@ application {
 }
 
 kotlin {
+    jvmToolchain(21)
+
     compilerOptions {
+        jvmTarget = JvmTarget.JVM_21
         freeCompilerArgs.addAll("-Xjsr305=strict")
     }
 }

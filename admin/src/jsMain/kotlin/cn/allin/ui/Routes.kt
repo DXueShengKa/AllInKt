@@ -5,14 +5,11 @@ import react.router.RouteObject
 import toolpad.core.NavigationObj
 
 interface Routes {
-    val routePath: String
     val routeObj: RouteObject
     val navigation: NavigationObj
 }
 
 fun routes(routePath: String, routeTitle: String, component: react.ComponentType<*>): Routes = object : Routes {
-
-    override val routePath: String = routeTitle
 
     override val navigation: NavigationObj = jso {
         title = routeTitle

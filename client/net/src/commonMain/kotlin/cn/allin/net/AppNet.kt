@@ -1,11 +1,14 @@
 package cn.allin.net
 
+import cn.allin.BuildConfig
 import cn.allin.ValidatorError
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
 import io.ktor.utils.io.charsets.*
@@ -19,6 +22,11 @@ const val SERVER_BASE_URL = "http://localhost:8020"
 
 expect val ktorEngineFactory: HttpClientEngineFactory<*>
 
+
+
+fun createHttpClient() = HttpClient(ktorEngineFactory) {
+    commonConfig()
+}
 
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -38,10 +46,11 @@ fun HttpClientConfig<*>.commonConfig() {
 
     HttpResponseValidator {
         validateResponse {
-            when(it.status) {
+            when (it.status) {
                 HttpStatusCode.Unauthorized -> {
                     WEKV.authorization.remove()
                 }
+
                 HttpStatusCode.BadRequest -> {
                     throw ValidatorError(it.body())
                 }
@@ -51,15 +60,25 @@ fun HttpClientConfig<*>.commonConfig() {
 
     defaultRequest {
         url(SERVER_BASE_URL)
-        headers {
-            WEKV.authorization.getOrNull()?.also { append(HttpHeaders.Authorization, it) }
+        WEKV.authorization.getOrNull()?.also {
+            header(HttpHeaders.Authorization, it)
         }
-        if (contentType() == null)
-            contentType(ContentType.Application.Json)
+        accept(ContentType.Application.Json)
+        contentType(ContentType.Application.Json)
+
+//        if (contentType() == null)
+//            contentType(ContentType.Application.Json)
     }
 
     install(ContentNegotiation) {
         serialization(ContentTypeXProtobuf, cn.allin.AllProtoBuf)
         serialization(ContentType.Application.Json, cn.allin.AllJson)
+    }
+
+    if (BuildConfig.DEBUG) {
+        Logging {
+            this.level = LogLevel.ALL
+            this.logger = Logger.DEFAULT
+        }
     }
 }

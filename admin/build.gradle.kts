@@ -68,10 +68,12 @@ kotlin {
 
             implementation(npm("@toolpad/core",libs.versions.mui.toolpad.get()))
             implementation(npm("dayjs",libs.versions.dayjs.get()))
-            implementation(npm("@emotion/styled","11.14.0"))
+            implementation(npm("@emotion/styled",libs.versions.emotionStyled.get()))
+            implementation(npm("mui-file-input",libs.versions.mui.fileInput.get()))
             implementation(projects.shared)
             implementation(projects.client.net)
-            implementation(libs.ktorClient.logging)
+            implementation(projects.client.data)
+            implementation(libs.koin.core)
         }
 
         jsTest.dependencies {

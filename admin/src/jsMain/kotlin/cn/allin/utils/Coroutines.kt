@@ -2,36 +2,39 @@ package cn.allin.utils
 
 import js.coroutines.internal.IsolatedCoroutineScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.promise
 import react.RefObject
 import react.useEffect
-import react.useEffectOnceWithCleanup
-import react.useRef
+import react.useEffectWithCleanup
 import react.useState
 import kotlin.reflect.KProperty
 
 
-fun useCoroutineScope(): RefObject<CoroutineScope> {
-    val c = useRef(IsolatedCoroutineScope())
-    useEffectOnceWithCleanup {
-        onCleanup {
-            c.current?.cancel()
-        }
+fun useCoroutineScope(): CoroutineScope {
+    val coroutineScope = useRefInit { IsolatedCoroutineScope() }
+    useEffectWithCleanup(coroutineScope){
+        onCleanup(coroutineScope::cancel)
     }
-    return c
+    return coroutineScope
 }
 
 fun asyncFunction(block: suspend CoroutineScope.() -> Unit): () -> dynamic {
     return {
-        IsolatedCoroutineScope().promise(block = block)
+        IsolatedCoroutineScope().promise(
+            start = CoroutineStart.UNDISPATCHED,
+            block = block
+        )
     }
 }
 
 fun <T> asyncFunction(block: suspend CoroutineScope.(T) -> Unit): (T) -> dynamic {
     return { t ->
-        IsolatedCoroutineScope().promise {
+        IsolatedCoroutineScope().promise(
+            start = CoroutineStart.UNDISPATCHED,
+        ) {
             block(t)
         }
     }
@@ -39,7 +42,9 @@ fun <T> asyncFunction(block: suspend CoroutineScope.(T) -> Unit): (T) -> dynamic
 
 fun <T1,T2> asyncFunction(block: suspend CoroutineScope.(T1, T2) -> Unit): (T1, T2) -> dynamic {
     return { t1,t2 ->
-        IsolatedCoroutineScope().promise {
+        IsolatedCoroutineScope().promise(
+            start = CoroutineStart.UNDISPATCHED,
+        ) {
             block(t1,t2)
         }
     }

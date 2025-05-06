@@ -22,10 +22,10 @@ class SerializableValidator : SmartValidator {
     }
 
     override fun validate(target: Any, errors: Errors, vararg validationHints: Any?) {
-        validationHints.forEach {
-            if (it is Class<*>){
-                val v = it.constructors?.firstOrNull()?.newInstance() as? VoValidator<Any>
-                v?.validator(target)?.also {
+        validationHints.forEach { hint ->
+            if (hint is Class<*>){
+                val v = hint.constructors?.firstOrNull()?.newInstance() as? VoValidator<Any>
+                v?.validator(target)?.also { it ->
                     errors.rejectValue(it.field, it.code, it.message)
                 }
             }

@@ -44,19 +44,19 @@ external interface Authentication {
 }
 
 
-sealed external interface SeverityStr {
+sealed external interface SeverityMui {
     companion object {
         @JsValue("info")
-        val info: SeverityStr
+        val info: SeverityMui
 
         @JsValue("warning")
-        val warning: SeverityStr
+        val warning: SeverityMui
 
         @JsValue("error")
-        val error: SeverityStr
+        val error: SeverityMui
 
         @JsValue("success")
-        val success: SeverityStr
+        val success: SeverityMui
     }
 }
 
@@ -69,7 +69,7 @@ fun SignInPageLocaleText.signInTitle(title: (String) -> String) {
 fun Notifications.show(
     text: String,
     autoHideDuration: Int = 1500,
-    severity: SeverityStr = SeverityStr.info,
+    severity: SeverityMui = SeverityMui.info,
 ) {
     show(text, jso {
         this.autoHideDuration = autoHideDuration

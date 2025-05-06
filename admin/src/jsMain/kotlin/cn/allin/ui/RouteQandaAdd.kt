@@ -1,90 +1,77 @@
 package cn.allin.ui
 
-import cn.allin.ValidatorError
 import cn.allin.VoFieldName
-import cn.allin.VoValidatorMessage
-import cn.allin.net.Req
-import cn.allin.net.addQanda
-import cn.allin.utils.getValue
+import cn.allin.api.ApiQanda
+import cn.allin.api.ApiQandaTag
+import cn.allin.components.AdminForm
+import cn.allin.components.useAdminForm
+import cn.allin.net.useQuery
+import cn.allin.utils.invokeFn
 import cn.allin.utils.reactNode
-import cn.allin.utils.useCoroutineScope
+import cn.allin.utils.rsv
+import cn.allin.utils.useInject
+import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import js.objects.jso
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import mui.material.Alert
-import mui.material.AlertColor
-import mui.material.Button
+import mui.material.Card
+import mui.material.CardHeader
+import mui.material.Divider
 import mui.material.FormControl
-import mui.material.Stack
-import mui.material.StackDirection
+import mui.material.FormHelperText
+import mui.material.FormLabel
+import mui.material.Grid
+import mui.material.List
+import mui.material.ListItemButton
+import mui.material.ListItemText
 import mui.material.TextField
-import mui.system.responsive
+import mui.material.TextareaAutosize
+import mui.system.sx
 import react.FC
-import react.dom.events.FormEvent
-import react.dom.html.ReactHTML.form
-import react.dom.onChange
+import react.Props
+import react.dom.aria.AriaRole
+import react.dom.html.ReactHTML.div
+import react.router.RouteObject
 import react.useState
+import toolpad.core.NavigationObj
+import web.cssom.Auto
+import web.cssom.pct
 import web.cssom.px
-import web.html.ButtonType
-import web.html.HTMLElement
-import web.html.HTMLInputElement
 
 
-private val AddUserFC = FC {
-    val cs by useCoroutineScope()
-    var userForm: QandaVO by useState { QandaVO(null, "", "") }
-    var addResult: Pair<AlertColor, String>? by useState()
-    var errorHelperText: VoValidatorMessage? by useState()
-
-    val handle: (FormEvent<HTMLElement>) -> Unit = {
-        val t = it.target as HTMLInputElement
-        when (t.name) {
-            VoFieldName.QandaVO_answer -> {
-                userForm = userForm.copy(answer = t.value)
-            }
-
-            VoFieldName.QandaVO_question -> {
-                userForm = userForm.copy(question = t.value)
-            }
-        }
-
-        errorHelperText = QandaVO.valid(userForm).leftOrNull()
+private val AddQandaFC = FC {
+    val apiQanda: ApiQanda = useInject()
+    val (tags, setTags) = useState<List<QaTagVO>>(emptyList())
+    var qaForm by useState {
+        QandaVO(0, "", "")
     }
 
-    Stack {
-        sx = jso {
-            width = 600.px
+    val adminForm = useAdminForm()
+
+    AdminForm {
+        formState = adminForm
+        dataId = "qaId"
+        getData = { id ->
+            val qa = apiQanda.get(id.toInt())
+            setTags(qa.tagList ?: emptyList())
+            qaForm = qa
         }
+        onSubmit = {
+            QandaVO.valid(qaForm.copy(tagList = tags))
+                .onLeft {
+                    adminForm.setErrorHelper(it)
+                }
+                .onRight { qa ->
+                    adminForm.setErrorHelper(null)
 
-        spacing = responsive(2)
+                    if (qa.id > 0) {
+                        apiQanda.update(qa)
+                    } else {
+                        apiQanda.add(qa)
+                        qaForm = QandaVO(0, "", "")
+                        setTags(emptyList())
+                    }
+                }
 
-        direction = responsive(StackDirection.column)
-
-        component = form
-
-        onSubmit = submit@{
-            it.preventDefault()
-            val v = VoValidatorMessage.validator(userForm)
-            if (v != null) {
-                errorHelperText = v
-                return@submit
-            } else {
-                errorHelperText = null
-            }
-
-            cs.launch(CoroutineExceptionHandler { _, t ->
-                if (t is ValidatorError)
-                    errorHelperText = t.validatorMessage
-                console.error(t)
-                addResult = AlertColor.error to "添加失败"
-            }) {
-                Req.addQanda(userForm)
-                addResult = AlertColor.success to "已添加"
-                delay(2000)
-                addResult = null
-            }
         }
 
         FormControl {
@@ -92,53 +79,137 @@ private val AddUserFC = FC {
                 label = reactNode {
                     +"问题"
                 }
-                name = VoFieldName.QandaVO_question
-                onChange = handle
 
-                errorHelperText?.also {
-                    if (it.field == VoFieldName.QandaVO_question) {
-                        error = true
-                        helperText = reactNode("${it.code},${it.message}")
-                    } else {
-                        error = false
+                with(adminForm) {
+                    register(VoFieldName.QandaVO_question, qaForm.question) {
+                        qaForm = qaForm.copy(question = it)
                     }
                 }
+
             }
         }
 
         FormControl {
-            TextField {
-                label = reactNode {
-                    +"回答"
+            FormLabel {
+                +"回答"
+            }
+            TextareaAutosize {
+                minRows = 3
+                style = jso {
+                    width = 100.pct
                 }
                 name = VoFieldName.QandaVO_answer
-                onChange = handle
+                value = qaForm.answer
+                onChange = {
+                    qaForm = qaForm.copy(
+                        answer = it.target.value
+                    )
+                }
+            }
+            FormHelperText {
+                +adminForm.run { register(VoFieldName.QandaVO_answer) }
+            }
+        }
 
-                errorHelperText?.also {
-                    if (it.field == VoFieldName.QandaVO_answer) {
-                        error = true
-                        helperText = reactNode("${it.code},${it.message}")
-                    } else {
-                        error = false
+        SelectTab {
+            tagSelect = tags
+            onTags = setTags.invokeFn
+        }
+    }
+}
+
+private external interface SelectTabProps : Props {
+    var tagSelect: List<QaTagVO>
+    var onTags: (List<QaTagVO>) -> Unit
+}
+
+private val SelectTab = FC<SelectTabProps> { props ->
+    val apiQandaTag: ApiQandaTag = useInject()
+
+    val query = useQuery<List<QaTagVO>> {
+        apiQandaTag.getAll()
+    }
+
+    Grid {
+        container = true
+        spacing = 2.rsv
+        Grid {
+            item = true
+            TagList {
+                title = "标题列表"
+                data = query.data
+                onItem = { tag ->
+                    if (tag !in props.tagSelect) {
+                        val tags = props.tagSelect + tag
+                        props.onTags(tags)
+                    }
+
+                }
+            }
+        }
+
+        Grid {
+            item = true
+            TagList {
+                title = "已添加的标签"
+                data = props.tagSelect
+                onItem = { tag ->
+                    val tags = props.tagSelect - tag
+                    props.onTags(tags)
+                }
+            }
+        }
+    }
+}
+
+private external interface TagListProps : Props {
+    var title: String
+    var data: List<QaTagVO>?
+    var onItem: (QaTagVO) -> Unit
+}
+
+private val TagList = FC<TagListProps> { props ->
+    Card {
+        CardHeader {
+            title = reactNode(props.title)
+        }
+        Divider()
+        List {
+            sx {
+                width = 200.px
+                height = 230.px
+                overflow = Auto.auto
+            }
+
+            component = div
+            role = AriaRole.list
+            dense = true
+
+            props.data?.forEach { v ->
+                ListItemButton {
+                    key = v.id.toString()
+                    role = AriaRole.listitem
+                    onClick = {
+                        props.onItem(v)
+                    }
+                    ListItemText {
+                        primary = reactNode(v.tagName)
                     }
                 }
             }
         }
-
-
-        Button {
-            type = ButtonType.submit
-            +"添加"
-        }
-
-        addResult?.let { (color, str) ->
-            Alert {
-                severity = color.asDynamic()
-                +str
-            }
-        }
     }
-
 }
 
-val RouteQandaAdd = routes("add", "添加问答", AddUserFC)
+val RouteQandaAdd = object : Routes {
+
+    override val navigation: NavigationObj = jso {
+        title = "添加问答"
+        segment = "add/-1"
+    }
+
+    override val routeObj: RouteObject = jso {
+        Component = AddQandaFC
+        path = "add/:qaId"
+    }
+}

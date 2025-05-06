@@ -5,10 +5,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import cn.allin.data.dataModule
+import cn.allin.data.DataDI
 import cn.allin.navigation.appNavGraphs
 import cn.allin.theme.MainTheme
-import org.koin.ksp.generated.defaultModule
+import org.koin.ksp.generated.module
 
 
 fun main() = application {
@@ -23,7 +23,7 @@ fun main() = application {
         MainTheme {
             MainApp(
                 application = {
-                    modules(dataModule, defaultModule, AppKoinViewModel)
+                    modules(DataDI.module, AppKoinViewModel)
                 }
             ) {
                 appNavGraphs()

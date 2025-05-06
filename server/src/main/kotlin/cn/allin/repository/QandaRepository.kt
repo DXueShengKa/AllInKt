@@ -4,21 +4,27 @@ import cn.allin.model.AutoAnswerRecordEntity
 import cn.allin.model.QAndAEntity
 import cn.allin.model.QaTagEntity
 import cn.allin.model.addBy
+import cn.allin.model.answer
 import cn.allin.model.by
 import cn.allin.model.fetchBy
 import cn.allin.model.id
 import cn.allin.model.qaId
 import cn.allin.model.question
+import cn.allin.model.tags
+import cn.allin.utils.substring
 import cn.allin.utils.toPageVO
-import cn.allin.utils.toQaTagVO
 import cn.allin.utils.toQandaVO
 import cn.allin.vo.PageVO
 import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import kotlinx.datetime.toKotlinLocalDateTime
+import org.babyfish.jimmer.sql.ast.mutation.AssociatedSaveMode
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
+import org.babyfish.jimmer.sql.kt.ast.expression.asc
+import org.babyfish.jimmer.sql.kt.ast.expression.desc
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
+import org.babyfish.jimmer.sql.kt.ast.expression.`eq?`
 import org.babyfish.jimmer.sql.kt.ast.expression.exists
 import org.babyfish.jimmer.sql.kt.ast.expression.like
 import org.babyfish.jimmer.sql.kt.ast.expression.not
@@ -41,23 +47,48 @@ class QandaRepository(private val sqlClient: KSqlClient) {
     }
 
 
-    fun findPage(pageIndex: Int, size: Int): PageVO<QandaVO> {
-        return sqlClient.createQuery(QAndAEntity::class) {
-            select(table.fetchBy {
+    fun find(qaId: Int): QandaVO {
+        return sqlClient.findOneById(
+            newFetcher(QAndAEntity::class).by {
                 allScalarFields()
-                tags {
-                    tagName()
-                }
+                tags { tagName() }
+            },
+            qaId
+        ).run {
+            QandaVO(
+                id,
+                question,
+                answer,
+                createTime.toKotlinLocalDateTime(),
+                tags.takeIf { it.isNotEmpty() }?.map { tag -> QaTagVO(tag.id, tag.tagName) },
+            )
+        }
+    }
+
+    fun findPage(pageIndex: Int, size: Int, isAsc: Boolean, tagId: Int?): PageVO<QandaVO> {
+        return sqlClient.createQuery(QAndAEntity::class) {
+            where(table.tags {
+                id `eq?` tagId
             })
+            orderBy(if (isAsc) table.id.asc() else table.id.desc())
+            select(
+                table.fetchBy {
+                    allScalarFields()
+                    tags {
+                        tagName()
+                    }
+                },
+                table.answer substring 1..10,
+            )
         }
             .fetchPage(pageIndex, size)
-            .toPageVO {
+            .toPageVO { (qa, a) ->
                 QandaVO(
-                    it.id,
-                    it.question,
-                    it.answer,
-                    it.createTime.toKotlinLocalDateTime(),
-                    it.tags.takeIf { it.isNotEmpty() }?.map { tag -> tag.tagName },
+                    qa.id,
+                    qa.question,
+                    a,
+                    qa.createTime.toKotlinLocalDateTime(),
+                    qa.tags.takeIf { it.isNotEmpty() }?.map { tag -> QaTagVO(tagName = tag.tagName) },
                 )
             }
     }
@@ -67,6 +98,14 @@ class QandaRepository(private val sqlClient: KSqlClient) {
             QAndAEntity {
                 question = vo.question
                 answer = vo.answer
+                vo.tagList?.map {
+                    QaTagEntity {
+                        id = it.id
+                    }
+                }?.also {
+                    tags = it
+                }
+
             }, SaveMode.INSERT_ONLY
         ).execute().modifiedEntity.id
     }
@@ -95,13 +134,6 @@ class QandaRepository(private val sqlClient: KSqlClient) {
         return sqlClient.deleteByIds(QAndAEntity::class, ids).totalAffectedRowCount
     }
 
-    fun findTagPage(index: Int, size: Int): PageVO<QaTagVO> {
-        return sqlClient.createQuery(QaTagEntity::class) {
-            select(table)
-        }.fetchPage(index, size)
-            .toPageVO { it.toQaTagVO() }
-    }
-
     fun add(qaList: List<QandaVO>): Int {
         val tagEntity = qaList.stream().flatMap {
             it.tagList?.stream() ?: Stream.empty()
@@ -109,7 +141,7 @@ class QandaRepository(private val sqlClient: KSqlClient) {
             .distinct()
             .map {
                 QaTagEntity {
-                    tagName = it
+                    tagName = it.tagName
                 }
             }
             .toList()
@@ -127,7 +159,7 @@ class QandaRepository(private val sqlClient: KSqlClient) {
                     answer = qa.answer
 
                     qa.tagList?.forEach { t ->
-                        val dbTagId = dbTags.find { it.tagName == t }?.id
+                        val dbTagId = dbTags.find { it.tagName == t.tagName }?.id
                         if (dbTagId != null) {
                             tags().addBy {
                                 id = dbTagId
@@ -139,6 +171,19 @@ class QandaRepository(private val sqlClient: KSqlClient) {
             SaveMode.INSERT_ONLY
         )
             .execute().totalAffectedRowCount
+    }
+
+    fun update(qanda: QandaVO) {
+        sqlClient.save(QAndAEntity {
+            id = qanda.id
+            question = qanda.question
+            answer = qanda.answer
+            qanda.tagList?.forEach {
+                tags().addBy {
+                    id = it.id
+                }
+            }
+        }, SaveMode.UPDATE_ONLY, AssociatedSaveMode.REPLACE)
     }
 
 }

@@ -14,11 +14,39 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.ksp.writeTo
+import org.jetbrains.dokka.InternalDokkaApi
+import org.jetbrains.dokka.analysis.markdown.jb.MarkdownParser
+import org.jetbrains.dokka.model.doc.Param
+import org.jetbrains.dokka.model.doc.Text
+import org.jetbrains.dokka.model.firstMemberOfTypeOrNull
+
+
+@OptIn(InternalDokkaApi::class)
+fun MarkdownParser.getParamList(logger: KSPLogger, text: String?): Map<String, String?> {
+    text ?: return emptyMap()
+    val paramList = hashMapOf<String, String?>()
+    parse(text.trimIndent()).children.forEach { tagWrapper ->
+        when (tagWrapper) {
+            is Param -> {
+                paramList[tagWrapper.name] = tagWrapper.firstMemberOfTypeOrNull<Text>()?.body
+            }
+//            is Description -> {
+//
+//            }
+            else -> {
+                logger.info("doc $tagWrapper")
+            }
+        }
+    }
+
+    return paramList
+}
+
 
 /**
  * 生成字段名字
  */
-@OptIn(KspExperimental::class)
+@OptIn(KspExperimental::class, InternalDokkaApi::class)
 fun generatorSerializationField(resolver: Resolver, codeGenerator: CodeGenerator, logger: KSPLogger) {
 
     val typeSpec = TypeSpec.objectBuilder("VoFieldName")
@@ -27,7 +55,7 @@ fun generatorSerializationField(resolver: Resolver, codeGenerator: CodeGenerator
     val d = mutableListOf<KSFile>()
 
     val stringType = String::class.asTypeName()
-
+    val md = MarkdownParser({ null }, "")
     resolver.getDeclarationsFromPackage("cn.allin.vo")
         .mapNotNull {
             it.closestClassDeclaration()

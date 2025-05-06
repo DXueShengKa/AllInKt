@@ -17,19 +17,19 @@ import kotlin.js.JsStatic
 import kotlin.jvm.JvmStatic
 
 /**
- * 用户数据
+ * @param name 名字
+ * @param email 电子邮箱
+ * @param password 密码
+ * @param birthday 生日
+ * @param role 权限
+ * @param address 地址
+ * @param gender 性别
  */
 @Serializable
 data class UserVO(
     val id: Long = 0,
-    /**
-     * 名字
-     */
     val name: String? = null,
     val email: String? = null,
-    /**
-     * 生日
-     */
     val password: String? = null,
     val birthday: LocalDate? = null,
     val role: String? = null,

@@ -1,46 +1,26 @@
 package cn.allin.handler
 
-import cn.allin.apiRoute
+import cn.allin.api.ApiRegion
 import cn.allin.repository.RegionRepository
-import org.springframework.http.MediaType
+import cn.allin.vo.RegionVO
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.reactive.function.server.bodyValueAndAwait
 
 @Component
 class RegionHandler(
     private val regionRepository: RegionRepository,
-) {
+) : ApiRegion {
 
-    suspend fun getAllProvince(request: ServerRequest): ServerResponse {
-        val v = regionRepository.findAllProvince()
-
-        return ServerResponse
-            .ok()
-//            .contentType(MediaType.APPLICATION_PROTOBUF)
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValueAndAwait(v)
+    override suspend fun getAllProvince(): List<RegionVO> {
+        return regionRepository.findAllProvince()
     }
 
-    suspend fun getCity(request: ServerRequest): ServerResponse {
-        val v = regionRepository.findCity(
-            provinceId = request.pathVariable(apiRoute.region.City.PROVINCE_ID).toInt()
-        )
-
-        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(v)
+    override suspend fun getCity(provinceId: Int): List<RegionVO> {
+        return regionRepository.findCity(provinceId)
     }
 
-    suspend fun getCounty(request: ServerRequest): ServerResponse {
-        val v = regionRepository.findCounty(
-            cityId = request.pathVariable(apiRoute.region.Country.CITY_ID).toInt()
-        )
-
-        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValueAndAwait(v)
-//        return ServerResponse.ok().contentType(MediaType.APPLICATION_PROTOBUF)
-//            .bodyValueAndAwait(ProtoBuf.Default.encodeToByteArray(v))
+    override suspend fun getCounty(cityId: Int): List<RegionVO> {
+        return regionRepository.findCounty(cityId)
     }
-
 
 
 }

@@ -1,20 +1,25 @@
 package cn.allin
 
 
-import SessionContext
+import cn.allin.api.ApiUser
 import cn.allin.net.Req
-import cn.allin.net.currentUser
+import cn.allin.net.WEKV
 import cn.allin.net.deleteAuth
+import cn.allin.net.userSession
 import cn.allin.ui.RouteAuth
 import cn.allin.ui.RouteAuthFC
 import cn.allin.ui.RouteQandaAdd
 import cn.allin.ui.RouteQandaList
+import cn.allin.ui.RouteTagAdd
 import cn.allin.ui.RouteTagList
 import cn.allin.ui.RouteUserAdd
 import cn.allin.ui.RouteUserList
+import cn.allin.utils.SessionContext
 import cn.allin.utils.asyncFunction
-import colorSchemes
-import cssVariables
+import cn.allin.utils.colorSchemes
+import cn.allin.utils.cssVariables
+import cn.allin.utils.useInject
+import cn.allin.utils.useSessionContext
 import js.objects.jso
 import mui.material.PaletteMode
 import mui.material.styles.createTheme
@@ -33,7 +38,6 @@ import toolpad.core.PageContainer
 import toolpad.core.Session
 import toolpad.core.react_router.ReactRouterAppProvider
 import toolpad.core.useSession
-import useSessionContext
 
 private val RootLayoutRoutes = arrayOf<RouteObject>(
     jso {
@@ -48,7 +52,8 @@ private val RootLayoutRoutes = arrayOf<RouteObject>(
         children = arrayOf(
             RouteQandaList.routeObj,
             RouteQandaAdd.routeObj,
-            RouteTagList.routeObj
+            RouteTagList.routeObj,
+            RouteTagAdd.routeObj
         )
     },
 
@@ -79,7 +84,8 @@ private val appNavigation: Navigation = arrayOf(
         children = arrayOf(
             RouteQandaList.navigation,
             RouteQandaAdd.navigation,
-            RouteTagList.navigation
+            RouteTagList.navigation,
+            RouteTagAdd.navigation,
         )
     }
 )
@@ -87,10 +93,11 @@ private val appNavigation: Navigation = arrayOf(
 private val AppLayout = FC {
     val navigate = useNavigate()
     val sessionContext = useSessionContext()
+    val apiUser: ApiUser = useInject()
 
     useEffectOnce {
-        Req.authToken()?.let {
-            val u = Req.currentUser()
+        WEKV.authorization.getOrNull()?.let {
+            val u = apiUser.userSession()
             sessionContext.set(jso {
                 user = u
             })
