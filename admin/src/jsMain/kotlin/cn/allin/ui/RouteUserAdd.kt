@@ -1,10 +1,15 @@
 package cn.allin.ui
 
 import cn.allin.ValidatorError
-import cn.allin.VoFieldName
+import cn.allin.VoField
 import cn.allin.VoValidatorMessage
 import cn.allin.api.ApiUser
+import cn.allin.birthday
 import cn.allin.components.SelectAddress
+import cn.allin.email
+import cn.allin.gender
+import cn.allin.name
+import cn.allin.password
 import cn.allin.utils.dayjs
 import cn.allin.utils.reactNode
 import cn.allin.utils.toLocalDate
@@ -54,15 +59,15 @@ private val AddUserFC = FC {
     val handle: (FormEvent<HTMLElement>) -> Unit = {
         val t = it.target as HTMLInputElement
         when (t.name) {
-            VoFieldName.UserVO_name -> {
+            UserVO.name.name -> {
                 userForm = userForm.copy(name = t.value)
             }
 
-            VoFieldName.UserVO_email -> {
+            UserVO.email.name -> {
                 userForm = userForm.copy(email = t.value)
             }
 
-            VoFieldName.UserVO_password -> userForm = userForm.copy(password = t.value)
+            UserVO.password.name -> userForm = userForm.copy(password = t.value)
         }
 
         errorHelperText = UserVO.valid(userForm).leftOrNull()
@@ -108,9 +113,9 @@ private val AddUserFC = FC {
                 label = reactNode {
                     +"姓名"
                 }
-                name = VoFieldName.UserVO_name
+                name = UserVO.name.name
                 onChange = handle
-                validatorMessage(errorHelperText, VoFieldName.UserVO_name)
+                validatorMessage(errorHelperText, UserVO.name)
             }
         }
 
@@ -119,9 +124,9 @@ private val AddUserFC = FC {
                 label = reactNode {
                     +"邮箱"
                 }
-                name = VoFieldName.UserVO_email
+                name = UserVO.email.name
                 onChange = handle
-                validatorMessage(errorHelperText, VoFieldName.UserVO_email)
+                validatorMessage(errorHelperText, UserVO.email)
             }
         }
 
@@ -130,17 +135,17 @@ private val AddUserFC = FC {
                 label = reactNode {
                     +"密码"
                 }
-                name = VoFieldName.UserVO_password
+                name = UserVO.password.name
                 type = InputType.password
                 onChange = handle
-                validatorMessage(errorHelperText, VoFieldName.UserVO_password)
+                validatorMessage(errorHelperText, UserVO.password)
             }
         }
 
         FormControl {
             DatePicker {
                 label = reactNode { +"生日" }
-                name = VoFieldName.UserVO_birthday
+                name = UserVO.birthday.name
                 minDate = dayjs("1900-1-1")
                 maxDate = dayjs()
                 onChange = {
@@ -156,7 +161,7 @@ private val AddUserFC = FC {
                 +"性别"
             }
             RadioGroup {
-                name = VoFieldName.UserVO_gender
+                name = UserVO.gender.name
                 row = true
                 value = userForm.gender
                 onChange = { _, g ->
@@ -202,9 +207,9 @@ private val AddUserFC = FC {
 
 }
 
-private fun BaseTextFieldProps.validatorMessage(errorMsg: VoValidatorMessage?, field: String) {
+private fun BaseTextFieldProps.validatorMessage(errorMsg: VoValidatorMessage?, field: VoField) {
     errorMsg?.also {
-        error = if (it.field == field) {
+        error = if (it.field == field.name) {
             helperText = reactNode("${it.code},${it.message}")
             true
         } else {

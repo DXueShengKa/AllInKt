@@ -21,6 +21,8 @@ class VoValidatorMessage(
     val message: String
 ) {
 
+    constructor(field: VoField,code: String):this(field.name,code,field.display)
+
     @OptIn(ExperimentalJsStatic::class)
     companion object : VoValidator<Any> {
         const val CodeNotNull = "不能为空"

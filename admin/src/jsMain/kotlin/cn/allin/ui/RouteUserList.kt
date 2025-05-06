@@ -1,7 +1,10 @@
 package cn.allin.ui
 
-import cn.allin.VoFieldName
+import cn.allin.address
 import cn.allin.api.ApiUser
+import cn.allin.birthday
+import cn.allin.gender
+import cn.allin.name
 import cn.allin.utils.invokeFn
 import cn.allin.utils.selectColumnDef
 import cn.allin.utils.setState
@@ -42,15 +45,15 @@ private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
         }
     },
     jso {
-        id = VoFieldName.UserVO_name
-        header = StringOrTemplateHeader("名字")
+        id = UserVO.name.name
+        header = StringOrTemplateHeader(UserVO.name.display)
         accessorFn = { user, _ ->
             user.name
         }
     },
     jso {
-        id = VoFieldName.UserVO_gender
-        header = StringOrTemplateHeader("性别")
+        id = UserVO.gender.name
+        header = StringOrTemplateHeader(UserVO.gender.display)
         accessorFn = { user, _ ->
             when (user.gender) {
                 Gender.Female -> "女"
@@ -60,15 +63,15 @@ private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
         }
     },
     jso {
-        id = VoFieldName.UserVO_birthday
-        header = StringOrTemplateHeader("生日")
+        id = UserVO.birthday.name
+        header = StringOrTemplateHeader(UserVO.birthday.display)
         accessorFn = { user, _ ->
             user.birthday?.toString()
         }
     },
     jso {
-        id = VoFieldName.UserVO_address
-        header = StringOrTemplateHeader("地址")
+        id = UserVO.address.name
+        header = StringOrTemplateHeader(UserVO.address.display)
         accessorFn = { user, _ ->
             user.address
         }

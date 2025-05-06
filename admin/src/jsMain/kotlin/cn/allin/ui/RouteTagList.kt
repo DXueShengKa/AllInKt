@@ -1,8 +1,10 @@
 package cn.allin.ui
 
-import cn.allin.VoFieldName
 import cn.allin.api.ApiQandaTag
+import cn.allin.createTime
+import cn.allin.description
 import cn.allin.net.useQuery
+import cn.allin.tagName
 import cn.allin.utils.DATE_TIME_DEFAULT_FORMAT
 import cn.allin.utils.columnDefCell
 import cn.allin.utils.useCoroutineScope
@@ -42,22 +44,22 @@ private fun tagListColumnDef(
         }
     },
     jso {
-        id = VoFieldName.QaTagVO_tagName
-        header = StringOrTemplateHeader("标签名")
+        id = QaTagVO.tagName.name
+        header = StringOrTemplateHeader(QaTagVO.tagName.display)
         accessorFn = { tag, _ ->
             tag.tagName
         }
     },
     jso {
-        id = VoFieldName.QaTagVO_description
-        header = StringOrTemplateHeader("介绍")
+        id = QaTagVO.description.name
+        header = StringOrTemplateHeader(QaTagVO.description.display)
         accessorFn = { tag, _ ->
             tag.description
         }
     },
     jso {
-        id = VoFieldName.QaTagVO_createTime
-        header = StringOrTemplateHeader("创建时间")
+        id = QaTagVO.createTime.name
+        header = StringOrTemplateHeader(QaTagVO.createTime.display)
         accessorFn = { tag, _ ->
             tag.createTime?.format(DATE_TIME_DEFAULT_FORMAT)
         }

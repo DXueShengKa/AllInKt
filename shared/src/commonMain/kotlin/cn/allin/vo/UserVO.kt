@@ -5,8 +5,11 @@ import arrow.core.raise.either
 import arrow.core.raise.ensure
 import arrow.core.raise.ensureNotNull
 import cn.allin.RegexValidatorEmail
-import cn.allin.VoFieldName
 import cn.allin.VoValidatorMessage
+import cn.allin.birthday
+import cn.allin.id
+import cn.allin.name
+import cn.allin.password
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -17,6 +20,9 @@ import kotlin.js.JsStatic
 import kotlin.jvm.JvmStatic
 
 /**
+ * 系统用户
+ *
+ * @param id 用户id
  * @param name 名字
  * @param email 电子邮箱
  * @param password 密码
@@ -44,24 +50,24 @@ data class UserVO(
         @JsStatic
         fun valid(vo: UserVO): Either<VoValidatorMessage, UserVO> = either {
             ensureNotNull(vo.name) {
-                VoValidatorMessage(VoFieldName.UserVO_name, VoValidatorMessage.CodeNotNull, "名字")
+                VoValidatorMessage(name, VoValidatorMessage.CodeNotNull)
             }
 
             ensure(vo.name.length in 1..15) {
-                VoValidatorMessage(VoFieldName.UserVO_name, VoValidatorMessage.CodeOutOfRange, "长度1-15")
+                VoValidatorMessage(name.name, VoValidatorMessage.CodeOutOfRange, "长度1-15")
             }
 
-            ensure(!vo.password.isNullOrEmpty()) { VoValidatorMessage(VoFieldName.UserVO_password, VoValidatorMessage.CodeNotNull, "密码") }
+            ensure(!vo.password.isNullOrEmpty()) { VoValidatorMessage(password, VoValidatorMessage.CodeNotNull) }
 
             if (vo.birthday != null) {
                 val now = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
                 ensure(vo.birthday in LocalDate(1900, 1, 1)..now) {
-                    VoValidatorMessage(VoFieldName.UserVO_birthday, VoValidatorMessage.CodeOutOfRange, "生日范围超过1900到今天")
+                    VoValidatorMessage(birthday.name, VoValidatorMessage.CodeOutOfRange, "生日范围超过1900到今天")
                 }
             }
 
             if (!vo.email.isNullOrEmpty()) {
-                ensure(vo.email matches RegexValidatorEmail) { VoValidatorMessage(VoFieldName.UserVO_birthday, "格式错误", "邮箱") }
+                ensure(vo.email matches RegexValidatorEmail) { VoValidatorMessage(birthday.name, "格式错误", "邮箱") }
             }
 
             vo
@@ -71,7 +77,7 @@ data class UserVO(
         @JvmStatic
         @JsStatic
         fun validPut(vo: UserVO): Either<VoValidatorMessage, UserVO> = either {
-            ensure(vo.id > 0) { VoValidatorMessage(VoFieldName.UserVO_id, VoValidatorMessage.CodeNotNull, "用户id") }
+            ensure(vo.id > 0) { VoValidatorMessage(id, VoValidatorMessage.CodeNotNull) }
             valid(vo).bind()
         }
 

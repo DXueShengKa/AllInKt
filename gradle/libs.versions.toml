@@ -33,6 +33,8 @@ kotlinx-io = "0.7.0"
 ksp = "2.1.20-2.0.0"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "2.1.0"
+#
+dokka = "2.0.0"
 #https://github.com/JetBrains/compose-multiplatform
 jetbrains-compose = "1.7.3"
 jetbrains-md3Adaptive = "1.0.1"
@@ -137,7 +139,8 @@ kotlin-wrappers-tanstack-table = { module = "org.jetbrains.kotlin-wrappers:kotli
 
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp-aa = { group = "com.google.devtools.ksp", name = "symbol-processing-aa", version.ref = "ksp" }
-
+dokka-markdown = { group = "org.jetbrains.dokka", name = "analysis-markdown", version.ref = "dokka" }
+dokka-core = { group = "org.jetbrains.dokka", name = "dokka-core", version.ref = "dokka" }
 
 jetbrains-adaptive-navigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "jetbrains-md3Adaptive" }
 jetbrains-adaptive-suite = { group = "org.jetbrains.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "jetbrains-md3Adaptive" }

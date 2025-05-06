@@ -1,10 +1,11 @@
 package cn.allin.ui
 
-import cn.allin.VoFieldName
 import cn.allin.api.ApiUser
+import cn.allin.name
 import cn.allin.net.Req
 import cn.allin.net.auth
 import cn.allin.net.userSession
+import cn.allin.password
 import cn.allin.utils.SessionContextValue
 import cn.allin.utils.getValue
 import cn.allin.utils.setValue
@@ -46,8 +47,8 @@ private suspend fun login(
         console.log(a, s)
     }
     val vo = UserVO(
-        name = formData.get(VoFieldName.UserVO_name)?.toString(),
-        password = formData.get(VoFieldName.UserVO_password)?.toString(),
+        name = formData.get(UserVO.name.name)?.toString(),
+        password = formData.get(UserVO.password.name)?.toString(),
     )
     val result = Req.auth(vo, remember)
     if (result.isSuccess) {
@@ -75,7 +76,7 @@ val RouteAuthFC = FC {
     SignInPage {
 
         localeText = jso {
-            password = "密码"
+            password = UserVO.password.display
             email = "用户名"
             signInRememberMe = "记住我"
             signInTitle = "登录"
@@ -95,10 +96,10 @@ val RouteAuthFC = FC {
             emailField = {
                 autoFocus = false
                 type = InputType.text
-                name = VoFieldName.UserVO_name
+                name = UserVO.name.name
             },
             passwordField = {
-                name = VoFieldName.UserVO_password
+                name = UserVO.password.name
             },
             form = {
                 noValidate = true

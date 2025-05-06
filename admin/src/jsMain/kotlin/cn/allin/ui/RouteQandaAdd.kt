@@ -1,11 +1,12 @@
 package cn.allin.ui
 
-import cn.allin.VoFieldName
+import cn.allin.answer
 import cn.allin.api.ApiQanda
 import cn.allin.api.ApiQandaTag
 import cn.allin.components.AdminForm
 import cn.allin.components.useAdminForm
 import cn.allin.net.useQuery
+import cn.allin.question
 import cn.allin.utils.invokeFn
 import cn.allin.utils.reactNode
 import cn.allin.utils.rsv
@@ -81,7 +82,7 @@ private val AddQandaFC = FC {
                 }
 
                 with(adminForm) {
-                    register(VoFieldName.QandaVO_question, qaForm.question) {
+                    register(QandaVO.question.name, qaForm.question) {
                         qaForm = qaForm.copy(question = it)
                     }
                 }
@@ -98,7 +99,7 @@ private val AddQandaFC = FC {
                 style = jso {
                     width = 100.pct
                 }
-                name = VoFieldName.QandaVO_answer
+                name = QandaVO.answer.name
                 value = qaForm.answer
                 onChange = {
                     qaForm = qaForm.copy(
@@ -107,7 +108,7 @@ private val AddQandaFC = FC {
                 }
             }
             FormHelperText {
-                +adminForm.run { register(VoFieldName.QandaVO_answer) }
+                +adminForm.run { register(QandaVO.answer.name) }
             }
         }
 

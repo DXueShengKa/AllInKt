@@ -1,9 +1,10 @@
 package cn.allin.ui
 
-import cn.allin.VoFieldName
 import cn.allin.api.ApiQandaTag
 import cn.allin.components.AdminForm
 import cn.allin.components.useAdminForm
+import cn.allin.description
+import cn.allin.tagName
 import cn.allin.utils.reactNode
 import cn.allin.utils.useInject
 import cn.allin.vo.QaTagVO
@@ -40,7 +41,7 @@ private val TagAddFC = FC {
             TextField {
                 label = reactNode("标签名")
                 with(adminForm) {
-                    register(VoFieldName.QaTagVO_tagName, tagForm.tagName) {
+                    register(QaTagVO.tagName.name, tagForm.tagName) {
                         tagForm = tagForm.copy(tagName = it)
                     }
                 }
@@ -52,7 +53,7 @@ private val TagAddFC = FC {
                 label = reactNode("介绍标签")
 
                 adminForm.apply {
-                    register(VoFieldName.QaTagVO_description, tagForm.description) {
+                    register(QaTagVO.description.name, tagForm.description) {
                         tagForm = tagForm.copy(description = it)
                     }
                 }

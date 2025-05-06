@@ -8,11 +8,12 @@ import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSFile
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asTypeName
 import com.squareup.kotlinpoet.ksp.writeTo
 import org.jetbrains.dokka.InternalDokkaApi
 import org.jetbrains.dokka.analysis.markdown.jb.MarkdownParser
@@ -39,6 +40,9 @@ fun MarkdownParser.getParamList(logger: KSPLogger, text: String?): Map<String, S
         }
     }
 
+//    logger.warn(text)
+//    logger.warn(paramList.toString())
+
     return paramList
 }
 
@@ -49,13 +53,12 @@ fun MarkdownParser.getParamList(logger: KSPLogger, text: String?): Map<String, S
 @OptIn(KspExperimental::class, InternalDokkaApi::class)
 fun generatorSerializationField(resolver: Resolver, codeGenerator: CodeGenerator, logger: KSPLogger) {
 
-    val typeSpec = TypeSpec.objectBuilder("VoFieldName")
-        .addKdoc("vo类的字段名")
+    val fileSpec = FileSpec.builder("cn.allin", "VoFieldExt")
 
     val d = mutableListOf<KSFile>()
 
-    val stringType = String::class.asTypeName()
-    val md = MarkdownParser({ null }, "")
+    val voFieldClass = ClassName("cn.allin", "VoField")
+    val markdownParser = MarkdownParser({ null }, "")
     resolver.getDeclarationsFromPackage("cn.allin.vo")
         .mapNotNull {
             it.closestClassDeclaration()
@@ -72,33 +75,36 @@ fun generatorSerializationField(resolver: Resolver, codeGenerator: CodeGenerator
         .forEach { d ->
 
             val className = d.simpleName.asString()
-//            val receiverType = ClassName(d.packageName.asString(), className, "Companion")
+            val receiverType = ClassName(d.packageName.asString(), className, "Companion")
 
+            val params = markdownParser.getParamList(logger, d.docString)
             val constructor = d.getConstructors().first()
             for (p in constructor.parameters) {
                 val name = p.name?.asString() ?: continue
                 val constName = "${className}_$name"
-                typeSpec.addProperty(
-                    PropertySpec.builder(constName, stringType, KModifier.CONST)
-                        .initializer("\"$name\"")
+
+                fileSpec.addProperty(
+                    PropertySpec.builder(constName, voFieldClass, KModifier.PRIVATE)
+                        .initializer("VoField(name=\"$name\",display=\"${params[name] ?: name}\")")
                         .build()
                 )
 
-//                val propertySpec = PropertySpec.builder(name, stringType)
-//                    .receiver(receiverType)
-//                    .getter(
-//                        FunSpec.getterBuilder()
-//                            .addModifiers(KModifier.INLINE)
-//                            .addCode("return $constName")
-//                            .build()
-//                    )
-//                    .build()
-//                typeSpec.addProperty(propertySpec)
+
+                fileSpec.addProperty(
+                    PropertySpec.builder(name, voFieldClass, KModifier.PUBLIC)
+                        .receiver(receiverType)
+                        .getter(
+                            FunSpec.getterBuilder()
+                                .addCode("return $constName")
+                                .build()
+                        )
+                        .build()
+                )
+
             }
         }
 
-    FileSpec.builder("cn.allin", "VoFieldName")
-        .addType(typeSpec.build())
+    fileSpec
         .build()
         .writeTo(codeGenerator, Dependencies(false, *d.toTypedArray()))
 

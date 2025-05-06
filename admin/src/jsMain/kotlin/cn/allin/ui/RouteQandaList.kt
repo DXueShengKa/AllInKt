@@ -1,11 +1,14 @@
 package cn.allin.ui
 
-import cn.allin.VoFieldName
+import cn.allin.answer
 import cn.allin.api.ApiQanda
 import cn.allin.api.ApiQandaTag
+import cn.allin.createTime
 import cn.allin.net.Req
 import cn.allin.net.uploadExcel
 import cn.allin.net.useQuery
+import cn.allin.question
+import cn.allin.tagList
 import cn.allin.utils.DATE_TIME_DEFAULT_FORMAT
 import cn.allin.utils.asyncFunction
 import cn.allin.utils.columnDefCell
@@ -71,15 +74,15 @@ private fun qaListColumnDef(
         }
     },
     jso {
-        id = VoFieldName.QandaVO_question
-        header = StringOrTemplateHeader("问题")
+        id = QandaVO.question.name
+        header = StringOrTemplateHeader(QandaVO.question.display)
         accessorFn = { qa, _ ->
             qa.question
         }
     },
     jso {
-        id = VoFieldName.QandaVO_answer
-        header = StringOrTemplateHeader("回答")
+        id = QandaVO.answer.name
+        header = StringOrTemplateHeader(QandaVO.answer.display)
         accessorFn = { qa, _ ->
             if (qa.answer.length > 9) {
                 qa.answer + "..."
@@ -89,15 +92,15 @@ private fun qaListColumnDef(
         }
     },
     jso {
-        id = VoFieldName.QandaVO_tagList
-        header = StringOrTemplateHeader("标签")
+        id = QandaVO.tagList.name
+        header = StringOrTemplateHeader(QandaVO.tagList.display)
         accessorFn = { qa, _ ->
             qa.tagList?.joinToString(","){ it.tagName }
         }
     },
     jso {
-        id = VoFieldName.QandaVO_createTime
-        header = StringOrTemplateHeader("创建时间")
+        id = QandaVO.createTime.name
+        header = StringOrTemplateHeader(QandaVO.createTime.display)
         accessorFn = { qa, _ ->
             qa.createTime?.format(DATE_TIME_DEFAULT_FORMAT)
         }
