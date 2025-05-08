@@ -1,13 +1,11 @@
 package toolpad.core
 
-import js.objects.jso
+import js.objects.unsafeJso
 import mui.material.FormControlLabelProps
 import mui.material.TextFieldProps
 import react.dom.html.FormHTMLAttributes
 import seskar.js.JsValue
 import web.html.HTMLFormElement
-
-
 
 
 sealed external interface AuthProviderId {
@@ -29,11 +27,11 @@ fun SignInProps.slotProps(
     form: (FormHTMLAttributes<HTMLFormElement>.() -> Unit)? = null,
     rememberMe: (FormControlLabelProps.() -> Unit)? = null,
 ) {
-    slotProps = jso {
-        this.emailField = emailField?.let(::jso)
-        this.passwordField = passwordField?.let(::jso)
-        this.rememberMe = rememberMe?.let(::jso)
-        this.form = form?.let(::jso)
+    slotProps = unsafeJso {
+        this.emailField = emailField?.let(::unsafeJso)
+        this.passwordField = passwordField?.let(::unsafeJso)
+        this.rememberMe = rememberMe?.let(::unsafeJso)
+        this.form = form?.let(::unsafeJso)
     }
 }
 
@@ -71,7 +69,7 @@ fun Notifications.show(
     autoHideDuration: Int = 1500,
     severity: SeverityMui = SeverityMui.info,
 ) {
-    show(text, jso {
+    show(text, unsafeJso {
         this.autoHideDuration = autoHideDuration
         this.severity = severity
     })

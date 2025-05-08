@@ -4,7 +4,7 @@ import cn.allin.api.ApiRegion
 import cn.allin.utils.reactNode
 import cn.allin.utils.useInject
 import cn.allin.vo.RegionVO
-import js.objects.jso
+import js.objects.unsafeJso
 import mui.material.Box
 import mui.material.FormControl
 import mui.material.InputLabel
@@ -107,7 +107,7 @@ private val ProvinceSelect = FC<SelectProps> { p ->
         val regionList = p.regionList ?: emptyList()
 
         Select {
-            sx = jso {
+            sx = unsafeJso {
                 minWidth = 200.px
             }
 

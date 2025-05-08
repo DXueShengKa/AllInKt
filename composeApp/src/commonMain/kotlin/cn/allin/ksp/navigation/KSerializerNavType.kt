@@ -1,7 +1,9 @@
 package cn.allin.ksp.navigation
 
-import androidx.core.bundle.Bundle
 import androidx.navigation.NavType
+import androidx.savedstate.SavedState
+import androidx.savedstate.read
+import androidx.savedstate.write
 import cn.allin.AllProtoBuf
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
@@ -15,10 +17,11 @@ class KSerializerNavType<T : Any?>(
     override val isNullableAllowed: Boolean
 ) : NavType<T>(isNullableAllowed) {
 
-
-    override fun get(bundle: Bundle, key: String): T? {
-        val ba = bundle.getByteArray(key) ?: return null
-        return AllProtoBuf.decodeFromByteArray(serializer, ba)
+    override fun get(bundle: SavedState, key: String): T? {
+        return bundle.read {
+            val ba = getString(key).encodeToByteArray()
+            AllProtoBuf.decodeFromByteArray(serializer, ba)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -35,8 +38,11 @@ class KSerializerNavType<T : Any?>(
         return name
     }
 
-    override fun put(bundle: Bundle, key: String, value: T) {
-        bundle.putByteArray(key, AllProtoBuf.encodeToByteArray(serializer, value))
+    override fun put(bundle: SavedState, key: String, value: T) {
+
+        bundle.write {
+            putString(key, AllProtoBuf.encodeToByteArray(serializer, value).decodeToString())
+        }
     }
 }
 
@@ -45,8 +51,10 @@ val ByteArrayNavType = object : NavType<ByteArray?>(true) {
         get() = "byte[]"
 
 
-    override fun get(bundle: Bundle, key: String): ByteArray? {
-        return bundle.getByteArray(key)
+    override fun get(bundle: SavedState, key: String): ByteArray {
+        return bundle.read {
+            getString(key).encodeToByteArray()
+        }
     }
 
     private var wr: ByteArray? = null
@@ -67,8 +75,11 @@ val ByteArrayNavType = object : NavType<ByteArray?>(true) {
         return value.contentEquals(other)
     }
 
-    override fun put(bundle: Bundle, key: String, value: ByteArray?) {
-        bundle.putByteArray(key, value)
+    override fun put(bundle: SavedState, key: String, value: ByteArray?) {
+        value ?: return
+        bundle.write {
+            putString(key, value.decodeToString())
+        }
     }
 
 }
@@ -81,9 +92,10 @@ class EnumNavType<T : Enum<T>>(
 ) : NavType<T>(isNullableAllowed) {
 
 
-    override fun get(bundle: Bundle, key: String): T? {
-        val i = bundle.getInt(key, -1)
-        return if (i > -1) enumEntries[i] else null
+    override fun get(bundle: SavedState, key: String): T? {
+        return bundle.read {
+            getIntOrNull(key)?.let { enumEntries[it] }
+        }
     }
 
     override fun parseValue(value: String): T {
@@ -94,7 +106,9 @@ class EnumNavType<T : Enum<T>>(
         return value.ordinal.toString()
     }
 
-    override fun put(bundle: Bundle, key: String, value: T) {
-        bundle.putInt(key,value.ordinal)
+    override fun put(bundle: SavedState, key: String, value: T) {
+        bundle.write {
+            putInt(key,value.ordinal)
+        }
     }
 }

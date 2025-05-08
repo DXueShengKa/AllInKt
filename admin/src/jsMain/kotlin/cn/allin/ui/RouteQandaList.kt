@@ -23,7 +23,7 @@ import cn.allin.vo.PageVO
 import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import js.array.ReadonlyArray
-import js.objects.jso
+import js.objects.unsafeJso
 import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.datetime.format
@@ -51,6 +51,7 @@ import react.useMemo
 import react.useState
 import tanstack.react.table.useReactTable
 import tanstack.table.core.ColumnDef
+import tanstack.table.core.OnChangeFn
 import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.TableOptions
 import tanstack.table.core.getCoreRowModel
@@ -66,21 +67,21 @@ private fun qaListColumnDef(
     onDelete: (QandaVO) -> Unit,
 ): ReadonlyArray<ColumnDef<QandaVO, String?>> = arrayOf(
     selectColumnDef(),
-    jso {
+    unsafeJso {
         id = "id"
         header = StringOrTemplateHeader(id)
         accessorFn = { qa, _ ->
             qa.id.toString()
         }
     },
-    jso {
+    unsafeJso {
         id = QandaVO.question.name
         header = StringOrTemplateHeader(QandaVO.question.display)
         accessorFn = { qa, _ ->
             qa.question
         }
     },
-    jso {
+    unsafeJso {
         id = QandaVO.answer.name
         header = StringOrTemplateHeader(QandaVO.answer.display)
         accessorFn = { qa, _ ->
@@ -91,21 +92,21 @@ private fun qaListColumnDef(
             }
         }
     },
-    jso {
+    unsafeJso {
         id = QandaVO.tagList.name
         header = StringOrTemplateHeader(QandaVO.tagList.display)
         accessorFn = { qa, _ ->
             qa.tagList?.joinToString(","){ it.tagName }
         }
     },
-    jso {
+    unsafeJso {
         id = QandaVO.createTime.name
         header = StringOrTemplateHeader(QandaVO.createTime.display)
         accessorFn = { qa, _ ->
             qa.createTime?.format(DATE_TIME_DEFAULT_FORMAT)
         }
     },
-    jso {
+    unsafeJso {
         id = "操作"
         header = StringOrTemplateHeader(id)
         cell = columnDefCell { cellContext ->
@@ -154,7 +155,7 @@ private val QandaListFC = FC {
 
     val onDelete: (QandaVO) -> Unit = { vo ->
         cs.launch {
-            apiQanda.delete(vo.id ?: return@launch)
+            apiQanda.delete(vo.id)
                 .onLeft {
                     notifications.show("${vo.question} $it", severity = SeverityMui.error)
                 }.onRight {
@@ -178,7 +179,7 @@ private val QandaListFC = FC {
                 onDelete = onDelete
             ),
             data = tableData,
-            onRowSelectionChange = selectState.onSelectChange,
+            onRowSelectionChange = OnChangeFn(selectState.onSelectChange),
             getCoreRowModel = getCoreRowModel(),
         ).setState(
             rowSelection = selectState.rows,
@@ -189,7 +190,7 @@ private val QandaListFC = FC {
     TableMenu {
         onRefresh = query::refresh
         onDeleteSelect = {
-            val ids = qaTable.getSelectedRowModel().flatRows.mapNotNull { it.original.id }
+            val ids = qaTable.getSelectedRowModel().flatRows.map { it.original.id }
             if (ids.isNotEmpty()) cs.launch {
                 val count = apiQanda.delete(ids)
                 query.refresh()
@@ -250,7 +251,7 @@ private val TableMenu = FC<TableMenuProps> { props ->
             placeholder = "点击选择文件"
             valueFile = excelFile
             onChange = setFile.invokeFn
-            clearIconButtonProps = jso {
+            clearIconButtonProps = unsafeJso {
                 children = IconsDelete.create()
             }
         }
@@ -273,7 +274,7 @@ private val TableMenu = FC<TableMenuProps> { props ->
         Button {
 
             onClick = asyncFunction {
-                val b = dialog.confirm(reactNode("是否删除选中"), jso {
+                val b = dialog.confirm(reactNode("是否删除选中"), unsafeJso {
                     okText = reactNode("删除")
                     cancelText = reactNode("取消")
                 }).await()
@@ -322,7 +323,7 @@ private val FilterTag: FC<FilterTagProps> = FC { props ->
             +"过滤标签"
         }
         Select {
-            sx = jso {
+            sx = unsafeJso {
                 minWidth = 200.px
             }
             value = tagId

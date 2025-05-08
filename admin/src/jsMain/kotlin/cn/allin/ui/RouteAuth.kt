@@ -13,7 +13,7 @@ import cn.allin.utils.useCoroutineScope
 import cn.allin.utils.useInject
 import cn.allin.utils.useSessionContext
 import cn.allin.vo.UserVO
-import js.objects.jso
+import js.objects.unsafeJso
 import kotlinx.coroutines.promise
 import react.FC
 import react.router.NavigateFunction
@@ -30,7 +30,7 @@ import web.html.InputType
 const val RouteAuth = "Auth"
 
 private val providers: Array<AuthProvider> = arrayOf(
-    jso {
+    unsafeJso {
         id = AuthProviderId.credentials
         name = "登录"
     }
@@ -53,13 +53,13 @@ private suspend fun login(
     val result = Req.auth(vo, remember)
     if (result.isSuccess) {
         val u = apiUser.userSession()
-        sessionContext.set(jso {
+        sessionContext.set(unsafeJso {
             user = u
         })
         nav("/")
-        return jso()
+        return unsafeJso()
     } else {
-        return jso {
+        return unsafeJso {
             error = result.message
         }
     }
@@ -75,7 +75,7 @@ val RouteAuthFC = FC {
 
     SignInPage {
 
-        localeText = jso {
+        localeText = unsafeJso {
             password = UserVO.password.display
             email = "用户名"
             signInRememberMe = "记住我"

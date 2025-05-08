@@ -8,7 +8,7 @@ import cn.allin.tagName
 import cn.allin.utils.reactNode
 import cn.allin.utils.useInject
 import cn.allin.vo.QaTagVO
-import js.objects.jso
+import js.objects.unsafeJso
 import mui.material.FormControl
 import mui.material.TextField
 import react.FC
@@ -66,12 +66,12 @@ private val TagAddFC = FC {
 
 val RouteTagAdd = object : Routes {
 
-    override val navigation: NavigationObj = jso {
+    override val navigation: NavigationObj = unsafeJso {
         title = "添加标签"
         segment = "tag/add/-1"
     }
 
-    override val routeObj: RouteObject = jso {
+    override val routeObj: RouteObject = unsafeJso {
         Component = TagAddFC
         path = "tag/add/:tagId"
     }

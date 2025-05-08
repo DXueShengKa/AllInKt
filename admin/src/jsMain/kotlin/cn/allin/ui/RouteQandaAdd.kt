@@ -13,7 +13,7 @@ import cn.allin.utils.rsv
 import cn.allin.utils.useInject
 import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
-import js.objects.jso
+import js.objects.unsafeJso
 import mui.material.Card
 import mui.material.CardHeader
 import mui.material.Divider
@@ -96,7 +96,7 @@ private val AddQandaFC = FC {
             }
             TextareaAutosize {
                 minRows = 3
-                style = jso {
+                style = unsafeJso {
                     width = 100.pct
                 }
                 name = QandaVO.answer.name
@@ -204,12 +204,12 @@ private val TagList = FC<TagListProps> { props ->
 
 val RouteQandaAdd = object : Routes {
 
-    override val navigation: NavigationObj = jso {
+    override val navigation: NavigationObj = unsafeJso {
         title = "添加问答"
         segment = "add/-1"
     }
 
-    override val routeObj: RouteObject = jso {
+    override val routeObj: RouteObject = unsafeJso {
         Component = AddQandaFC
         path = "add/:qaId"
     }

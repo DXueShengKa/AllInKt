@@ -12,7 +12,7 @@ import cn.allin.utils.useInject
 import cn.allin.vo.PageVO
 import cn.allin.vo.QaTagVO
 import js.array.ReadonlyArray
-import js.objects.jso
+import js.objects.unsafeJso
 import kotlinx.coroutines.launch
 import kotlinx.datetime.format
 import mui.material.IconButton
@@ -36,28 +36,28 @@ private fun tagListColumnDef(
     onEdit: (QaTagVO) -> Unit,
     onDelete: (QaTagVO) -> Unit,
 ): ReadonlyArray<ColumnDef<QaTagVO, String?>> = arrayOf(
-    jso {
+    unsafeJso {
         id = "id"
         header = StringOrTemplateHeader(id)
         accessorFn = { tag, _ ->
             tag.id.toString()
         }
     },
-    jso {
+    unsafeJso {
         id = QaTagVO.tagName.name
         header = StringOrTemplateHeader(QaTagVO.tagName.display)
         accessorFn = { tag, _ ->
             tag.tagName
         }
     },
-    jso {
+    unsafeJso {
         id = QaTagVO.description.name
         header = StringOrTemplateHeader(QaTagVO.description.display)
         accessorFn = { tag, _ ->
             tag.description
         }
     },
-    jso {
+    unsafeJso {
         id = QaTagVO.createTime.name
         header = StringOrTemplateHeader(QaTagVO.createTime.display)
         accessorFn = { tag, _ ->
@@ -65,7 +65,7 @@ private fun tagListColumnDef(
         }
     },
 
-    jso {
+    unsafeJso {
         id = "操作"
         header = StringOrTemplateHeader(id)
         cell = columnDefCell { cellContext ->
