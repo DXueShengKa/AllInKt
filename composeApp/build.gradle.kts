@@ -1,6 +1,5 @@
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
@@ -8,10 +7,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlin.composeCompiler)
-    alias(libs.plugins.ksp)
 }
-
-val isTest: String by project
 
 val isMacOS = System.getProperty("os.name").startsWith("Mac OS")
 
@@ -21,7 +17,6 @@ kotlin {
 
     androidTarget()
 
-    jvm("desktop")
 
     if (isMacOS) listOf(
         iosX64(),
@@ -35,39 +30,24 @@ kotlin {
     }
 
     sourceSets {
-        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
         }
 
         commonMain.dependencies {
-            implementation(libs.jetbrains.navigation.compose)
-            implementation(libs.jetbrains.adaptive.navigation)
-            implementation(libs.koin.kmp.compose.viewmodel)
             implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(projects.shared)
-            implementation(projects.client.ui)
-            implementation(projects.client.data)
-            implementation(projects.client.components)
-            implementation(projects.ksp.annotation)
 
-            implementation(libs.lazytable)
+            //iOS build failed
+            implementation(libs.ktorClient.core)
         }
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-//            implementation(libs.koin.test)
         }
 
-        desktopMain.dependencies {
-            implementation(libs.slf4j.simple)
-            implementation(compose.desktop.currentOs)
-            implementation(libs.jspecify)
-        }
     }
 }
 
@@ -109,38 +89,3 @@ android {
     }
 
 }
-
-compose.desktop {
-
-    application {
-        mainClass = "cn.allin.MainKt"
-
-        nativeDistributions {
-//            targetFormats(TargetFormat.Dmg, TargetFormat.Exe, TargetFormat.AppImage)
-            targetFormats(TargetFormat.Dmg, TargetFormat.Exe, TargetFormat.Deb)
-            packageName = "cn.allin"
-            packageVersion = "1.0.0"
-        }
-
-        buildTypes.release.proguard {
-            version.set(libs.versions.proguard.get())
-            configurationFiles.from("jvmProguard.pro")
-        }
-    }
-}
-
-
-fun DependencyHandler.kspAll(dependencyNotation: Any) {
-    add("kspAndroid", dependencyNotation)
-    add("kspDesktop", dependencyNotation)
-    if (isMacOS){
-        add("kspIosSimulatorArm64", dependencyNotation)
-        add("kspIosArm64", dependencyNotation)
-        add("kspIosX64", dependencyNotation)
-    }
-}
-
-dependencies {
-    kspAll(projects.ksp.composeApp)
-}
-
