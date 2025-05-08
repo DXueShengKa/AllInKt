@@ -23,7 +23,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import cn.allin.ksp.navigation.NavRoute
-import cn.allin.ui.jlota.JlOtaScreen
+import cn.allin.ui.jlota.DeviceListScreen
 import org.koin.compose.LocalKoinApplication
 import org.koin.compose.LocalKoinScope
 import org.koin.compose.application.rememberKoinApplication
@@ -53,8 +53,7 @@ fun App() {
 //        }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-
-            JlOtaScreen()
+            DeviceListScreen()
         }
     }
 }

@@ -88,7 +88,7 @@ kotlin {
             implementation(projects.client.components)
             implementation(projects.ksp.annotation)
 
-            implementation(libs.bluefalcon)
+//            implementation(libs.bluefalcon)
         }
 
         iosMain.dependencies {
