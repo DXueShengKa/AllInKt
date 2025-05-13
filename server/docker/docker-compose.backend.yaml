@@ -1,0 +1,17 @@
+services:
+  server:
+    image: dragonwell-registry.cn-hangzhou.cr.aliyuncs.com/dragonwell/dragonwell:21
+    container_name: my-server
+    environment:
+      LANG: zh_CN.UTF-8
+      LANGUAGE: zh_CN:en_US
+      LC_ALL: zh_CN.UTF-8
+    volumes:
+      - /home/server:/server
+    ports:
+      - "8020:8020"
+    depends_on:
+      - pgsql
+      - redis
+    command: [ "java", "-Xmx512m", "-jar", "/server/server-1.0.0.jar", "--spring.config.location=file:/server/server-conf.yml" ]
+

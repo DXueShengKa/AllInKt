@@ -1,4 +1,3 @@
-version: '1'
 services:
   pgsql:
     build:
@@ -39,23 +38,22 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
-    command: ["server","/data","--console-address",":9001"]
+    command: [ "server","/data","--console-address",":9001" ]
 
-  server:
-    image: dragonwell-registry.cn-hangzhou.cr.aliyuncs.com/dragonwell/dragonwell:21
-    container_name: my-server
+
+  #内网穿透
+  frpService:
+    image: ghcr.io/fatedier/frps:v0.62.1
+    container_name: frpService
     environment:
-      LANG: zh_CN.UTF-8
-      LANGUAGE: zh_CN:en_US
-      LC_ALL: zh_CN.UTF-8
-    volumes:
-      - /home/server:/server
+      TZ: Asia/Shanghai
     ports:
-      - "8020:8020"
-    depends_on:
-      - pgsql
-      - redis
-    command: [ "java", "-Xmx512m", "-jar", "/server/server-1.0.0.jar", "--spring.config.location=file:/server/server-conf.yml" ]
+      - "7000:7000"
+      - "7001:7001"
+      - "7002:7002"
+    volumes:
+      - /home/frp/frpService.toml:/etc/frp/frps.toml
+    command: -c /etc/frp/frps.toml
 
   nginx:
     image: nginx:latest
@@ -63,7 +61,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - server
+      - frpService
     volumes:
       - /home/nginx/conf.d:/etc/nginx/conf.d
       - /home/nginx/html:/usr/share/nginx/html

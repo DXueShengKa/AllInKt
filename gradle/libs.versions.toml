@@ -95,6 +95,8 @@ bluefalcon = "2.2.5"
 #https://github.com/apache/poi
 apache-poi = "5.4.1"
 
+awssdk = "2.31.40"
+
 [plugins]
 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
@@ -245,6 +247,8 @@ arrow-optics-ksp = { module = "io.arrow-kt:arrow-optics-ksp-plugin", version.ref
 
 bluefalcon = { module = "dev.bluefalcon:blue-falcon", version.ref = "bluefalcon" }
 apache-poi-ooxml = { group="org.apache.poi", name="poi-ooxml", version.ref="apache-poi" }
+
+awssdk-s3 = { module = "software.amazon.awssdk:s3", version.ref = "awssdk" }
 
 [bundles]
 netLibs = [
