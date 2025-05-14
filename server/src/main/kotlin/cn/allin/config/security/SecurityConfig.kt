@@ -1,6 +1,7 @@
 package cn.allin.config.security
 
 import cn.allin.AllJson
+import cn.allin.api.ApiFile
 import cn.allin.api.ApiUser
 import cn.allin.apiRoute
 import cn.allin.config.UserRole
@@ -152,6 +153,8 @@ class SecurityConfig {
                 authorize(pathMatchers(HttpMethod.GET, "/region/**"), permitAll)
 
                 authorize("/${apiRoute.offiAccount.path}/**", permitAll)
+
+                authorize("/${ApiFile.FILE}/**", permitAll)
 
                 authorize(anyExchange, hasAuthority(UserRole.ROLE_ADMIN.name))
             }

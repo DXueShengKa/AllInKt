@@ -52,7 +52,7 @@ okhttp3 = "4.12.0"
 #https://github.com/ktorio/ktor
 ktor = "3.1.3"
 #https://github.com/coil-kt/coil
-coil3 = "3.1.0"
+coil3 = "3.2.0"
 #https://github.com/InsertKoinIO/koin
 koin = "4.0.4"
 #https://github.com/InsertKoinIO/koin-annotations
@@ -130,6 +130,8 @@ kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", v
 
 kotlin-wrappers-bom = { module = "org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom", version.ref = "kotlin-wrappers" }
 kotlin-wrappers-emotion-react = { module = "org.jetbrains.kotlin-wrappers:kotlin-emotion-react" }
+kotlin-wrappers-webJs = { module = "org.jetbrains.kotlin-wrappers:kotlin-web-js" }
+kotlin-wrappers-browserJs = { module = "org.jetbrains.kotlin-wrappers:kotlin-browser-js" }
 kotlin-wrappers-react = { module = "org.jetbrains.kotlin-wrappers:kotlin-react" }
 kotlin-wrappers-react-dom = { module = "org.jetbrains.kotlin-wrappers:kotlin-react-dom" }
 kotlin-wrappers-react-router = { module = "org.jetbrains.kotlin-wrappers:kotlin-react-router" }

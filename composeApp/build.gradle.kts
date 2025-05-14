@@ -51,6 +51,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(projects.shared)
             implementation(projects.client.ui)
+            implementation(projects.client.net)
             implementation(projects.client.data)
             implementation(projects.client.components)
             implementation(projects.ksp.annotation)

@@ -4,6 +4,7 @@ import androidx.compose.material.icons.sharp.Downloading
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cn.allin.data.repository.FileRepository
 import cn.allin.theme.MainIcons
 import cn.allin.ui.components.ImageUrl
 import cn.allin.ui.fileManager.TransferItemData
@@ -13,7 +14,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-class TransferManagerViewModel:ViewModel() {
+class TransferManagerViewModel(
+    private val fileRepository: FileRepository,
+):ViewModel() {
 
     val l = Array(6) {
         TransferItemData(

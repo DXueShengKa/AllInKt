@@ -3,7 +3,6 @@ package cn.allin.controller
 import arrow.core.Either
 import arrow.core.raise.either
 import cn.allin.api.ApiFile
-import cn.allin.api.ApiFile.Companion.UPLOAD_URL
 import cn.allin.service.FileService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,7 +15,7 @@ class FileController(
     private val fileService: FileService
 ): ApiFile {
 
-    @GetMapping(UPLOAD_URL)
+    @GetMapping(ApiFile.UPLOAD_URL)
     override suspend fun uploadUrl(@RequestParam filePath: String): Either<String, String> {
         return either {
             try {
@@ -26,6 +25,13 @@ class FileController(
             }
         }
     }
+
+    @GetMapping(ApiFile.LIST)
+    override suspend fun list(path: String?): List<String> {
+       return fileService.listDir(path?:"")
+    }
+
+
 
 
 }

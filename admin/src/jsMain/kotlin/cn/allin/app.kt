@@ -20,7 +20,7 @@ import cn.allin.utils.colorSchemes
 import cn.allin.utils.cssVariables
 import cn.allin.utils.useInject
 import cn.allin.utils.useSessionContext
-import js.objects.jso
+import js.objects.unsafeJso
 import mui.material.PaletteMode
 import mui.material.styles.createTheme
 import react.FC
@@ -40,14 +40,15 @@ import toolpad.core.react_router.ReactRouterAppProvider
 import toolpad.core.useSession
 
 private val RootLayoutRoutes = arrayOf<RouteObject>(
-    jso {
+    unsafeJso {
         path = "user"
         children = arrayOf(
             RouteUserAdd.routeObj,
             RouteUserList.routeObj
         )
     },
-    jso {
+    unsafeJso {
+
         path = "qanda"
         children = arrayOf(
             RouteQandaList.routeObj,
@@ -57,7 +58,8 @@ private val RootLayoutRoutes = arrayOf<RouteObject>(
         )
     },
 
-    jso {
+    unsafeJso {
+
         path = "*"
         Component = FC {
             +"默认页面"
@@ -66,11 +68,13 @@ private val RootLayoutRoutes = arrayOf<RouteObject>(
 )
 
 private val appNavigation: Navigation = arrayOf(
-    jso {
+    unsafeJso {
+
         kind = "header"
         title = "首页"
     },
-    jso {
+    unsafeJso {
+
         title = "用户管理"
         segment = "user"
         children = arrayOf(
@@ -78,7 +82,7 @@ private val appNavigation: Navigation = arrayOf(
             RouteUserList.navigation
         )
     },
-    jso {
+    unsafeJso {
         title = "问答管理"
         segment = "qanda"
         children = arrayOf(
@@ -98,7 +102,7 @@ private val AppLayout = FC {
     useEffectOnce {
         WEKV.authorization.getOrNull()?.let {
             val u = apiUser.userSession()
-            sessionContext.set(jso {
+            sessionContext.set(unsafeJso {
                 user = u
             })
             navigate("/")
@@ -108,7 +112,8 @@ private val AppLayout = FC {
     SessionContext.Provider {
         value = sessionContext
         ReactRouterAppProvider {
-            authentication = jso {
+            authentication = unsafeJso {
+
                 signIn = {
                     navigate(RouteAuth)
                 }
@@ -120,8 +125,10 @@ private val AppLayout = FC {
             }
 
             theme = createTheme(
-                jso {
-                    palette = jso {
+                unsafeJso {
+
+                    palette = unsafeJso {
+
                         mode = PaletteMode.light
                     }
                     cssVariables(
@@ -136,7 +143,8 @@ private val AppLayout = FC {
 
             navigation = appNavigation
 
-            branding = jso {
+            branding = unsafeJso {
+
                 title = "后台管理"
             }
             Outlet()
@@ -162,11 +170,13 @@ private val RootLayout = FC {
 
 
 val AppBrowserRouter = createHashRouter(
-    arrayOf(jso {
+    arrayOf(unsafeJso {
+
         Component = AppLayout
 
         children = arrayOf(
-            jso {
+            unsafeJso {
+
                 path = "/"
                 Component = RootLayout
                 children = RootLayoutRoutes
@@ -174,7 +184,8 @@ val AppBrowserRouter = createHashRouter(
                     +"/ 加载错误"
                 }.create()
             },
-            jso {
+            unsafeJso {
+
                 path = RouteAuth
                 Component = RouteAuthFC
             }

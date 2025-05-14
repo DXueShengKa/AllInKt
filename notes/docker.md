@@ -4,10 +4,10 @@
 
 ````
 # 启动所有服务（如果尚未运行）
-docker-compose -f file1.yml -f file2.yml up -d
+docker compose -p aliyun -f docker-compose.yaml -f docker-compose.backend.yaml up -d
 
-# 仅更新 file2.yml 中的服务
-docker compose -f file2.yml up -d
+# 仅更新 backend.yml 中的服务
+# docker compose -p aliyun -f docker-compose.backend.yaml restart
 
 ````
 
