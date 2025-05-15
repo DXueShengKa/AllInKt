@@ -1,8 +1,8 @@
 package cn.allin.data.repository
 
 import cn.allin.api.ApiFile
-import cn.allin.data.entity.WeFile
 import cn.allin.data.entity.WeFileInfo
+import cn.allin.vo.FilePathVO
 import kotlinx.io.files.Path
 import org.koin.core.annotation.Factory
 
@@ -10,11 +10,8 @@ import org.koin.core.annotation.Factory
 class FileManagerRepository(
     private val api: ApiFile
 ) {
-    suspend fun paths(parent: Path?): List<WeFile> {
-        return api.list(parent?.toString())
-            .map {
-                WeFile(Path(it), it.endsWith('/'))
-            }
+    suspend fun paths(parentId: Int?): FilePathVO {
+        return api.list(parentId)
     }
 
     fun delete(path: Path) {

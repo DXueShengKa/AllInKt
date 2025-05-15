@@ -3,6 +3,7 @@ package cn.allin.config
 import cn.allin.utils.UserAuthenticationToken
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.protobuf.ProtoBuf
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
@@ -16,6 +17,12 @@ import org.springframework.data.redis.serializer.RedisSerializationContext
 import org.springframework.data.redis.serializer.RedisSerializer
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import org.springframework.web.reactive.function.client.WebClient
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.s3.S3AsyncClient
+import software.amazon.awssdk.services.s3.presigner.S3Presigner
+import java.net.URI
 
 @OptIn(ExperimentalSerializationApi::class)
 @Configuration
@@ -41,7 +48,7 @@ class CacheConfig {
             .hashValue(RedisSerializer.byteArray())
             .build()
 
-        val template = ReactiveRedisTemplate<String, ByteArray>(redisConnectionFactory,context)
+        val template = ReactiveRedisTemplate<String, ByteArray>(redisConnectionFactory, context)
         return template
     }
 
@@ -54,6 +61,39 @@ class CacheConfig {
 
         return RedisCacheManager.builder(redisConnectionFactory)
             .cacheDefaults(config)
+            .build()
+    }
+
+
+    @Value("\${aws.endpoint}")
+    private lateinit var endpoint: String
+
+    @Value("\${aws.accessKey}")
+    private lateinit var accessKey: String
+
+    @Value("\${aws.secretKey}")
+    private lateinit var secretKey: String
+
+    @Value("\${aws.region}")
+    private lateinit var region: String
+
+
+    @Bean
+    fun s3Client(): S3AsyncClient {
+        return S3AsyncClient.builder()
+            .endpointOverride(URI.create(endpoint))
+            .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
+            .region(Region.of(region))
+            .build()
+    }
+
+
+    @Bean
+    fun s3PreSigner(): S3Presigner {
+        return S3Presigner.builder()
+            .endpointOverride(URI.create(endpoint))
+            .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
+            .region(Region.of(region))
             .build()
     }
 

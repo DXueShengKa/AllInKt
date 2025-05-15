@@ -2,18 +2,17 @@ package cn.allin.ui.fileMamager
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cn.allin.data.entity.WeFile
-import cn.allin.data.repository.FileManagerRepository
+import cn.allin.api.ApiFile
 import cn.allin.ui.components.ImageUrl
 import cn.allin.ui.fileManager.FileManagerDesc
 import cn.allin.ui.fileManager.FileManagerItem
+import cn.allin.vo.FilePathVO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.io.files.Path
 
 
 class FileManagerViewModel(
-    private val repository: FileManagerRepository
+    private val repository: ApiFile
 ) : ViewModel() {
 
     val fileListFlow = MutableStateFlow<List<FileManagerItem>>(emptyList())
@@ -22,47 +21,72 @@ class FileManagerViewModel(
         list(null)
     }
 
-    private var paths: List<WeFile> = emptyList()
+    private var paths: List<FilePathVO> = emptyList()
 
-    var currentPath: Path? = null
-        set(value) {
-            list(value)
-            field = value
-        }
+    var currentPath: FilePathVO? = null
 
-    private fun list(path: Path?) {
+    private fun list(pathId: Int?) {
         viewModelScope.launch {
-            paths = repository.paths(path)
+            val pathRepository = repository.list(pathId)
 
-            fileListFlow.value = paths.map {
-                FileManagerItem(
+           currentPath = if (pathRepository.parentId == null) null else pathRepository
+
+            val list = ArrayList<FileManagerItem>(paths.size)
+            pathRepository.childs?.forEach {
+                list += FileManagerItem(
                     img = ImageUrl.ImageUrlDefault,
-                    type = if (it.isDir) FileManagerItem.FILE_TYPE_DIR else FileManagerItem.FILE_TYPE_FILE,
-                    name = it.path.name,
-                    desc = it.path.parent.toString()
+                    type = FileManagerItem.FILE_TYPE_DIR,
+                    name = it.path,
+                    desc = "----"
                 )
+            }
+            pathRepository.fileList?.forEach {
+                list += FileManagerItem(
+                    img = ImageUrl.ImageUrlDefault,
+                    type = FileManagerItem.FILE_TYPE_FILE,
+                    name = it.name,
+                    desc = it.createTime.toString()
+                )
+            }
+
+            paths = pathRepository.childs ?: emptyList()
+            fileListFlow.value = list
+        }
+    }
+
+    fun newDir(newPath: String){
+        viewModelScope.launch {
+            val pathId = currentPath?.id ?: return@launch
+            repository.newDir(FilePathVO(
+                id = 0,
+                parentId = pathId,
+                path = newPath,
+            )).onRight {
+                list(pathId)
             }
         }
     }
 
     fun previous() {
-        currentPath = currentPath?.parent
+
+        list(currentPath?.parentId)
     }
 
     fun next(index: Int) {
-        val f = paths[index]
-        if (f.isDir) {
-            currentPath = f.path
+        if (index < paths.size) {
+            currentPath = paths[index]
+            list(currentPath?.id)
         }
     }
 
     val getDesc: (Int) -> FileManagerDesc? = desc@{ index ->
-        val i = repository.info(paths[index].path) ?: return@desc null
-        return@desc FileManagerDesc(
-            name = i.name,
-            info = i.size.toString(),
-            path = i.path,
-            createTime = i.createTime,
-        )
+        null
+//        val i = repository.info(paths[index].path) ?: return@desc null
+//        return@desc FileManagerDesc(
+//            name = i.name,
+//            info = i.size.toString(),
+//            path = i.path,
+//            createTime = i.createTime,
+//        )
     }
 }

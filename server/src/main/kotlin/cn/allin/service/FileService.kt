@@ -1,66 +1,79 @@
 package cn.allin.service
 
+import cn.allin.model.FilePathEntity
+import cn.allin.model.by
+import cn.allin.repository.FileObjectRepository
+import cn.allin.repository.FilePathRepository
+import cn.allin.utils.toFileVO
+import cn.allin.vo.FilePathVO
 import kotlinx.coroutines.future.await
-import org.springframework.beans.factory.annotation.Value
+import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.http.MediaTypeFactory
 import org.springframework.stereotype.Service
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
-import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3AsyncClient
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest
-import java.net.URI
 import java.time.Duration
 import java.util.stream.Stream
 import kotlin.jvm.optionals.getOrNull
 
 @Service
-class FileService() {
+class FileService(
+    private val s3Client: S3AsyncClient,
+    private val s3PreSigner: S3Presigner,
+    private val objectRepository: FileObjectRepository,
+    private val pathRepository: FilePathRepository
+) {
 
-    companion object {
-        const val archive = "archive"
+    suspend fun listDir(pathId: Int?): FilePathVO {
+        var path = ""
+        var parentId: Int? = null
+        val paths = if (pathId != null) {
+            val entity = pathRepository.findById(pathId, newFetcher(FilePathEntity::class).by {
+                path()
+                parentId()
+                `childList*` {
+                    depth(1)
+                }
+            }).get()
+            path = entity.path
+            parentId = entity.parentId
+            entity.childList
+        } else {
+            pathRepository.findAllByParentIdIsNull()
+        }
+
+        val files = pathId?.let(objectRepository::findAllByPathId)
+
+        return FilePathVO(
+            id = pathId ?: 0,
+            path = path,
+            parentId = parentId,
+            childs = paths.map { p ->
+                FilePathVO(
+                    id = p.id,
+                    path = p.path,
+                    parentId = p.parentId
+                )
+            },
+            fileList = files?.map {
+                it.toFileVO()
+            }
+        )
     }
 
-    @Value("\${aws.endpoint}")
-    private lateinit var endpoint: String
-
-    @Value("\${aws.accessKey}")
-    private lateinit var accessKey: String
-
-    @Value("\${aws.secretKey}")
-    private lateinit var secretKey: String
-
-    @Value("\${aws.region}")
-    private lateinit var region: String
-
-    private var _s3: S3AsyncClient? = null
-
-    fun s3Client(): S3AsyncClient {
-        return _s3 ?: S3AsyncClient.builder()
-            .endpointOverride(URI.create(endpoint))
-            .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
-            .region(Region.of(region))
-            .build()
-            .also { _s3 = it }
+    fun addPath(parentId: Int, path: String):Int {
+       return pathRepository.save(FilePathEntity {
+            this.parentId = parentId
+            this.path = path
+        }, org.babyfish.jimmer.sql.ast.mutation.SaveMode.INSERT_ONLY)
+            .id
     }
 
-    private var _presigner: S3Presigner? = null
-
-    private fun preSigner(): S3Presigner {
-        return _presigner ?: S3Presigner.builder()
-            .endpointOverride(URI.create(endpoint))
-            .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
-            .region(Region.of(region))
-            .build()
-            .also { _presigner = it }
-    }
-
-
-    suspend fun listDir(path: String): List<String> {
-        val r = s3Client()
+    suspend fun listDir(bucket: String, path: String): List<String> {
+        val r = s3Client
             .listObjectsV2 {
-                it.bucket(archive)
+                it.bucket(bucket)
                     .prefix(if (path.endsWith("/")) path else "$path/")
                     .delimiter("/")
             }
@@ -77,7 +90,7 @@ class FileService() {
     }
 
 
-    fun createUpUrl(filePath: String): String {
+    fun createUpUrl(bucket: String, filePath: String): String {
         val contentType = if (filePath.endsWith(".zip", true)) {
             "application/zip"
         } else MediaTypeFactory.getMediaType(filePath.substringAfter("/")).map {
@@ -87,41 +100,40 @@ class FileService() {
         val presignRequest = PutObjectPresignRequest.builder()
             .signatureDuration(Duration.ofMinutes(10))
             .putObjectRequest {
-                it.bucket(archive)
+                it.bucket(bucket)
                     .key(filePath)
                 if (!contentType.isNullOrEmpty())
                     it.contentType(contentType)
             }
             .build()
 
-        return preSigner().presignPutObject(presignRequest).url().toString()
+        return s3PreSigner.presignPutObject(presignRequest).url().toString()
     }
 
 
-    fun downloadUrl(filePath: String): String {
-       return preSigner().presignGetObject {
+    fun downloadUrl(bucket: String, filePath: String): String {
+        return s3PreSigner.presignGetObject {
             it.signatureDuration(Duration.ofMinutes(10))
                 .getObjectRequest { request ->
-                    request.bucket(archive)
+                    request.bucket(bucket)
                         .key(filePath)
                 }
         }.url().toString()
     }
 
 
-    suspend fun objInfo(filePath: String): String {
-       val tagging = s3Client().getObjectTagging {
-            it.bucket(archive)
+    suspend fun objInfo(bucket: String, filePath: String): String {
+        val tagging = s3Client.getObjectTagging {
+            it.bucket(bucket)
                 .key(filePath)
         }
 
-        return s3Client().headObject {
-            it.bucket(archive)
-            .key(filePath)
-        }.thenCombine(tagging){ metadata,tags ->
+        return s3Client.headObject {
+            it.bucket(bucket)
+                .key(filePath)
+        }.thenCombine(tagging) { metadata, tags ->
             metadata.metadata()
             metadata.contentType()
-            ""
         }.await()
 
     }

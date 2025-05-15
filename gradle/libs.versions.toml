@@ -5,9 +5,9 @@ android-targetSdk = "35"
 android-gradle = "8.9.2"
 
 #https://github.com/JetBrains/kotlin
-kotlin = "2.1.20"
+kotlin = "2.1.21"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "2025.5.3"
+kotlin-wrappers = "2025.5.6"
 #https://ant-design.antgroup.com/changelog-cn
 antd = "5.23.2"
 #https://github.com/iamkun/dayjs/
@@ -30,10 +30,10 @@ kotlinx-datetime = "0.6.2"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.7.0"
 #https://github.com/google/ksp
-ksp = "2.1.20-2.0.1"
+ksp = "2.1.21-2.0.1"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "2.1.0"
-#
+#https://github.com/Kotlin/dokka
 dokka = "2.0.0"
 #https://github.com/JetBrains/compose-multiplatform
 jetbrains-compose = "1.8.0"
@@ -68,7 +68,7 @@ exposed = "0.60.0"
 #https://github.com/turansky/seskar
 seskar = "4.8.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.81"
+jimmer = "0.9.84"
 #https://developer.android.google.cn/jetpack/androidx/releases/activity?hl=zh-cn
 activity = "1.10.1"
 #https://developer.android.google.cn/jetpack/androidx/releases/paging?hl=zh-cn
@@ -206,6 +206,7 @@ spring-starter-security = { module = "org.springframework.boot:spring-boot-start
 spring-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-starter-oauth2-resourceServer = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server" }
 spring-starter-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis-reactive" }
+spring-starter-data-r2dbc = { module = "org.springframework.boot:spring-boot-starter-data-r2dbc" }
 
 spring-securityTest = { module = "org.springframework.security:spring-security-test" }
 spring-starter-dataJdbc = { module = "org.springframework.boot:spring-boot-starter-data-jdbc" }
@@ -222,6 +223,7 @@ exposed-spring = { group = "org.jetbrains.exposed", name = "exposed-spring-boot-
 exposed-kotlinDatetime = { group = "org.jetbrains.exposed", name = "exposed-kotlin-datetime", version.ref = "exposed" }
 
 postgresql = { module = "org.postgresql:postgresql" }
+postgresql-r2dbc = { module = "org.postgresql:r2dbc-postgresql" }
 
 jimmer-spring = { module = "org.babyfish.jimmer:jimmer-spring-boot-starter", version.ref = "jimmer" }
 jimmer-ksp = { module = "org.babyfish.jimmer:jimmer-ksp", version.ref = "jimmer" }

@@ -21,10 +21,11 @@ class FileManagerState(
     private val fileItemFlow: StateFlow<List<FileManagerItem>>,
     internal val cs: CoroutineScope,
     internal val onBack: () -> Unit,
-    internal val onItemClick:(Int) -> Unit,
+    internal val onItemClick: (Int) -> Unit,
     private val onDelete: (Int) -> Unit,
     internal val onDown: (Int) -> Unit,
     internal val getDesc: suspend (Int) -> FileManagerDesc?,
+    internal val onNewDir: (String) -> Unit,
 ) {
 
 
@@ -34,6 +35,8 @@ class FileManagerState(
         const val SHEET_TYPE_MOVE = 2
         const val SHEET_TYPE_RENAME = 3
         const val SHEET_TYPE_DESC = 4
+
+        const val SHEET_TYPE_NEW_DIR = 5
     }
 
 
@@ -84,11 +87,11 @@ class FileManagerState(
 
     private var selectIndex = -1
 
-    internal fun onDelete(){
+    internal fun onDelete() {
         onDelete(selectIndex)
     }
 
-    internal fun onDown(){
+    internal fun onDown() {
         onDown(selectIndex)
     }
 
@@ -109,6 +112,14 @@ class FileManagerState(
         sheetType = SHEET_TYPE_RENAME
     }
 
+
+    internal fun openNewDir() {
+        cs.launch {
+            sheetType = SHEET_TYPE_NEW_DIR
+            scaffoldState.bottomSheetState.expand()
+        }
+    }
+
     internal fun openAdd() {
         cs.launch {
             sheetType = SHEET_TYPE_NEW_ADD
@@ -123,6 +134,12 @@ class FileManagerState(
                 sheetType = SHEET_TYPE_DESC
                 scaffoldState.bottomSheetState.expand()
             }
+        }
+    }
+
+    internal val closeSheet: () -> Unit = {
+        cs.launch {
+            scaffoldState.bottomSheetState.hide()
         }
     }
 }

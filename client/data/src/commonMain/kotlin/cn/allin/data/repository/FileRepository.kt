@@ -2,6 +2,7 @@ package cn.allin.data.repository
 
 import arrow.core.Either
 import cn.allin.api.ApiFile
+import cn.allin.vo.FilePathVO
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -20,10 +21,19 @@ class FileRepository(
         }.body()
     }
 
-    override suspend fun list(path: String?): List<String> {
-       return httpClient.get(ApiFile.pathList()){
-            parameter("path", path)
+
+    override suspend fun delete(pathId: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun newDir(pathVO: FilePathVO): Either<String, Int> {
+       return httpClient.post(ApiFile.pathNewDir()) {
+            setBody(pathVO)
         }.body()
+    }
+
+    override suspend fun list(pathId: Int?): FilePathVO {
+        return httpClient.get(ApiFile.pathList(pathId)).body()
     }
 
     suspend fun upload(url: String, channel: ByteReadChannel): String? {

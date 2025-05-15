@@ -24,11 +24,6 @@ expect val ktorEngineFactory: HttpClientEngineFactory<*>
 
 
 
-fun createHttpClient() = HttpClient(ktorEngineFactory) {
-    commonConfig()
-}
-
-
 @OptIn(ExperimentalSerializationApi::class)
 fun HttpClientConfig<*>.contentNegotiation() {
     install(ContentNegotiation) {

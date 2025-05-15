@@ -1,10 +1,12 @@
 package cn.allin
 
+import org.babyfish.jimmer.spring.repository.EnableJimmerRepositories
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
 
 @SpringBootApplication
+@EnableJimmerRepositories("cn.allin.repository")
 class Application
 
 fun main(args: Array<String>) {

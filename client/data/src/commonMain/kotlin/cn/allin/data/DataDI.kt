@@ -1,6 +1,7 @@
 package cn.allin.data
 
-import cn.allin.net.createHttpClient
+import cn.allin.net.commonConfig
+import cn.allin.net.ktorEngineFactory
 import io.ktor.client.*
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
@@ -14,6 +15,8 @@ object DataDI {
     @Single(createdAtStart = true)
     @JvmStatic
     fun httpClient(): HttpClient {
-        return createHttpClient()
+        return HttpClient(ktorEngineFactory) {
+            commonConfig()
+        }
     }
 }

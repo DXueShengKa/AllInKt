@@ -35,7 +35,8 @@ internal fun RouteFileManager() {
         onDown = {
 
         },
-        getDesc = vm.getDesc
+        getDesc = vm.getDesc,
+        onNewDir = vm::newDir
     )
 
     FileHomeScreen(state)
