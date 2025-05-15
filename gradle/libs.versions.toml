@@ -5,9 +5,9 @@ android-targetSdk = "35"
 android-gradle = "8.9.2"
 
 #https://github.com/JetBrains/kotlin
-kotlin = "2.1.20"
+kotlin = "2.1.21"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "2025.5.3"
+kotlin-wrappers = "2025.5.6"
 #https://ant-design.antgroup.com/changelog-cn
 antd = "5.23.2"
 #https://github.com/iamkun/dayjs/
@@ -30,10 +30,10 @@ kotlinx-datetime = "0.6.2"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.7.0"
 #https://github.com/google/ksp
-ksp = "2.1.20-2.0.1"
+ksp = "2.1.21-2.0.1"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "2.1.0"
-#
+#https://github.com/Kotlin/dokka
 dokka = "2.0.0"
 #https://github.com/JetBrains/compose-multiplatform
 jetbrains-compose = "1.8.0"
@@ -52,7 +52,7 @@ okhttp3 = "4.12.0"
 #https://github.com/ktorio/ktor
 ktor = "3.1.3"
 #https://github.com/coil-kt/coil
-coil3 = "3.1.0"
+coil3 = "3.2.0"
 #https://github.com/InsertKoinIO/koin
 koin = "4.0.4"
 #https://github.com/InsertKoinIO/koin-annotations
@@ -68,32 +68,13 @@ exposed = "0.60.0"
 #https://github.com/turansky/seskar
 seskar = "4.8.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.81"
+jimmer = "0.9.84"
 #https://developer.android.google.cn/jetpack/androidx/releases/activity?hl=zh-cn
 activity = "1.10.1"
 #https://developer.android.google.cn/jetpack/androidx/releases/paging?hl=zh-cn
 paging = "3.3.6"
 
-slf4j = "2.0.13"
-#https://github.com/jwtk/jjwt
-jjwt = "0.12.6"
-#https://github.com/ben-manes/caffeine
-caffeine = "3.2.0"
-#https://github.com/Guardsquare/proguard
-proguard = "7.6.0"
-#https://github.com/aallam/openai-kotlin
-openai = "4.0.1"
 
-junit = "4.13.2"
-#https://jsoup.org/
-jsoup = "1.19.1"
-jspecify = "1.0.0"
-#https://github.com/arrow-kt/arrow
-arrow = "2.1.0"
-#https://github.com/Reedyuk/blue-falcon
-bluefalcon = "2.2.5"
-#https://github.com/apache/poi
-apache-poi = "5.4.1"
 
 [plugins]
 
@@ -128,6 +109,8 @@ kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", v
 
 kotlin-wrappers-bom = { module = "org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom", version.ref = "kotlin-wrappers" }
 kotlin-wrappers-emotion-react = { module = "org.jetbrains.kotlin-wrappers:kotlin-emotion-react" }
+kotlin-wrappers-webJs = { module = "org.jetbrains.kotlin-wrappers:kotlin-web-js" }
+kotlin-wrappers-browserJs = { module = "org.jetbrains.kotlin-wrappers:kotlin-browser-js" }
 kotlin-wrappers-react = { module = "org.jetbrains.kotlin-wrappers:kotlin-react" }
 kotlin-wrappers-react-dom = { module = "org.jetbrains.kotlin-wrappers:kotlin-react-dom" }
 kotlin-wrappers-react-router = { module = "org.jetbrains.kotlin-wrappers:kotlin-react-router" }
@@ -161,25 +144,6 @@ squareup-okhttp3-loggingInterceptor = { group = "com.squareup.okhttp3", name = "
 reactor-test = { module = "io.projectreactor:reactor-test" }
 junit-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 
-koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
-koin-core-coroutines = { group = "io.insert-koin", name = "koin-core-coroutines", version.ref = "koin" }
-koin-androidx-workmanager = { group = "io.insert-koin", name = "koin-androidx-workmanager", version.ref = "koin" }
-koin-androidx-compose-navigation = { group = "io.insert-koin", name = "koin-androidx-compose-navigation", version.ref = "koin" }
-koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
-koin-kmp-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
-koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-annotations" }
-koin-compiler = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-annotations" }
-lazytable = { module = "io.github.oleksandrbalan:lazytable", version.ref = "lazytable" }
-
-coil3-bom = { module = "io.coil-kt.coil3:coil-bom", version.ref = "coil3" }
-coil3-core = { module = "io.coil-kt.coil3:coil-core" }
-coil3-compose = { module = "io.coil-kt.coil3:coil-compose" }
-coil3-gif = { module = "io.coil-kt.coil3:coil-gif" }
-coil3-svg = { module = "io.coil-kt.coil3:coil-svg" }
-coil3-video = { module = "io.coil-kt.coil3:coil-video" }
-coil3-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3" }
-coil3-network-core = { module = "io.coil-kt.coil3:coil-network-core" }
-coil3-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp" }
 
 
 ktorClient-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
@@ -193,69 +157,3 @@ ktorClient-js = { group = "io.ktor", name = "ktor-client-js", version.ref = "kto
 ktorClient-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 ktorClient-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
 ktorClient-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
-
-
-spring-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
-spring-starter-jetty = { module = "org.springframework.boot:spring-boot-starter-jetty" }
-spring-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache" }
-spring-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
-spring-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
-spring-starter-oauth2-resourceServer = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server" }
-spring-starter-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis-reactive" }
-
-spring-securityTest = { module = "org.springframework.security:spring-security-test" }
-spring-starter-dataJdbc = { module = "org.springframework.boot:spring-boot-starter-data-jdbc" }
-jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
-spring-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
-spring-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
-spring-session-core = { module = "org.springframework.session:spring-session-core" }
-spring-session-data-redis = { module = "org.springframework.session:spring-session-data-redis" }
-
-spring-integration-mqtt = { module = "org.springframework.integration:spring-integration-mqtt" }
-spring-integration-ip = { module = "org.springframework.integration:spring-integration-ip" }
-
-exposed-spring = { group = "org.jetbrains.exposed", name = "exposed-spring-boot-starter", version.ref = "exposed" }
-exposed-kotlinDatetime = { group = "org.jetbrains.exposed", name = "exposed-kotlin-datetime", version.ref = "exposed" }
-
-postgresql = { module = "org.postgresql:postgresql" }
-
-jimmer-spring = { module = "org.babyfish.jimmer:jimmer-spring-boot-starter", version.ref = "jimmer" }
-jimmer-ksp = { module = "org.babyfish.jimmer:jimmer-ksp", version.ref = "jimmer" }
-
-
-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
-androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
-androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
-
-openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openai" }
-
-slf4j-simple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
-jjwt = { module = "io.jsonwebtoken:jjwt", version.ref = "jjwt" }
-caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
-jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
-
-arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
-arrow-coroutines = { module = "io.arrow-kt:arrow-fx-coroutines", version.ref = "arrow" }
-arrow-serialization = { module = "io.arrow-kt:arrow-core-serialization", version.ref = "arrow" }
-arrow-optics = { module = "io.arrow-kt:arrow-optics", version.ref = "arrow" }
-arrow-optics-ksp = { module = "io.arrow-kt:arrow-optics-ksp-plugin", version.ref = "arrow" }
-
-bluefalcon = { module = "dev.bluefalcon:blue-falcon", version.ref = "bluefalcon" }
-apache-poi-ooxml = { group="org.apache.poi", name="poi-ooxml", version.ref="apache-poi" }
-
-[bundles]
-netLibs = [
-    "squareup-okhttp3-okhttp",
-    "squareup-okhttp3-loggingInterceptor"
-]
-
-commonKtorClient = [
-    "ktorClient-core",
-    "ktorClient-content-negotiation",
-    "ktorClient-logging",
-    "ktorClient-serialization-json",
-    "ktorClient-websockets",
-]
