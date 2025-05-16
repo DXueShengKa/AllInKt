@@ -121,7 +121,6 @@ fun generatorEntity(resolver: Resolver, codeGenerator: CodeGenerator, logger: KS
 private class VoField(
     val name: String,
     val type: KSType,
-    val nullable: Boolean,
 )
 
 private class VoType(
@@ -140,23 +139,24 @@ fun generatorEntityToVo(resolver: Resolver, codeGenerator: CodeGenerator, logger
     val fs = FileSpec.builder("cn.allin.utils", "EntityToVo")
         .addImport("kotlinx.datetime", "toKotlinLocalDate")
         .addImport("kotlinx.datetime", "toKotlinLocalDateTime")
+        .addImport("kotlinx.datetime", "toJavaLocalDateTime")
 
     val d = mutableListOf<KSFile>()
 
     resolver.getSymbolsWithAnnotation(toVoName)
         .forEach { a ->
-            val entity = a.containingFile!!.declarations.filterIsInstance<KSClassDeclaration>()
-                .first()
-                .getDeclaredProperties()
+//            val entity = a.containingFile!!.declarations.filterIsInstance<KSClassDeclaration>()
+//                .first()
+//                .getDeclaredProperties()
 
-            val annotationValue: List<KSType> = a.annotations.first {
+            val annotationValue: List<KSType>? = a.annotations.first {
                 toVoName.endsWith(it.shortName.getShortName())
             }.arguments
                 .first()
-                .value as List<KSType>
+                .value as? List<KSType>
 
-            val voSeq = annotationValue.asSequence()
-                .map { type ->
+            val voSeq = annotationValue?.asSequence()
+                ?.map { type ->
                     val voFieldList = (type.declaration as KSClassDeclaration)
                         .primaryConstructor!!
                         .parameters
@@ -165,15 +165,15 @@ fun generatorEntityToVo(resolver: Resolver, codeGenerator: CodeGenerator, logger
                             VoField(
                                 fieldName,
                                 it.type.resolve(),
-                                //根据entity字段判断空而不是vo的
-                                entity.find { it.simpleName.asString() == fieldName }
-                                    ?.type?.resolve()?.isMarkedNullable == true
+
                             )
                         }
+
+                    logger.warn(type.toClassName().reflectionName())
                     VoType(type.toClassName(), voFieldList)
                 }
 
-            a.accept(GenerateToVo(logger, voSeq), fs)
+            a.accept(GenerateToVo(logger, voSeq?:emptySequence()), fs)
 
             a.containingFile?.also(d::add)
         }
@@ -195,41 +195,91 @@ private class GenerateToVo(private val logger: KSPLogger, private val voTypes: S
             }
 
         voTypes.forEach {
-            val code: CodeBlock.Builder = CodeBlock.builder()
-                .add("return %T(", it.voName)
+            data.addFunction(toVoFun(it, entityField, classDeclaration.toClassName()))
 
-            for (field in it.fields) {
-                val entityTypeDeclaration: KSClassDeclaration = entityField[field.name]?.declaration as? KSClassDeclaration ?: continue
+            data.addFunction(toEntityFun(it, entityField, classDeclaration.toClassName()))
+        }
 
-                val nullability = if (field.nullable) "?" else ""
+    }
 
-                val right: String = if (field.type.declaration.qualifiedName == entityTypeDeclaration.qualifiedName) {
-                    field.name
-                } else if (entityTypeDeclaration.classKind == ClassKind.ENUM_CLASS) {
-                    when (field.type.declaration.simpleName.getShortName()) {
-                        "String" -> "${field.name}$nullability.name"
-                        "Int" -> "${field.name}$nullability.ordinal"
-                        else -> continue
-                    }
-                } else if (entityTypeDeclaration.toClassName() == JavaLocalDate) {
-                    "${field.name}$nullability.toKotlinLocalDate()"
-                } else if (entityTypeDeclaration.toClassName() == JavaLocalDateTime) {
-                    "${field.name}$nullability.toKotlinLocalDateTime()"
-                } else {
-                    continue
+    private fun toVoFun(voType: VoType, entityField: Map<String, KSType>, entityType: ClassName): FunSpec {
+        val code: CodeBlock.Builder = CodeBlock.builder()
+            .add("return %T(", voType.voName)
+
+        for (field in voType.fields) {
+            val entityTypeDeclaration: KSClassDeclaration = entityField[field.name]?.declaration as? KSClassDeclaration ?: continue
+
+            val nullability = if (field.type.isMarkedNullable) "?" else ""
+
+            val right: String = if (field.type.declaration.qualifiedName == entityTypeDeclaration.qualifiedName) {
+                field.name
+            } else if (entityTypeDeclaration.classKind == ClassKind.ENUM_CLASS) {
+                when (field.type.declaration.simpleName.getShortName()) {
+                    "String" -> "${field.name}$nullability.name"
+                    "Int" -> "${field.name}$nullability.ordinal"
+                    else -> continue
                 }
-
-                code.add("${field.name} = $right, ")
+            } else if (entityTypeDeclaration.toClassName() == JavaLocalDate) {
+                "${field.name}$nullability.toKotlinLocalDate()"
+            } else if (entityTypeDeclaration.toClassName() == JavaLocalDateTime) {
+                "${field.name}$nullability.toKotlinLocalDateTime()"
+            } else {
+                continue
             }
 
-            val funSpec = FunSpec.builder("to${it.voName.simpleName}")
-                .receiver(classDeclaration.toClassName())
-                .returns(it.voName)
-                .addCode(code.add(")").build())
-                .build()
-
-            data.addFunction(funSpec)
+            code.add("${field.name} = $right, ")
         }
+
+        return FunSpec.builder("to${voType.voName.simpleName}")
+            .receiver(entityType)
+            .returns(voType.voName)
+            .addCode(code.add(")").build())
+            .build()
+
+    }
+
+    private fun toEntityFun(voType: VoType, entityField: Map<String, KSType>, entityType: ClassName): FunSpec {
+        val code: CodeBlock.Builder = CodeBlock.builder()
+            .add("return %T {", entityType)
+
+        for (field in voType.fields) {
+            val entityTypeDeclaration: KSClassDeclaration = entityField[field.name]?.declaration as? KSClassDeclaration ?: continue
+
+
+
+            val right: String = if (field.type.declaration.qualifiedName == entityTypeDeclaration.qualifiedName) {
+                "this@toEntity." + field.name
+            } else if (entityTypeDeclaration.classKind == ClassKind.ENUM_CLASS) {
+                val q = "this@toEntity.${field.name}"
+                val z = when (field.type.declaration.simpleName.getShortName()) {
+                    "String" -> entityTypeDeclaration.qualifiedName?.asString() + ".valueOf(it)"
+                    "Int" -> entityTypeDeclaration.qualifiedName?.asString() + ".entries[it]"
+                    else -> continue
+                }
+                "${q}${if (field.type.isMarkedNullable) '?' else ""}.let { $z }"
+            } else if (entityTypeDeclaration.toClassName() == JavaLocalDateTime) {
+                "this@toEntity." + "${field.name}?.toJavaLocalDateTime()"
+            } else {
+                continue
+            }
+
+            if (field.name == "id") {
+                code.addStatement("\nif(id > 0)")
+            }
+
+            if (field.type.isMarkedNullable || entityField[field.name]?.isMarkedNullable == true) {
+                code.addStatement("\t$right?.also { ${field.name} = it }")
+            } else {
+                code.addStatement("\t${field.name} = $right")
+            }
+
+        }
+
+        return FunSpec.builder("toEntity")
+            .receiver(voType.voName)
+            .returns(entityType)
+            .addCode(code.add("}").build())
+            .build()
 
     }
 

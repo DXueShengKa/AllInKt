@@ -24,7 +24,7 @@ data class PageParams(
 
 external interface AdminTableProps : Props {
     var table: Table<*>
-    var pageCount: Int?
+    var pageCount: Long?
     var page: PageParams
     var onPage: (Int) -> Unit
     var onPageParams: (PageParams) -> Unit

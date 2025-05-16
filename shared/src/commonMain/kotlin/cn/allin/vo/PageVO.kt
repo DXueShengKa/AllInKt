@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PageVO<T>(
     val rows: List<T>,
-    val totalRow: Int,
+    val totalRow: Long,
     val totalPage: Int
 )

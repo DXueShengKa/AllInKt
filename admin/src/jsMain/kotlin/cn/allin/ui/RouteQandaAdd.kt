@@ -1,18 +1,19 @@
 package cn.allin.ui
 
-import cn.allin.VoFieldName
+import cn.allin.answer
 import cn.allin.api.ApiQanda
 import cn.allin.api.ApiQandaTag
 import cn.allin.components.AdminForm
 import cn.allin.components.useAdminForm
 import cn.allin.net.useQuery
+import cn.allin.question
 import cn.allin.utils.invokeFn
 import cn.allin.utils.reactNode
 import cn.allin.utils.rsv
 import cn.allin.utils.useInject
 import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
-import js.objects.jso
+import js.objects.unsafeJso
 import mui.material.Card
 import mui.material.CardHeader
 import mui.material.Divider
@@ -81,7 +82,7 @@ private val AddQandaFC = FC {
                 }
 
                 with(adminForm) {
-                    register(VoFieldName.QandaVO_question, qaForm.question) {
+                    register(QandaVO.question.name, qaForm.question) {
                         qaForm = qaForm.copy(question = it)
                     }
                 }
@@ -95,10 +96,10 @@ private val AddQandaFC = FC {
             }
             TextareaAutosize {
                 minRows = 3
-                style = jso {
+                style = unsafeJso {
                     width = 100.pct
                 }
-                name = VoFieldName.QandaVO_answer
+                name = QandaVO.answer.name
                 value = qaForm.answer
                 onChange = {
                     qaForm = qaForm.copy(
@@ -107,7 +108,7 @@ private val AddQandaFC = FC {
                 }
             }
             FormHelperText {
-                +adminForm.run { register(VoFieldName.QandaVO_answer) }
+                +adminForm.run { register(QandaVO.answer.name) }
             }
         }
 
@@ -203,12 +204,12 @@ private val TagList = FC<TagListProps> { props ->
 
 val RouteQandaAdd = object : Routes {
 
-    override val navigation: NavigationObj = jso {
+    override val navigation: NavigationObj = unsafeJso {
         title = "添加问答"
         segment = "add/-1"
     }
 
-    override val routeObj: RouteObject = jso {
+    override val routeObj: RouteObject = unsafeJso {
         Component = AddQandaFC
         path = "add/:qaId"
     }

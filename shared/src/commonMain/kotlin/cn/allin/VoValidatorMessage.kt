@@ -1,5 +1,6 @@
 package cn.allin
 
+import cn.allin.vo.FilePathVO
 import cn.allin.vo.QandaVO
 import cn.allin.vo.UserVO
 import kotlinx.serialization.Serializable
@@ -21,6 +22,8 @@ class VoValidatorMessage(
     val message: String
 ) {
 
+    constructor(field: VoField,code: String):this(field.name,code,field.display)
+
     @OptIn(ExperimentalJsStatic::class)
     companion object : VoValidator<Any> {
         const val CodeNotNull = "不能为空"
@@ -31,6 +34,7 @@ class VoValidatorMessage(
             return when (obj) {
                 is UserVO -> UserVO.valid(obj).leftOrNull()
                 is QandaVO -> QandaVO.valid(obj).leftOrNull()
+                is FilePathVO -> FilePathVO.valid(obj).leftOrNull()
                 else -> null
             }
         }

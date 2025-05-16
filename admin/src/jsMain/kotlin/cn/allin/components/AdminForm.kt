@@ -4,7 +4,7 @@ import cn.allin.ValidatorError
 import cn.allin.VoValidatorMessage
 import cn.allin.utils.useCoroutineScope
 import cn.allin.utils.useRefInit
-import js.objects.jso
+import js.objects.unsafeJso
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -110,7 +110,7 @@ val AdminForm = FC<AdminFormProps> { props ->
     }
 
     Stack {
-        sx = jso {
+        sx = unsafeJso {
             width = 600.px
         }
         spacing = responsive(2)

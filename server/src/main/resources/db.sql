@@ -153,3 +153,37 @@ create table auto_answer_record
 comment on table auto_answer_record is '自动回答记录';
 -- 微信公众号表 end
 
+
+-- 文件 start
+create table file_path
+(
+    id          serial primary key,
+    parent_id   int references file_path (id) on delete cascade,
+    path        varchar(128)                        not null,
+    create_time timestamp default current_timestamp not null,
+    constraint file_key unique (parent_id, path)
+);
+comment on column file_path.parent_id is '为空表示根目录，对象存储里用作桶';
+
+
+
+create table file_object
+(
+    id          bigserial primary key,
+    path_id     int references file_path (id)       not null,
+    name        varchar(128)                        not null,
+    size        bigint                              not null,
+    mime_type   varchar(64)                         not null,
+    md5         varchar(128)                        not null,
+    metadata    jsonb,
+    update_time timestamp                           not null,
+    create_time timestamp default current_timestamp not null
+);
+
+create trigger file_object_update_timestamp
+    before insert or update
+    on file_object
+    for each row
+execute procedure update_timestamp_column();
+
+-- 文件 end

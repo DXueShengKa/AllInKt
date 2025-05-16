@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalLayoutApi::class)
+@file:OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 
 package cn.allin.ui.fileManager
 
@@ -20,19 +20,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.automirrored.sharp.More
 import androidx.compose.material.icons.sharp.Delete
 import androidx.compose.material.icons.sharp.Details
-import androidx.compose.material.icons.sharp.DirtyLens
 import androidx.compose.material.icons.sharp.DriveFileMoveRtl
 import androidx.compose.material.icons.sharp.DriveFileRenameOutline
 import androidx.compose.material.icons.sharp.FileDownload
 import androidx.compose.material.icons.sharp.FileUpload
 import androidx.compose.material.icons.sharp.Image
 import androidx.compose.material.icons.sharp.MyLocation
+import androidx.compose.material.icons.sharp.PostAdd
 import androidx.compose.material.icons.sharp.Timer
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -84,7 +88,9 @@ private fun FlowRowScope.OptionsItem(
 }
 
 @Composable
-internal fun FileManagerNewAdd() {
+internal fun FileManagerNewAdd(
+    state: FileManagerState,
+) {
     FlowRow(
         Modifier.fillMaxWidth().padding(16.dp),
         maxItemsInEachRow = 3,
@@ -92,7 +98,7 @@ internal fun FileManagerNewAdd() {
     ) {
         OptionsItem(ImageUrl(MainIcons.Image), "上传照片") {}
         OptionsItem(ImageUrl(MainIcons.FileUpload), "选择文件") {}
-        OptionsItem(ImageUrl(MainIcons.DirtyLens), "新建文件夹") {}
+        OptionsItem(ImageUrl(MainIcons.PostAdd), "新建文件夹", state::openNewDir)
     }
 }
 
@@ -113,49 +119,94 @@ internal fun ColumnScope.FileManagerMove(moveList: List<FileManagerItem>) {
 @Composable
 internal fun ColumnScope.FileManagerRename(
     item: FileManagerItem,
+    hide: () -> Unit,
+    onValue: (String) -> Unit
 ) {
-    val title: String
-    val name: String
-    val description: String
+
     if (item.type == FileManagerItem.FILE_TYPE_DIR) {
-        title = "重命名文件夹"
-        name = "文件夹名称"
-        description = "文件夹简介"
+        FileManagerEdit(
+            title = "重命名文件夹",
+            name = "文件夹名称",
+            description = "文件夹简介",
+            hide = hide,
+            onValue = onValue,
+        )
     } else {
-        title = "重命名文件"
-        name = "文件名称"
-        description = "文件简介"
+        FileManagerEdit(
+            title = "重命名文件",
+            name = "文件名称",
+            description = "文件简介",
+            hide = hide,
+            onValue = onValue,
+        )
+    }
+}
+
+
+@Composable
+internal fun ColumnScope.FileManagerNewDir(
+    hide: () -> Unit,
+    onValue: (String) -> Unit
+) {
+
+    FileManagerEdit(
+        title = "新建文件夹",
+        name = "文件夹名称",
+        description = "文件夹简介",
+        hide = hide,
+        onValue = onValue,
+    )
+
+}
+
+@Composable
+private fun FileManagerEdit(
+    title: String,
+    name: String,
+    description: String,
+    hide: () -> Unit,
+    onValue: (String) -> Unit,
+) {
+    val nameValue = remember { mutableStateOf("") }
+    DisposableEffect(title){
+        onDispose {
+            println("DisposableEffect")
+        }
     }
     Text(title, Modifier.padding(start = 16.dp))
-    Text(name, style = MaterialTheme.typography.labelSmall)
+//    Text(name, style = MaterialTheme.typography.labelSmall)
     OutlinedTextField(
-        "", {},
+        nameValue.value, { nameValue.value = it },
         Modifier.fillMaxWidth(),
+        label = { Text(name) },
     )
     Text(description, style = MaterialTheme.typography.labelSmall)
     OutlinedTextField(
         "", {},
         Modifier.fillMaxWidth(),
     )
-    FillScreenButton("确认", {})
+    FillScreenButton("确认", {
+        onValue(nameValue.value)
+        hide()
+    })
 }
 
 @Immutable
 class FileManagerDesc(
-    val name:String,
-    val info:String,
-    val path:String,
-    val createTime:String,
+    val name: String,
+    val info: String,
+    val path: String,
+    val createTime: String,
 )
 
 @Composable
 internal fun FileManagerDesc(
     desc: FileManagerDesc,
 ) {
-    DescItem(MainIcons.Image,desc.path,desc.info)
-    DescItem(MainIcons.MyLocation,"位置",desc.path)
-    DescItem(MainIcons.Timer,"创建时间",desc.createTime)
-    DescItem(MainIcons.Timer,"最后修改时间",desc.createTime)
+    DescItem(MainIcons.Image, desc.path, desc.info)
+    DescItem(MainIcons.MyLocation, "位置", desc.path)
+    DescItem(MainIcons.Timer, "创建时间", desc.createTime)
+    DescItem(MainIcons.Timer, "最后修改时间", desc.createTime)
 }
 
 @Composable
@@ -163,7 +214,7 @@ internal fun DescItem(
     image: ImageVector,
     title: String,
     subtitle: String,
-){
+) {
     Row(
         Modifier.fillMaxWidth().padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),

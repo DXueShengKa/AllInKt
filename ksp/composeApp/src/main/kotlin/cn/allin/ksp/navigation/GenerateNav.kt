@@ -68,7 +68,7 @@ class GenerateNav(
             }
 
         val funSpec = FunSpec.builder("${fileName.lowercase()}NavGraphs")
-            .addModifiers(KModifier.PUBLIC)
+            .addModifiers(KModifier.INTERNAL)
             .receiver(ClassName("androidx.navigation", "NavGraphBuilder"))
             .addCode(blockBuilder.build())
             .addKdoc("使用类进行导航")

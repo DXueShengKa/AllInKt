@@ -5,15 +5,15 @@ android-targetSdk = "35"
 android-gradle = "8.9.2"
 
 #https://github.com/JetBrains/kotlin
-kotlin = "2.1.20"
+kotlin = "2.1.21"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "2025.4.6"
+kotlin-wrappers = "2025.5.6"
 #https://ant-design.antgroup.com/changelog-cn
 antd = "5.23.2"
 #https://github.com/iamkun/dayjs/
 dayjs = "1.11.13"
 #https://mui.com/toolpad/core/introduction/
-mui-toolpad = "^0.12.1"
+mui-toolpad = "0.12.1"
 #https://v6.mui.com/material-ui/getting-started/
 mui-material = "^6"
 #https://github.com/viclafouch/mui-file-input
@@ -30,43 +30,47 @@ kotlinx-datetime = "0.6.2"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.7.0"
 #https://github.com/google/ksp
-ksp = "2.1.20-2.0.0"
+ksp = "2.1.21-2.0.1"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "2.1.0"
+#https://github.com/Kotlin/dokka
+dokka = "2.0.0"
 #https://github.com/JetBrains/compose-multiplatform
-jetbrains-compose = "1.7.3"
-jetbrains-md3Adaptive = "1.0.1"
+jetbrains-compose = "1.8.0"
+jetbrains-md3Adaptive = "1.1.0"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/lifecycle/lifecycle-viewmodel-compose/
-jetbrains-lifecycle = "2.8.4"
+jetbrains-lifecycle = "2.9.0-beta01"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/navigation/navigation-common/
-jetbrains-navigation = "2.8.0-alpha11"
+jetbrains-navigation = "2.9.0-beta01"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
 jetbrains-core-bundle = "1.0.1"
+#https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/savedstate/savedstate-compose/
+jetbrains-savedstate = "1.3.0-beta01"
 #https://developer.android.google.cn/jetpack/androidx/releases/datastore?hl=zh-cn
-datastore = "1.1.5"
+datastore = "1.1.6"
 
 #https://github.com/square/okhttp
 okhttp3 = "4.12.0"
 #https://github.com/ktorio/ktor
-ktor = "3.1.2"
+ktor = "3.1.3"
 #https://github.com/coil-kt/coil
-coil3 = "3.1.0"
+coil3 = "3.2.0"
 #https://github.com/InsertKoinIO/koin
-koin = "4.0.4"
+koin = "4.1.0-Beta11"
 #https://github.com/InsertKoinIO/koin-annotations
 koin-annotations = "2.0.0"
 #https://github.com/oleksandrbalan/lazytable
 lazytable = "1.10.0"
 #https://github.com/spring-projects/spring-boot
-spring-boot = "3.4.4"
+spring-boot = "3.4.5"
 #https://docs.spring.io/dependency-management-plugin/docs/current/reference/html/#introduction
 spring-dependencyManagement = "1.1.7"
 
 exposed = "0.60.0"
 #https://github.com/turansky/seskar
-seskar = "4.7.0"
+seskar = "4.8.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.81"
+jimmer = "0.9.84"
 #https://developer.android.google.cn/jetpack/androidx/releases/activity?hl=zh-cn
 activity = "1.10.1"
 #https://developer.android.google.cn/jetpack/androidx/releases/paging?hl=zh-cn
@@ -92,6 +96,8 @@ arrow = "2.1.0"
 bluefalcon = "2.2.5"
 #https://github.com/apache/poi
 apache-poi = "5.4.1"
+
+awssdk = "2.31.40"
 
 [plugins]
 
@@ -126,6 +132,8 @@ kotlinx-io-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", v
 
 kotlin-wrappers-bom = { module = "org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom", version.ref = "kotlin-wrappers" }
 kotlin-wrappers-emotion-react = { module = "org.jetbrains.kotlin-wrappers:kotlin-emotion-react" }
+kotlin-wrappers-webJs = { module = "org.jetbrains.kotlin-wrappers:kotlin-web-js" }
+kotlin-wrappers-browserJs = { module = "org.jetbrains.kotlin-wrappers:kotlin-browser-js" }
 kotlin-wrappers-react = { module = "org.jetbrains.kotlin-wrappers:kotlin-react" }
 kotlin-wrappers-react-dom = { module = "org.jetbrains.kotlin-wrappers:kotlin-react-dom" }
 kotlin-wrappers-react-router = { module = "org.jetbrains.kotlin-wrappers:kotlin-react-router" }
@@ -137,15 +145,18 @@ kotlin-wrappers-tanstack-table = { module = "org.jetbrains.kotlin-wrappers:kotli
 
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp-aa = { group = "com.google.devtools.ksp", name = "symbol-processing-aa", version.ref = "ksp" }
-
+dokka-markdown = { group = "org.jetbrains.dokka", name = "analysis-markdown", version.ref = "dokka" }
+dokka-core = { group = "org.jetbrains.dokka", name = "dokka-core", version.ref = "dokka" }
 
 jetbrains-adaptive-navigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "jetbrains-md3Adaptive" }
 jetbrains-adaptive-suite = { group = "org.jetbrains.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "jetbrains-md3Adaptive" }
 jetbrains-collection = { group = "org.jetbrains.compose.collection-internal", name = "collection", version.ref = "jetbrains-compose" }
 jetbrains-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "jetbrains-navigation" }
 jetbrains-navigation-runtime = { group = "org.jetbrains.androidx.navigation", name = "navigation-runtime", version.ref = "jetbrains-navigation" }
+jetbrains-lifecycle-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "jetbrains-lifecycle" }
 jetbrains-lifecycle-viewmodelCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "jetbrains-lifecycle" }
 jetbrains-lifecycle-vmSavedState = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "jetbrains-lifecycle" }
+jetbrains-savedstate-compose = { group = "org.jetbrains.androidx.savedstate", name = "savedstate-compose", version.ref = "jetbrains-savedstate" }
 jetbrains-core-bundle = { group = "org.jetbrains.androidx.core", name = "core-bundle", version.ref = "jetbrains-core-bundle" }
 
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
@@ -199,6 +210,7 @@ spring-starter-security = { module = "org.springframework.boot:spring-boot-start
 spring-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-starter-oauth2-resourceServer = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server" }
 spring-starter-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis-reactive" }
+spring-starter-data-r2dbc = { module = "org.springframework.boot:spring-boot-starter-data-r2dbc" }
 
 spring-securityTest = { module = "org.springframework.security:spring-security-test" }
 spring-starter-dataJdbc = { module = "org.springframework.boot:spring-boot-starter-data-jdbc" }
@@ -215,6 +227,7 @@ exposed-spring = { group = "org.jetbrains.exposed", name = "exposed-spring-boot-
 exposed-kotlinDatetime = { group = "org.jetbrains.exposed", name = "exposed-kotlin-datetime", version.ref = "exposed" }
 
 postgresql = { module = "org.postgresql:postgresql" }
+postgresql-r2dbc = { module = "org.postgresql:r2dbc-postgresql" }
 
 jimmer-spring = { module = "org.babyfish.jimmer:jimmer-spring-boot-starter", version.ref = "jimmer" }
 jimmer-ksp = { module = "org.babyfish.jimmer:jimmer-ksp", version.ref = "jimmer" }
@@ -242,6 +255,8 @@ arrow-optics-ksp = { module = "io.arrow-kt:arrow-optics-ksp-plugin", version.ref
 
 bluefalcon = { module = "dev.bluefalcon:blue-falcon", version.ref = "bluefalcon" }
 apache-poi-ooxml = { group="org.apache.poi", name="poi-ooxml", version.ref="apache-poi" }
+
+awssdk-s3 = { module = "software.amazon.awssdk:s3", version.ref = "awssdk" }
 
 [bundles]
 netLibs = [

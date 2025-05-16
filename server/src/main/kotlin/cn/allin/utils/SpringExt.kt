@@ -119,7 +119,14 @@ fun createTriggerUpdateTimestamp(tableName: String) =
 fun <T,R> Page<T>.toPageVO(transform: (T) -> R): PageVO<R> {
     return PageVO(
         rows = this.rows.map(transform),
-        totalRow = this.totalRowCount.toInt(),
+        totalRow = this.totalRowCount,
         totalPage = this.totalPageCount.toInt()
+    )
+}
+fun <T,R>  org.springframework.data.domain.Page<T>.toPageVO(transform: (T) -> R): PageVO<R> {
+    return PageVO(
+        rows = this.content.map(transform),
+        totalRow = this.totalElements,
+        totalPage = this.totalPages
     )
 }

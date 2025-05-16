@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.protobuf)
 
     implementation(libs.apache.poi.ooxml)
+    implementation(libs.awssdk.s3)
 
     testImplementation(libs.kotlin.test.junit5)
     testImplementation(libs.reactor.test)

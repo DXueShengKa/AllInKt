@@ -1,7 +1,10 @@
 package cn.allin.ui
 
-import cn.allin.VoFieldName
+import cn.allin.address
 import cn.allin.api.ApiUser
+import cn.allin.birthday
+import cn.allin.gender
+import cn.allin.name
 import cn.allin.utils.invokeFn
 import cn.allin.utils.selectColumnDef
 import cn.allin.utils.setState
@@ -12,7 +15,7 @@ import cn.allin.vo.Gender
 import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
 import js.array.ReadonlyArray
-import js.objects.jso
+import js.objects.unsafeJso
 import kotlinx.coroutines.launch
 import mui.material.Button
 import mui.material.Snackbar
@@ -27,6 +30,7 @@ import react.useMemo
 import react.useState
 import tanstack.react.table.useReactTable
 import tanstack.table.core.ColumnDef
+import tanstack.table.core.OnChangeFn
 import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.TableOptions
 import tanstack.table.core.getCoreRowModel
@@ -34,23 +38,23 @@ import tanstack.table.core.getCoreRowModel
 
 private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
     selectColumnDef(),
-    jso {
+    unsafeJso {
         id = "id"
         header = StringOrTemplateHeader("ID")
         accessorFn = { user, _ ->
             user.id.toString()
         }
     },
-    jso {
-        id = VoFieldName.UserVO_name
-        header = StringOrTemplateHeader("名字")
+    unsafeJso {
+        id = UserVO.name.name
+        header = StringOrTemplateHeader(UserVO.name.display)
         accessorFn = { user, _ ->
             user.name
         }
     },
-    jso {
-        id = VoFieldName.UserVO_gender
-        header = StringOrTemplateHeader("性别")
+    unsafeJso {
+        id = UserVO.gender.name
+        header = StringOrTemplateHeader(UserVO.gender.display)
         accessorFn = { user, _ ->
             when (user.gender) {
                 Gender.Female -> "女"
@@ -59,16 +63,16 @@ private val UserColumnDef: ReadonlyArray<ColumnDef<UserVO, String?>> = arrayOf(
             }
         }
     },
-    jso {
-        id = VoFieldName.UserVO_birthday
-        header = StringOrTemplateHeader("生日")
+    unsafeJso {
+        id = UserVO.birthday.name
+        header = StringOrTemplateHeader(UserVO.birthday.display)
         accessorFn = { user, _ ->
             user.birthday?.toString()
         }
     },
-    jso {
-        id = VoFieldName.UserVO_address
-        header = StringOrTemplateHeader("地址")
+    unsafeJso {
+        id = UserVO.address.name
+        header = StringOrTemplateHeader(UserVO.address.display)
         accessorFn = { user, _ ->
             user.address
         }
@@ -99,7 +103,7 @@ private val UserListFC = FC {
         options = TableOptions(
             columns = UserColumnDef,
             data = tableData,
-            onRowSelectionChange = selectState.onSelectChange,
+            onRowSelectionChange = OnChangeFn(selectState.onSelectChange),
             getCoreRowModel = getCoreRowModel(),
         ).setState(
             rowSelection = selectState.rows,
@@ -111,7 +115,7 @@ private val UserListFC = FC {
         message = FC {
             +"已删除"
         }.create()
-        anchorOrigin = jso {
+        anchorOrigin = unsafeJso {
             vertical = SnackbarOriginVertical.top
             horizontal = SnackbarOriginHorizontal.center
         }

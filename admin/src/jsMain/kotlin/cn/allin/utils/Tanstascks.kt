@@ -1,7 +1,7 @@
 package cn.allin.utils
 
 import js.array.ReadonlyArray
-import js.objects.jso
+import js.objects.unsafeJso
 import mui.material.Checkbox
 import mui.material.TableBody
 import mui.material.TableCell
@@ -37,17 +37,17 @@ class SelectState(
     val onSelectChange: (Updater<js.objects.ReadonlyRecord<String, Boolean>>) -> Unit,
 ) {
     fun clear() {
-        onSelectChange(jso())
+        onSelectChange(unsafeJso())
     }
 }
 
 fun useRowSelectionState(): SelectState {
-    val (rowSelect, setRowSelect) = useState<Updater<RowSelectionState>>(jso())
+    val (rowSelect, setRowSelect) = useState<Updater<RowSelectionState>>(unsafeJso())
     return SelectState(rowSelect, setRowSelect.invokeFn)
 }
 
 fun <T : Any> selectColumnDef(): ColumnDef<T, String?> {
-    return jso {
+    return unsafeJso {
         id = "select"
         header = StringOrTemplateHeader(columnDefHeader { context ->
             Checkbox {
@@ -77,7 +77,7 @@ fun <T : Any> selectColumnDef(): ColumnDef<T, String?> {
 fun <Data : Any> TableOptions<Data>.setState(
     rowSelection: Updater<RowSelectionState>
 ): TableOptions<Data> {
-    asDynamic()["state"] = jso {
+    asDynamic()["state"] = unsafeJso {
         this.rowSelection = rowSelection
     }
     return this

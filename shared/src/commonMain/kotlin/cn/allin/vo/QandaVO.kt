@@ -3,13 +3,15 @@ package cn.allin.vo
 import arrow.core.Either
 import arrow.core.raise.either
 import arrow.core.raise.ensure
-import cn.allin.VoFieldName
 import cn.allin.VoValidatorMessage
+import cn.allin.answer
+import cn.allin.question
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 /**
  * 问答
+ *
  * @param question 问题
  * @param answer 回答
  * @param createTime 创建时间
@@ -27,11 +29,11 @@ data class QandaVO(
         fun valid(vo: QandaVO): Either<VoValidatorMessage, QandaVO> = either {
 
             ensure(vo.question.isNotEmpty()) {
-                VoValidatorMessage(VoFieldName.QandaVO_question, VoValidatorMessage.CodeNotNull, "问题")
+                VoValidatorMessage(question, VoValidatorMessage.CodeNotNull)
             }
 
             ensure(vo.answer.isNotEmpty()) {
-                VoValidatorMessage(VoFieldName.QandaVO_answer, VoValidatorMessage.CodeNotNull, "回答")
+                VoValidatorMessage(answer, VoValidatorMessage.CodeNotNull)
             }
             vo
         }

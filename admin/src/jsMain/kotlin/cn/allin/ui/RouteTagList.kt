@@ -1,8 +1,10 @@
 package cn.allin.ui
 
-import cn.allin.VoFieldName
 import cn.allin.api.ApiQandaTag
+import cn.allin.createTime
+import cn.allin.description
 import cn.allin.net.useQuery
+import cn.allin.tagName
 import cn.allin.utils.DATE_TIME_DEFAULT_FORMAT
 import cn.allin.utils.columnDefCell
 import cn.allin.utils.useCoroutineScope
@@ -10,7 +12,7 @@ import cn.allin.utils.useInject
 import cn.allin.vo.PageVO
 import cn.allin.vo.QaTagVO
 import js.array.ReadonlyArray
-import js.objects.jso
+import js.objects.unsafeJso
 import kotlinx.coroutines.launch
 import kotlinx.datetime.format
 import mui.material.IconButton
@@ -34,36 +36,36 @@ private fun tagListColumnDef(
     onEdit: (QaTagVO) -> Unit,
     onDelete: (QaTagVO) -> Unit,
 ): ReadonlyArray<ColumnDef<QaTagVO, String?>> = arrayOf(
-    jso {
+    unsafeJso {
         id = "id"
         header = StringOrTemplateHeader(id)
         accessorFn = { tag, _ ->
             tag.id.toString()
         }
     },
-    jso {
-        id = VoFieldName.QaTagVO_tagName
-        header = StringOrTemplateHeader("标签名")
+    unsafeJso {
+        id = QaTagVO.tagName.name
+        header = StringOrTemplateHeader(QaTagVO.tagName.display)
         accessorFn = { tag, _ ->
             tag.tagName
         }
     },
-    jso {
-        id = VoFieldName.QaTagVO_description
-        header = StringOrTemplateHeader("介绍")
+    unsafeJso {
+        id = QaTagVO.description.name
+        header = StringOrTemplateHeader(QaTagVO.description.display)
         accessorFn = { tag, _ ->
             tag.description
         }
     },
-    jso {
-        id = VoFieldName.QaTagVO_createTime
-        header = StringOrTemplateHeader("创建时间")
+    unsafeJso {
+        id = QaTagVO.createTime.name
+        header = StringOrTemplateHeader(QaTagVO.createTime.display)
         accessorFn = { tag, _ ->
             tag.createTime?.format(DATE_TIME_DEFAULT_FORMAT)
         }
     },
 
-    jso {
+    unsafeJso {
         id = "操作"
         header = StringOrTemplateHeader(id)
         cell = columnDefCell { cellContext ->

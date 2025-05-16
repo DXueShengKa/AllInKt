@@ -6,7 +6,6 @@ pluginManagement {
     includeBuild("buildPlugin")
     repositories {
         google()
-        mavenLocal()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -15,7 +14,6 @@ pluginManagement {
 dependencyResolutionManagement {
     repositories {
         google()
-        mavenLocal()
         mavenCentral()
     }
 }

@@ -60,7 +60,8 @@ fun rememberFileManagerState(
     onItemClick: (Int) -> Unit,
     onDelete: (Int) -> Unit,
     onDown: (Int) -> Unit,
-    getDesc: suspend (Int) -> FileManagerDesc?
+    getDesc: suspend (Int) -> FileManagerDesc?,
+    onNewDir: (String) -> Unit,
 ): FileManagerState {
 
     val bottomSheetState = rememberStandardBottomSheetState(
@@ -79,6 +80,7 @@ fun rememberFileManagerState(
             onDelete,
             onDown,
             getDesc,
+            onNewDir,
         )
     }
 }
@@ -89,13 +91,13 @@ fun rememberFileManagerState(
 fun FileHomeScreen(
     fileManagerState: FileManagerState,
 ) {
-
     BottomSheetScaffold(
         scaffoldState = fileManagerState.scaffoldState,
         topBar = {
             FileTopBar(fileManagerState)
         },
         sheetTonalElevation = 1.dp,
+        sheetDragHandle = null,
         sheetContent = {
             when (fileManagerState.sheetType) {
                 FileManagerState.SHEET_TYPE_OPTIONS -> {
@@ -110,7 +112,11 @@ fun FileHomeScreen(
                 }
 
                 FileManagerState.SHEET_TYPE_NEW_ADD -> {
-                    FileManagerNewAdd()
+                    FileManagerNewAdd(state = fileManagerState)
+                }
+
+                FileManagerState.SHEET_TYPE_NEW_DIR -> {
+                    FileManagerNewDir(fileManagerState.closeSheet,fileManagerState.onNewDir)
                 }
 
                 FileManagerState.SHEET_TYPE_MOVE -> {
@@ -119,7 +125,7 @@ fun FileHomeScreen(
 
                 FileManagerState.SHEET_TYPE_RENAME -> {
                     fileManagerState.selectItem?.also {
-                        FileManagerRename(it)
+                        FileManagerRename(it,fileManagerState.closeSheet){}
                     }
                 }
 
@@ -129,12 +135,11 @@ fun FileHomeScreen(
                     }
                 }
 
-
             }
             Spacer(Modifier.height(16.dp))
         }
     ) { innerPadding ->
-        Box {
+        Box(Modifier.padding(innerPadding)) {
             FileManagerList(
                 Modifier.fillMaxSize(),
                 innerPadding,
@@ -145,7 +150,9 @@ fun FileHomeScreen(
 
             FloatingActionButton(
                 onClick = fileManagerState::openAdd,
-                modifier = Modifier.align(Alignment.BottomEnd)
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 30.dp, bottom = 30.dp),
             ) {
                 Icon(MainIcons.Add, contentDescription = null)
             }

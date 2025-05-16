@@ -3,9 +3,16 @@ package cn.allin.service
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import cn.allin.model.QaTagEntity
+import cn.allin.model.by
 import cn.allin.repository.QandaTagRepository
+import cn.allin.utils.toEntity
+import cn.allin.utils.toPageVO
+import cn.allin.utils.toQaTagVO
 import cn.allin.vo.PageVO
 import cn.allin.vo.QaTagVO
+import org.babyfish.jimmer.sql.ast.mutation.SaveMode
+import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.stereotype.Service
 
 @Service
@@ -13,13 +20,16 @@ class QandaTagService(
     private val qandaTagRepository: QandaTagRepository,
 ) {
 
-
-    fun findTagPage(index: Int?, size: Int?): PageVO<QaTagVO> {
-        return qandaTagRepository.findTagPage(index ?: 0, size ?: 10)
+    fun findTagPage(index: Int, size: Int): PageVO<QaTagVO> {
+        return qandaTagRepository.findAll(pageIndex = index, pageSize = size){
+            asc(QaTagEntity::id)
+        }.toPageVO {
+            it.toQaTagVO()
+        }
     }
 
     fun addTag(tag: QaTagVO) {
-        qandaTagRepository.addTag(tag)
+        qandaTagRepository.save(tag.toEntity(), SaveMode.INSERT_ONLY)
     }
 
 
@@ -33,16 +43,16 @@ class QandaTagService(
     }
 
     fun findAllTag(): List<QaTagVO> {
-        return qandaTagRepository.findAllTag().map {
-            QaTagVO(it.id,it.tagName)
+        return qandaTagRepository.findAll(newFetcher(QaTagEntity::class).by { tagName() }).map {
+            QaTagVO(it.id, it.tagName)
         }
     }
 
     fun getTag(id: Int): QaTagVO {
-        return qandaTagRepository.findTag(id)
+        return qandaTagRepository.findById(id).get().toQaTagVO()
     }
 
     fun update(tag: QaTagVO) {
-        qandaTagRepository.update(tag)
+        qandaTagRepository.save(tag.toEntity(), SaveMode.UPDATE_ONLY)
     }
 }

@@ -4,6 +4,7 @@ import arrow.core.serialization.ArrowModule
 import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.protobuf.ProtoBuf
 
 /**
@@ -37,11 +38,15 @@ object ServerParams {
 
 val AllJson = Json {
     ignoreUnknownKeys = true
-    serializersModule = ArrowModule
+    serializersModule = SerializersModule {
+        include(ArrowModule)
+    }
 }
 
 @OptIn(ExperimentalSerializationApi::class)
 val AllProtoBuf: BinaryFormat = ProtoBuf {
-    serializersModule = ArrowModule
+    serializersModule = SerializersModule {
+        include(ArrowModule)
+    }
 }
 

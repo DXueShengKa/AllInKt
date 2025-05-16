@@ -29,7 +29,7 @@ class QandaTagController(
         @RequestParam(ServerParams.PAGE_INDEX) pageIndex: Int?,
         @RequestParam(ServerParams.PAGE_SIZE) pageSize: Int?
     ): PageVO<QaTagVO> {
-        return qandaTagService.findTagPage(pageIndex, pageSize)
+        return qandaTagService.findTagPage(pageIndex?:0, pageSize?:10)
     }
 
     @GetMapping(ApiQandaTag.ALL)

@@ -15,7 +15,7 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
-import js.objects.jso
+import js.objects.unsafeJso
 import js.typedarrays.Uint8Array
 import js.typedarrays.toByteArray
 import toolpad.core.UserSession
@@ -98,7 +98,7 @@ suspend fun Req.deleteAuth() {
 suspend fun ApiUser.userSession(): UserSession? {
     val user: UserVO? = get()
     return if (user != null) {
-        jso {
+        unsafeJso {
             id = user.id.toString()
             name = user.name
             email = user.email
