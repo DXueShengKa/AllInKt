@@ -1,6 +1,5 @@
 package cn.allin.repository
 
-import cn.allin.config.UserRole
 import cn.allin.model.UserEntity
 import cn.allin.model.birthday
 import cn.allin.model.email
@@ -9,11 +8,11 @@ import cn.allin.model.gender
 import cn.allin.model.id
 import cn.allin.model.name
 import cn.allin.model.password
+import cn.allin.utils.toEntity
 import cn.allin.utils.toPageVO
 import cn.allin.utils.toUserVO
 import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
-import io.netty.channel.unix.NativeInetAddress.address
 import kotlinx.datetime.toJavaLocalDate
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.KSqlClient
@@ -42,17 +41,7 @@ class UserRepository(
     }
 
     fun add(userVO: UserVO) {
-        sqlClient.saveCommand(UserEntity {
-            birthday = userVO.birthday?.toJavaLocalDate()
-            name = userVO.name!!
-            password = userVO.password!!
-
-            userVO.role?.also {
-                role = UserRole.valueOf(it)
-            }
-            address = userVO.address
-            gender = userVO.gender
-        }, SaveMode.INSERT_ONLY).execute()
+        sqlClient.saveCommand(userVO.toEntity(), SaveMode.INSERT_ONLY).execute()
     }
 
     fun findRole(username: String): UserEntity? {
