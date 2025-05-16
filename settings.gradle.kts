@@ -3,10 +3,8 @@ rootProject.name = "AllInKt"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
-//    includeBuild("buildPlugin")
     repositories {
         google()
-        mavenLocal()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -15,24 +13,8 @@ pluginManagement {
 dependencyResolutionManagement {
     repositories {
         google()
-        mavenLocal()
         mavenCentral()
     }
 }
 
-include(
-    ":composeApp",
-//    ":server",
-//    ":shared",
-//    ":admin",
-//    ":kt-ai",
-//    ":ksp:annotation",
-//    ":ksp:server",
-//    ":ksp:shared",
-//    ":ksp:composeApp",
-//    ":client:net",
-//    ":client:data",
-//    ":client:ui",
-//    ":client:components",
-//    ":client:navigation-react",
-)
+include(":composeApp")
