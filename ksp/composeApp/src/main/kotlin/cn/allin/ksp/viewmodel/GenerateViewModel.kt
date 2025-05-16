@@ -11,6 +11,7 @@ import com.google.devtools.ksp.symbol.Nullability
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.ksp.writeTo
 
@@ -20,7 +21,7 @@ import com.squareup.kotlinpoet.ksp.writeTo
  */
 @OptIn(KspExperimental::class)
 fun generateViewModel(
-    moduleName:String,
+    moduleName: String,
     codeGenerator: CodeGenerator,
     resolver: Resolver,
     filePackageName: String
@@ -62,14 +63,14 @@ fun generateViewModel(
         .toList()
 
 
-    val property = PropertySpec.builder("${moduleName}KoinViewModel", ClassName("org.koin.core.module", "Module"))
+    val property = PropertySpec.builder("${moduleName}KoinViewModel", ClassName("org.koin.core.module", "Module"), KModifier.INTERNAL)
         .addKdoc("ksp生成ViewModel的koin配置")
         .initializer(moduleCode.endControlFlow().build())
         .build()
 
     FileSpec.builder(filePackageName, fileName)
         .addProperty(property)
-        .addImport("org.koin.core.module.dsl","viewModel")
+        .addImport("org.koin.core.module.dsl", "viewModel")
         .build()
         .writeTo(codeGenerator, true, originatingKSFiles)
 }

@@ -109,6 +109,9 @@ private fun KotlinHierarchyBuilder.groupNative() {
 
             group("ios") {
                 withIos()
+                withIosX64()
+                withIosArm64()
+                withIosSimulatorArm64()
             }
 
             group("macos") {

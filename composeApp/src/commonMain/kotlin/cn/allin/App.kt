@@ -40,15 +40,14 @@ import org.koin.compose.LocalKoinScope
 import org.koin.compose.application.rememberKoinApplication
 import org.koin.core.annotation.KoinInternalApi
 import org.koin.dsl.KoinAppDeclaration
-import org.koin.dsl.koinApplication
 
-val LocalNavController = staticCompositionLocalOf<NavController> { error("未初始化导航") }
+internal val LocalNavController = staticCompositionLocalOf<NavController> { error("未初始化导航") }
 
-const val RouteApp = "MainApp"
+internal const val RouteApp = "MainApp"
 
 @NavRoute(routeString = RouteApp)
 @Composable
-fun App() {
+internal fun App() {
     val nav = LocalNavController.current
     LazyVerticalGrid(
         columns = GridCells.Adaptive(100.dp),
@@ -75,12 +74,12 @@ private fun AppItem(img: ImageVector, text: String, onItemClicked: () -> Unit) {
 
 @OptIn(KoinInternalApi::class)
 @Composable
-fun MainApp(
+internal fun MainApp(
     application: KoinAppDeclaration,
     builder: NavGraphBuilder.() -> Unit
 ) {
     val navController = rememberNavController()
-    val koin = rememberKoinApplication(koinApplication(application))
+    val koin = rememberKoinApplication(application)
     CompositionLocalProvider(
         LocalNavController provides navController,
         LocalKoinApplication provides koin,
