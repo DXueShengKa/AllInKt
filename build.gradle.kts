@@ -7,6 +7,4 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.kotlin.spring) apply false
     alias(libs.plugins.kotlin.serialization) apply false
-    alias(libs.plugins.spring) apply false
-    alias(libs.plugins.srpingDependencyManagement) apply false
 }

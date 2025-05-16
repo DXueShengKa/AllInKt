@@ -20,9 +20,7 @@ dependencyResolutionManagement {
 
 include(
     ":composeApp",
-//    ":server",
     ":shared",
-//    ":admin",
 //    ":kt-ai",
     ":ksp:annotation",
 //    ":ksp:server",
@@ -32,5 +30,4 @@ include(
     ":client:data",
     ":client:ui",
     ":client:components",
-//    ":client:navigation-react",
 )
