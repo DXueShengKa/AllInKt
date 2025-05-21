@@ -2,7 +2,7 @@
 android-compileSdk = "35"
 android-minSdk = "26"
 android-targetSdk = "35"
-android-gradle = "8.9.2"
+android-gradle = "8.9.3"
 
 #https://github.com/JetBrains/kotlin
 kotlin = "2.1.21"
@@ -36,16 +36,16 @@ kotlinpoet = "2.1.0"
 #https://github.com/Kotlin/dokka
 dokka = "2.0.0"
 #https://github.com/JetBrains/compose-multiplatform
-jetbrains-compose = "1.8.0"
-jetbrains-md3Adaptive = "1.1.0"
+jetbrains-compose = "1.8.1"
+jetbrains-md3Adaptive = "1.1.1"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/lifecycle/lifecycle-viewmodel-compose/
-jetbrains-lifecycle = "2.9.0-beta01"
+jetbrains-lifecycle = "2.9.0"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/navigation/navigation-common/
-jetbrains-navigation = "2.9.0-beta01"
+jetbrains-navigation = "2.9.0-beta02"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
 jetbrains-core-bundle = "1.0.1"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/savedstate/savedstate-compose/
-jetbrains-savedstate = "1.3.0-beta01"
+jetbrains-savedstate = "1.3.0"
 #https://developer.android.google.cn/jetpack/androidx/releases/datastore?hl=zh-cn
 datastore = "1.1.6"
 
@@ -56,9 +56,9 @@ ktor = "3.1.3"
 #https://github.com/coil-kt/coil
 coil3 = "3.2.0"
 #https://github.com/InsertKoinIO/koin
-koin = "4.1.0-Beta11"
+koin = "4.1.0-RC1"
 #https://github.com/InsertKoinIO/koin-annotations
-koin-annotations = "2.0.0"
+koin-annotations = "2.0.1-RC1"
 #https://github.com/oleksandrbalan/lazytable
 lazytable = "1.10.0"
 #https://github.com/spring-projects/spring-boot
@@ -88,10 +88,10 @@ openai = "4.0.1"
 
 junit = "4.13.2"
 #https://jsoup.org/
-jsoup = "1.19.1"
+jsoup = "1.20.1"
 jspecify = "1.0.0"
 #https://github.com/arrow-kt/arrow
-arrow = "2.1.0"
+arrow = "2.1.2"
 #https://github.com/Reedyuk/blue-falcon
 bluefalcon = "2.2.5"
 #https://github.com/apache/poi
@@ -148,8 +148,8 @@ ksp-aa = { group = "com.google.devtools.ksp", name = "symbol-processing-aa", ver
 dokka-markdown = { group = "org.jetbrains.dokka", name = "analysis-markdown", version.ref = "dokka" }
 dokka-core = { group = "org.jetbrains.dokka", name = "dokka-core", version.ref = "dokka" }
 
-jetbrains-adaptive-navigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "jetbrains-md3Adaptive" }
-jetbrains-adaptive-suite = { group = "org.jetbrains.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "jetbrains-md3Adaptive" }
+jetbrains-md3adaptive-navigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "jetbrains-md3Adaptive" }
+jetbrains-md3adaptive-navigation-suite = { group = "org.jetbrains.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "jetbrains-compose" }
 jetbrains-collection = { group = "org.jetbrains.compose.collection-internal", name = "collection", version.ref = "jetbrains-compose" }
 jetbrains-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "jetbrains-navigation" }
 jetbrains-navigation-runtime = { group = "org.jetbrains.androidx.navigation", name = "navigation-runtime", version.ref = "jetbrains-navigation" }
