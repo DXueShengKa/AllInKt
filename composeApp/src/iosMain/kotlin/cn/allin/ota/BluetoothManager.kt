@@ -113,8 +113,8 @@ internal class BluetoothManager(
                 val s = StringBuilder()
                 s.append('\n')
                 val uuids = advertisementData[CBAdvertisementDataServiceUUIDsKey]
-                if (uuids != null) {
-                    (uuids as List<CBUUID>).forEach {
+                if (uuids is List<*>) {
+                    uuids.forEach {
                         s.append("uuid=$it\n")
                     }
                 }

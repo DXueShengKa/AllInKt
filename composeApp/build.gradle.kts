@@ -76,7 +76,7 @@ kotlin {
 
         commonMain.dependencies {
             implementation(libs.jetbrains.navigation.compose)
-            implementation(libs.jetbrains.adaptive.navigation)
+            implementation(libs.jetbrains.md3adaptive.navigation)
             implementation(libs.koin.kmp.compose.viewmodel)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
