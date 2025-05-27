@@ -58,7 +58,6 @@ fun TaskContainer.kotlinCompilerOptions() {
         compilerOptions {
             if (this is KotlinJvmCompilerOptions) {
                 jvmTarget.set(JvmTarget.JVM_21)
-                freeCompilerArgs.add("-Xjvm-default=all")
             }
 
             optIn.addAll(
