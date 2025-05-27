@@ -7,7 +7,7 @@ android-gradle = "8.9.3"
 #https://github.com/JetBrains/kotlin
 kotlin = "2.1.21"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "2025.5.6"
+kotlin-wrappers = "2025.5.8"
 #https://ant-design.antgroup.com/changelog-cn
 antd = "5.23.2"
 #https://github.com/iamkun/dayjs/
@@ -47,7 +47,7 @@ jetbrains-core-bundle = "1.0.1"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/savedstate/savedstate-compose/
 jetbrains-savedstate = "1.3.0"
 #https://developer.android.google.cn/jetpack/androidx/releases/datastore?hl=zh-cn
-datastore = "1.1.6"
+datastore = "1.1.7"
 
 #https://github.com/square/okhttp
 okhttp3 = "4.12.0"
@@ -62,7 +62,7 @@ koin-annotations = "2.0.1-RC1"
 #https://github.com/oleksandrbalan/lazytable
 lazytable = "1.10.0"
 #https://github.com/spring-projects/spring-boot
-spring-boot = "3.4.5"
+spring-boot = "3.5.0"
 #https://docs.spring.io/dependency-management-plugin/docs/current/reference/html/#introduction
 spring-dependencyManagement = "1.1.7"
 
