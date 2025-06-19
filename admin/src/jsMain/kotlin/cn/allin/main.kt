@@ -13,6 +13,7 @@ import org.koin.ksp.generated.module
 import react.FC
 import react.create
 import react.dom.client.createRoot
+import web.dom.ElementId
 import web.dom.document
 
 
@@ -25,7 +26,7 @@ fun main() {
         MainFC()
     }
 
-    createRoot(document.getElementById("root")!!)
+    createRoot(document.getElementById(ElementId("root"))!!)
         .render(reactElement)
 }
 

@@ -31,10 +31,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
@@ -53,12 +56,18 @@ import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.MeasurePolicy
+import androidx.compose.ui.text.ParagraphStyle
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import cn.allin.utils.ChineseDate
 import cn.allin.utils.TimeTextStyle
 import cn.allin.utils.getDisplayName
 import cn.allin.utils.lastDayOfMonth
@@ -310,48 +319,59 @@ private fun DatePickerLayout(
 
                 HorizontalDivider(Modifier.padding(vertical = 6.dp))
 
-                da.array.forEach {
-                    key(it) {
-                        if (it.day.isNotEmpty() && it.day == state.selectDay) Text(
-                            it.day,
-                            Modifier
-                                .size(BoxSize)
-                                .padding(2.dp)
-                                .background(colors.selectColor, CircleShape)
-                                .wrapContentSize(),
-                            colors.onSelectColor
-                        ) else when (it.dayType) {
-                            DayTypeDefault -> {
-                                Text(
-                                    it.day,
-                                    Modifier
-                                        .size(BoxSize)
-                                        .wrapContentSize()
-                                )
-                            }
+                val typography = MaterialTheme.typography
 
-                            DayTypePre -> {
-                                Text(
-                                    it.day,
-                                    Modifier
-                                        .size(BoxSize)
-                                        .padding(2.dp)
-                                        .background(colors.preColor, CircleShape)
-                                        .wrapContentSize()
-                                )
+                CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.merge(textAlign = TextAlign.Center)) {
+                    da.array.forEach {
+                        key(it) {
+                            val day = remember(it.day, it.chineseDay) {
+                                buildAnnotatedString {
+                                    append(it.day)
+                                    append('\n')
+                                    withStyle(typography.labelSmall.toSpanStyle()) {
+                                        append(it.chineseDay)
+                                    }
+                                }
                             }
+                            if (it.day.isNotEmpty() && it.day == state.selectDay) Text(
+                                day,
+                                Modifier
+                                    .size(BoxSize)
+                                    .background(colors.selectColor, CircleShape)
+                                    .wrapContentSize(),
+                                colors.onSelectColor
+                            ) else when (it.dayType) {
+                                DayTypeDefault -> {
+                                    Text(
+                                        day,
+                                        Modifier
+                                            .size(BoxSize)
+                                            .wrapContentSize()
+                                    )
+                                }
 
-                            DayTypeDisable -> {
-                                Text(
-                                    it.day,
-                                    Modifier
-                                        .size(BoxSize)
-                                        .wrapContentSize(),
-                                    colors.disableColor
-                                )
+                                DayTypePre -> {
+                                    Text(
+                                        day,
+                                        Modifier
+                                            .size(BoxSize)
+                                            .background(colors.preColor, CircleShape)
+                                            .wrapContentSize()
+                                    )
+                                }
+
+                                DayTypeDisable -> {
+                                    Text(
+                                        day,
+                                        Modifier
+                                            .size(BoxSize)
+                                            .wrapContentSize(),
+                                        colors.disableColor
+                                    )
+                                }
+
+                                else -> Spacer(Modifier.size(BoxSize))
                             }
-
-                            else -> Spacer(Modifier.size(BoxSize))
                         }
                     }
                 }
@@ -432,7 +452,7 @@ private fun PickerWheel(
 /**
  * 单个格子的大小
  */
-private val BoxSize = 40.dp
+private val BoxSize = 44.dp
 
 /**
  * 日期之间的垂直间隔
@@ -599,13 +619,14 @@ class DatePickerState(
     @Immutable
     internal class Day(
         var day: String,
+        var chineseDay: String,
         var dayType: DatePickerDayType.Type
     )
 
     /**
      * 日期数组，1日之前和当月最后一天之后不显示
      */
-    private val _dayArray = Array(DayBoxCount) { Day("", DayTypeNull) }
+    private val _dayArray = Array(DayBoxCount) { Day("","", DayTypeNull) }
 
     /**
      * 日期位于ui上的矩形
@@ -688,6 +709,7 @@ class DatePickerState(
             }
 
             _dayArray[i].day = day.toString()
+            _dayArray[i].chineseDay = ChineseDate(LocalDate(year, month, day)).run { getLunarFestivals()?:getChineseDay() }
 
 
             _dayArray[i].dayType = if (

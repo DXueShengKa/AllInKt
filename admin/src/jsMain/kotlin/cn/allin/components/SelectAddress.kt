@@ -15,6 +15,7 @@ import react.Props
 import react.useEffect
 import react.useState
 import web.cssom.px
+import web.dom.ElementId
 
 external interface SelectAddressProps : Props {
     var onValue: (String) -> Unit
@@ -99,8 +100,8 @@ private external interface SelectProps : Props {
 private val ProvinceSelect = FC<SelectProps> { p ->
     FormControl {
         InputLabel {
-            id = p.id
-            htmlFor = "select"
+            id = ElementId(p.id)
+            htmlFor = "select".asDynamic()
             +p.id
         }
 
@@ -111,7 +112,7 @@ private val ProvinceSelect = FC<SelectProps> { p ->
                 minWidth = 200.px
             }
 
-            id = p.id
+            id = p.id.asDynamic()
             label = reactNode(p.id)
 
             value = p.value?.name ?: ""

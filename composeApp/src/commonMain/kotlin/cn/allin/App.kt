@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.icons.sharp.CalendarViewWeek
 import androidx.compose.material.icons.sharp.FileDownload
 import androidx.compose.material.icons.sharp.FileOpen
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +34,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import cn.allin.ksp.navigation.NavRoute
 import cn.allin.theme.MainIcons
+import cn.allin.ui.RouteCalendar
 import cn.allin.ui.fileMamager.RouteFileManager
 import cn.allin.ui.fileMamager.RouteTransferManager
 import eu.wewox.lazytable.LazyTable
@@ -61,6 +65,9 @@ internal fun App() {
         item {
             AppItem(MainIcons.FileDownload, "传输管理") { nav.navigate(RouteTransferManager) }
         }
+        item {
+            AppItem(MainIcons.CalendarViewWeek, "日历") { nav.navigate(RouteCalendar) }
+        }
     }
 }
 
@@ -83,7 +90,8 @@ internal fun MainApp(
     CompositionLocalProvider(
         LocalNavController provides navController,
         LocalKoinApplication provides koin,
-        LocalKoinScope provides koin.scopeRegistry.rootScope
+        LocalKoinScope provides koin.scopeRegistry.rootScope,
+        LocalContentColor provides MaterialTheme.colorScheme.onBackground
     ) {
         NavHost(
             navController = navController,

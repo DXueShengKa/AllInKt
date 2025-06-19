@@ -60,6 +60,7 @@ import toolpad.core.show
 import toolpad.core.useDialogs
 import toolpad.core.useNotifications
 import web.cssom.px
+import web.dom.ElementId
 import web.file.File
 
 private fun qaListColumnDef(
@@ -318,8 +319,8 @@ private val FilterTag: FC<FilterTagProps> = FC { props ->
 
     FormControl {
         InputLabel {
-            id = ""
-            htmlFor = "select"
+            id = ElementId("")
+            htmlFor = "select".asDynamic()
             +"过滤标签"
         }
         Select {
