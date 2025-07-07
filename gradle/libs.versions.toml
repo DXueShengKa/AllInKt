@@ -1,13 +1,13 @@
 [versions]
-android-compileSdk = "35"
+android-compileSdk = "36"
 android-minSdk = "26"
-android-targetSdk = "35"
-android-gradle = "8.9.3"
+android-targetSdk = "36"
+android-gradle = "8.10.1"
 
 #https://github.com/JetBrains/kotlin
-kotlin = "2.1.21"
+kotlin = "2.2.0"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "2025.6.5"
+kotlin-wrappers = "2025.7.1"
 #https://ant-design.antgroup.com/changelog-cn
 antd = "5.23.2"
 #https://github.com/iamkun/dayjs/
@@ -24,15 +24,15 @@ emotionStyled = "11.14.0"
 #https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.10.2"
 #https://github.com/Kotlin/kotlinx.serialization
-kotlinx-serialization = "1.8.1"
+kotlinx-serialization = "1.9.0"
 #https://github.com/Kotlin/kotlinx-datetime
-kotlinx-datetime = "0.6.2"
+kotlinx-datetime = "0.7.0"
 #https://github.com/Kotlin/kotlinx-io
-kotlinx-io = "0.7.0"
+kotlinx-io = "0.8.0"
 #https://github.com/google/ksp
-ksp = "2.1.21-2.0.2"
+ksp = "2.2.0-2.0.2"
 #https://github.com/square/kotlinpoet
-kotlinpoet = "2.1.0"
+kotlinpoet = "2.2.0"
 #https://github.com/Kotlin/dokka
 dokka = "2.0.0"
 #https://github.com/JetBrains/compose-multiplatform
@@ -54,7 +54,7 @@ jetbrains-compose-hotReload = "1.0.0-alpha11"
 #https://github.com/square/okhttp
 okhttp3 = "4.12.0"
 #https://github.com/ktorio/ktor
-ktor = "3.2.0"
+ktor = "3.2.1"
 #https://github.com/coil-kt/coil
 coil3 = "3.2.0"
 #https://github.com/InsertKoinIO/koin

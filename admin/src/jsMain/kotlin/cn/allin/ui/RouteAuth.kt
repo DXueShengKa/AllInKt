@@ -26,6 +26,7 @@ import toolpad.core.SignInPage
 import toolpad.core.slotProps
 import web.form.FormData
 import web.html.InputType
+import web.html.text
 
 const val RouteAuth = "Auth"
 

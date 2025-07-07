@@ -62,7 +62,8 @@ fun TaskContainer.kotlinCompilerOptions() {
 
             optIn.addAll(
                 "kotlin.RequiresOptIn",
-                "kotlin.js.ExperimentalJsStatic"
+                "kotlin.js.ExperimentalJsStatic",
+                "kotlin.time.ExperimentalTime"
             )
 
             freeCompilerArgs.addAll(

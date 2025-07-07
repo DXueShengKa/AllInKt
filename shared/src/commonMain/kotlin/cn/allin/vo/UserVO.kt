@@ -10,7 +10,6 @@ import cn.allin.birthday
 import cn.allin.id
 import cn.allin.name
 import cn.allin.password
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -18,6 +17,7 @@ import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsStatic
 import kotlin.js.JsStatic
 import kotlin.jvm.JvmStatic
+import kotlin.time.Clock
 
 /**
  * 系统用户

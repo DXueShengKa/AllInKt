@@ -1,12 +1,13 @@
 package cn.allin.utils
 
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
+import kotlin.time.Instant
 
 const val DATE_TIME_DEFAULT_FORMAT_STR = "YYYY-MM-DD HH:mm:ss"
 
@@ -17,7 +18,7 @@ val DATE_TIME_DEFAULT_FORMAT = LocalDateTime.Format {
     char('-')
     monthNumber()
     char('-')
-    dayOfMonth()
+    day(padding = Padding.ZERO)
     char(' ')
     hour()
     char(':')

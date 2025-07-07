@@ -3,6 +3,8 @@ package cn.allin.utils
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
+import kotlinx.datetime.isoDayNumber
+import kotlinx.datetime.number
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import java.time.format.TextStyle
@@ -12,16 +14,16 @@ import java.util.*
 actual typealias TimeTextStyle = TextStyle
 
 actual fun Month.length(isLeap: Boolean): Int {
-    return length(isLeap)
+    return java.time.Month.of(number).length(isLeap)
 }
 
 actual fun Month.getDisplayName(textStyle: TimeTextStyle): String {
-    return getDisplayName(textStyle, Locale.getDefault())
+    return java.time.Month.of(number).getDisplayName(textStyle, Locale.getDefault())
 }
 
 
 actual fun DayOfWeek.getDisplayName(textStyle: TimeTextStyle): String {
-    return getDisplayName(textStyle, Locale.getDefault())
+    return java.time.DayOfWeek.of(isoDayNumber).getDisplayName(textStyle, Locale.getDefault())
 }
 
 

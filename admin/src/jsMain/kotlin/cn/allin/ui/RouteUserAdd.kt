@@ -46,6 +46,8 @@ import web.html.ButtonType
 import web.html.HTMLElement
 import web.html.HTMLInputElement
 import web.html.InputType
+import web.html.password
+import web.html.submit
 
 
 private val AddUserFC = FC {

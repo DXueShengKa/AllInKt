@@ -1,6 +1,7 @@
 package cn.allin.utils
 
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.number
 
 private val DAY_NAME = arrayOf("一", "二", "三", "四", "五", "六", "七", "八", "九", "十")
 private val MONTH_NAME = arrayOf("一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二")
@@ -95,11 +96,11 @@ class ChineseDate {
     constructor(localDate: LocalDate) {
         // 公历
         gregorianYear = localDate.year
-        gregorianMonthBase1 = localDate.monthNumber
-        gregorianDay = localDate.dayOfMonth
+        gregorianMonthBase1 = localDate.month.number
+        gregorianDay = localDate.day
 
         // 求出和1900年1月31日相差的天数
-        var offset = (localDate.toEpochDays() - Lunar.BASE_DAY)
+        var offset = (localDate.toEpochDays().toInt() - Lunar.BASE_DAY)
 
         // 计算农历年份
         // 用offset减去每农历年的天数，计算当天是农历第几天，offset是当年的第几天

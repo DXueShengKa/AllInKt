@@ -53,9 +53,9 @@ class QandaController(
 
     @PostMapping
     override suspend fun add(
-        @Validated @RequestBody qandaVO: QandaVO,
+        @Validated @RequestBody qanda: QandaVO,
     ): Int {
-        return qandaService.add(qandaVO)
+        return qandaService.add(qanda)
     }
 
     @PutMapping

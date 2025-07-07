@@ -1,6 +1,7 @@
 package cn.allin.utils
 
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.number
 import kotlin.jvm.JvmStatic
 
 /**
@@ -11,7 +12,7 @@ private const val BASE_YEAR = 1900
 /**
  * 1900-01-31，农历正月初一
  */
-private val BASE_DAY = LocalDate(BASE_YEAR, 1, 31).toEpochDays()
+private val BASE_DAY = LocalDate(BASE_YEAR, 1, 31).toEpochDays().toInt()
 
 /**
  * 此表来自：[https://github.com/jjonline/calendar.js/blob/master/calendar.js](https://github.com/jjonline/calendar.js/blob/master/calendar.js)
@@ -127,7 +128,8 @@ object Lunar {
      */
     @JvmStatic
     fun monthDays(y: Int, m: Int): Int {
-        return if (getCode(y) and (0x10000 shr m).toLong() == 0L) 29 else 30
+        val _0x1: Long = 0x10000
+        return if (getCode(y) and _0x1 shr m == 0L) 29 else 30
     }
 
 
@@ -249,17 +251,19 @@ object Lunar {
         if (n < 1 || n > 24) {
             return -1
         }
-        val _table = S_TERM_INFO[y - 1900]
-        val _info = arrayOfNulls<Int>(6)
-        for (i in 0..5) {
-            _info[i] = _table.substring(i * 5, 5 * (i + 1)).toInt(16)
+        val _table: String = S_TERM_INFO[y - 1900]
+
+        val w = 5
+        val _info = IntArray(6){ i ->
+            _table.substring(i * w, w * (i + 1)).toInt(16)
         }
+        val _4 = 4
         val _calday = arrayOfNulls<String>(24)
         for (i in 0..5) {
-            _calday[4 * i] = _info[i].toString().substring(0, 1)
-            _calday[4 * i + 1] = _info[i].toString().substring(1, 3)
-            _calday[4 * i + 2] = _info[i].toString().substring(3, 4)
-            _calday[4 * i + 3] = _info[i].toString().substring(4, 6)
+            _calday[_4 * i] = _info[i].toString().substring(0, 1)
+            _calday[_4 * i + 1] = _info[i].toString().substring(1, 3)
+            _calday[_4 * i + 2] = _info[i].toString().substring(3, 4)
+            _calday[_4 * i + 3] = _info[i].toString().substring(4, 6)
         }
 
         return (_calday[n - 1])!!.toInt()
@@ -272,7 +276,7 @@ object Lunar {
      */
     @JvmStatic
     fun solarGetTerm(localDate: LocalDate): String {
-        return getTermInternal(localDate.year, localDate.monthNumber, localDate.dayOfMonth)
+        return getTermInternal(localDate.year, localDate.month.number, localDate.day)
     }
 
     /**
