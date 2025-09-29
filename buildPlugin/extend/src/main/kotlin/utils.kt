@@ -15,8 +15,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 
 val isMacOs = System.getProperty("os.name").startsWith("Mac OS")
-val isMacWindow = System.getProperty("os.name").startsWith("Window")
-val isMacLinux = System.getProperty("os.name").startsWith("Linux")
+val isWindow = System.getProperty("os.name").startsWith("Window")
+val isLinux = System.getProperty("os.name").startsWith("Linux")
 
 
 fun DependencyHandler.kspAndroid(dependencyNotation: Any) {

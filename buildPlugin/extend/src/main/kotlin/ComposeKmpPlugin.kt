@@ -4,11 +4,12 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 
 /**
- * compose多平台配置，不含web
+ * compose多平台配置
  */
 class ComposeKmpPlugin : Plugin<Project> {
 
@@ -31,13 +32,18 @@ class ComposeKmpPlugin : Plugin<Project> {
     }
 
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    @OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
     private fun KotlinMultiplatformExtension.kmp() {
         applyHierarchyTemplate(hierarchyTemplate)
 
         androidTarget()
 
         jvm()
+
+        wasmJs {
+            browser()
+            binaries.library()
+        }
 
         if (isMacOs) {
             iosX64()

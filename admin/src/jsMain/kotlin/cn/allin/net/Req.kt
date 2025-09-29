@@ -19,6 +19,7 @@ import js.objects.unsafeJso
 import js.typedarrays.Uint8Array
 import js.typedarrays.toByteArray
 import toolpad.core.UserSession
+import web.blob.arrayBuffer
 import web.file.File
 
 

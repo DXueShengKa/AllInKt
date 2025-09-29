@@ -4,6 +4,10 @@ plugins {
 
 kotlin {
     jvm()
+    wasmJs {
+        browser()
+        binaries.library()
+    }
 
     val osName = System.getProperty("os.name")
     if (osName == "Mac OS X"){

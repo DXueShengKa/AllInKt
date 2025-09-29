@@ -1,8 +1,10 @@
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.compose.reload.ComposeHotRun
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -23,7 +25,16 @@ kotlin {
 
     androidTarget()
 
-    jvm("desktop")
+    jvm {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
+    }
+
+    wasmJs {
+        browser()
+        binaries.executable()
+    }
 
     if (isMacOS) listOf(
         iosX64(),
@@ -41,7 +52,6 @@ kotlin {
     }
 
     sourceSets {
-        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
@@ -72,7 +82,7 @@ kotlin {
 //            implementation(libs.koin.test)
         }
 
-        desktopMain.dependencies {
+        jvmMain.dependencies {
             implementation(libs.slf4j.simple)
             implementation(compose.desktop.currentOs)
             implementation(libs.jspecify)
@@ -138,13 +148,15 @@ compose.desktop {
     }
 }
 
-tasks.withType<ComposeHotRun>().configureEach {
-    mainClass = "cn.allin.MainKt"
+plugins.withType<NodeJsPlugin>{
+    the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec>()
+        .version = "22.18.0"
 }
 
 fun DependencyHandler.kspAll(dependencyNotation: Any) {
     add("kspAndroid", dependencyNotation)
-    add("kspDesktop", dependencyNotation)
+    add("kspJvm", dependencyNotation)
+    add("kspWasmJs", dependencyNotation)
     if (isMacOS){
         add("kspIosSimulatorArm64", dependencyNotation)
         add("kspIosArm64", dependencyNotation)

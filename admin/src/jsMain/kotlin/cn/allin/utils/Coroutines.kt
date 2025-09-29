@@ -1,6 +1,7 @@
 package cn.allin.utils
 
 import js.coroutines.internal.IsolatedCoroutineScope
+import js.internal.InternalApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.cancel
@@ -13,6 +14,7 @@ import react.useState
 import kotlin.reflect.KProperty
 
 
+@OptIn(InternalApi::class)
 fun useCoroutineScope(): CoroutineScope {
     val coroutineScope = useRefInit { IsolatedCoroutineScope() }
     useEffectWithCleanup(coroutineScope){
@@ -21,6 +23,7 @@ fun useCoroutineScope(): CoroutineScope {
     return coroutineScope
 }
 
+@OptIn(InternalApi::class)
 fun asyncFunction(block: suspend CoroutineScope.() -> Unit): () -> dynamic {
     return {
         IsolatedCoroutineScope().promise(
@@ -30,6 +33,7 @@ fun asyncFunction(block: suspend CoroutineScope.() -> Unit): () -> dynamic {
     }
 }
 
+@OptIn(InternalApi::class)
 fun <T> asyncFunction(block: suspend CoroutineScope.(T) -> Unit): (T) -> dynamic {
     return { t ->
         IsolatedCoroutineScope().promise(
@@ -40,6 +44,7 @@ fun <T> asyncFunction(block: suspend CoroutineScope.(T) -> Unit): (T) -> dynamic
     }
 }
 
+@OptIn(InternalApi::class)
 fun <T1,T2> asyncFunction(block: suspend CoroutineScope.(T1, T2) -> Unit): (T1, T2) -> dynamic {
     return { t1,t2 ->
         IsolatedCoroutineScope().promise(

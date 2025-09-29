@@ -56,6 +56,7 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.minus
+import kotlinx.datetime.number
 import kotlin.time.Clock
 
 
@@ -209,14 +210,14 @@ class DateWheelState(
 
     internal var coroutineScope: CoroutineScope? = null
 
-    private val currentDateArray = arrayOf(default.year, default.monthNumber, default.dayOfMonth)
+    private val currentDateArray = arrayOf(default.year, default.month.number, default.day)
 
     var currentDate: LocalDate
         get() = LocalDate(currentYear, currentMonth, currentDay)
         set(value) {
             currentDateArray[YEAR] = value.year
-            currentDateArray[MONTH] = value.monthNumber
-            currentDateArray[DAY] = value.dayOfMonth
+            currentDateArray[MONTH] = value.month.number
+            currentDateArray[DAY] = value.day
 
             coroutineScope.let {
                 it ?: throw NullPointerException("请在ui渲染后再设置当前选择的时间")
@@ -224,10 +225,10 @@ class DateWheelState(
                 yearSwipe.animateTo(yearArray.indexOf(currentDateArray[YEAR]))
 
                 delay(200)
-                monthSwipe.animateTo(monthArray.indexOf(value.monthNumber))
+                monthSwipe.animateTo(monthArray.indexOf(value.month.number))
 
                 delay(200)
-                daySwipe.animateTo(dayArray.indexOf(value.dayOfMonth))
+                daySwipe.animateTo(dayArray.indexOf(value.day))
             }
         }
 
@@ -252,11 +253,11 @@ class DateWheelState(
 
     private fun createMonthArray(year: Int): IntArray {
         if (start.year == end.year) {
-            var m = start.monthNumber
-            return IntArray(end.monthNumber - start.monthNumber + 1) { m++ }
+            var m = start.month.number
+            return IntArray(end.month.number - start.month.number + 1) { m++ }
         }
-        var m = if (year == start.year) start.monthNumber else 1
-        val size = if (year == end.year) end.monthNumber else 12
+        var m = if (year == start.year) start.month.number else 1
+        val size = if (year == end.year) end.month.number else 12
 
         return IntArray(size - m + 1) { m++ }
     }
@@ -270,8 +271,8 @@ class DateWheelState(
     internal var dayArrayUI by mutableStateOf(Array(0) { "" })
 
     private fun createDayArray(year: Int, month: Month): IntArray {
-        val size = if (end.year == year && end.month == month) end.dayOfMonth else month.length(isLeapYear(year))
-        var day = if (start.year == year && start.month == month) start.dayOfMonth else 1
+        val size = if (end.year == year && end.month == month) end.day else month.length(isLeapYear(year))
+        var day = if (start.year == year && start.month == month) start.day else 1
         return IntArray(size - if (day == 1) 0 else day - 1) { day++ }
     }
 
@@ -520,7 +521,7 @@ private class WheelState(
             if (value === field) return
             field = value
 
-            val anchors = DraggableAnchors<Int> {
+            val anchors = DraggableAnchors {
                 repeat(value.size) {
                     it at itemHeightPx * it.toFloat()
                 }

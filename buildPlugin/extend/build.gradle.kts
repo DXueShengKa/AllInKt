@@ -18,8 +18,8 @@ kotlin {
 }
 
 dependencies {
-    compileOnly(libs.android.gradle)
-    compileOnly(libs.kotlin.gradle)
+    implementation(libs.android.gradle)
+    implementation(libs.kotlin.gradle)
 }
 
 tasks {
@@ -31,10 +31,7 @@ tasks {
 
 gradlePlugin {
     plugins {
-        register("sharedKmp") {
-            id = "allin.sharedKmp"
-            implementationClass = "SharedKmpPlugin"
-        }
+
         register("noJsKmp") {
             id = "allin.noJsKmp"
             implementationClass = "NoJsKmpPlugin"

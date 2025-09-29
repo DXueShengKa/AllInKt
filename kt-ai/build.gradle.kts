@@ -1,5 +1,5 @@
 plugins {
-    id("allin.sharedKmp")
+    id("shared-kmp")
     alias(libs.plugins.kotlin.serialization)
 }
 

@@ -16,7 +16,6 @@ import androidx.compose.material.icons.sharp.FileOpen
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +38,7 @@ import cn.allin.ui.fileMamager.RouteFileManager
 import cn.allin.ui.fileMamager.RouteTransferManager
 import eu.wewox.lazytable.LazyTable
 import eu.wewox.lazytable.LazyTableItem
+import org.koin.compose.ComposeContextWrapper
 import org.koin.compose.LocalKoinApplication
 import org.koin.compose.LocalKoinScope
 import org.koin.compose.application.rememberKoinApplication
@@ -89,8 +89,8 @@ internal fun MainApp(
     val koin = rememberKoinApplication(application)
     CompositionLocalProvider(
         LocalNavController provides navController,
-        LocalKoinApplication provides koin,
-        LocalKoinScope provides koin.scopeRegistry.rootScope,
+        LocalKoinApplication provides ComposeContextWrapper(koin),
+        LocalKoinScope provides ComposeContextWrapper(koin.scopeRegistry.rootScope),
         LocalContentColor provides MaterialTheme.colorScheme.onBackground
     ) {
         NavHost(

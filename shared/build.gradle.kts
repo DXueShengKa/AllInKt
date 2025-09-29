@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
-    id("allin.sharedKmp")
+    id("shared-kmp")
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }

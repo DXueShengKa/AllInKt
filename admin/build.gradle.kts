@@ -1,4 +1,5 @@
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin
 
 
 plugins {
@@ -11,21 +12,12 @@ kotlin {
     js {
         outputModuleName = "admin"
         browser {
-            val rootDirPath = project.rootDir.path
-            val projectDirPath = project.projectDir.path
             commonWebpackConfig {
                 sourceMaps = false
                 cssSupport {
                     enabled = true
                 }
                 outputFileName = "admin.js"
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-                        add(rootDirPath)
-                        add(projectDirPath)
-                    }
-                }
             }
 
             testTask {
@@ -80,4 +72,9 @@ kotlin {
             implementation(kotlin("test-js"))
         }
     }
+}
+
+plugins.withType<NodeJsPlugin>{
+   the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec>()
+       .version = "22.18.0"
 }

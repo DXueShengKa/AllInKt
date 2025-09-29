@@ -78,6 +78,7 @@ import com.compose.components.DatePickerState.Companion.PickerUiDefault
 import com.compose.components.DatePickerState.Companion.PickerUiMonth
 import com.compose.components.DatePickerState.Companion.PickerUiYear
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
@@ -88,7 +89,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.number
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
-import kotlin.coroutines.coroutineContext
+import kotlin.jvm.JvmInline
 import kotlin.time.Clock
 
 /**
@@ -562,7 +563,7 @@ class DatePickerState(
 
     //点击事件，获取点到的那个日期
     internal val selectPointerInput: suspend PointerInputScope.() -> Unit = {
-        val coroutineScope = CoroutineScope(coroutineContext)
+        val coroutineScope = CoroutineScope(currentCoroutineContext())
 
         coroutineScope.launch {
             syncDateSwipe()
@@ -647,11 +648,11 @@ class DatePickerState(
     /**
      * 被选中的那一天
      */
-    internal var selectDay by callbackStateOf(endDate.dayOfMonth.toString()){ a, b ->
+    internal var selectDay by callbackStateOf(endDate.day.toString()){ a, b ->
         enabledBackToToday = !(
                 today.year == now.year
                 && today.month == now.month
-                && today.dayOfMonth.toString() == b
+                && today.day.toString() == b
             )
 
         a == b
@@ -688,16 +689,16 @@ class DatePickerState(
         val startDayOfMonth = date.withDayOfMonth(1)
         val endDayOfMonth = date.lastDayOfMonth()
 
-        var day = startDayOfMonth.dayOfMonth
+        var day = startDayOfMonth.day
         val year = date.year
-        val month = date.monthNumber
+        val month = date.month.number
 
         //该月1日星期下标
         val weekIndex = startDayOfMonth.dayOfWeek.ordinal
 
         for (i in _dayArray.indices) {
             //1日之前的星期和最后一天之后的位置为空不显示东西
-            if (i < weekIndex || day > endDayOfMonth.dayOfMonth) {
+            if (i < weekIndex || day > endDayOfMonth.day) {
                 _dayArray[i].day = ""
                 _dayArray[i].dayType = DayTypeNull
                 continue
@@ -708,9 +709,9 @@ class DatePickerState(
 
 
             _dayArray[i].dayType = if (
-                (startDate.year == year && startDate.monthNumber == month && day < startDate.dayOfMonth)
+                (startDate.year == year && startDate.month.number == month && day < startDate.day)
                 ||
-                (endDate.year == year && endDate.monthNumber == month && day > endDate.dayOfMonth)
+                (endDate.year == year && endDate.month.number == month && day > endDate.day)
             ) {
                 DayTypeDisable
             } else {
@@ -733,7 +734,7 @@ class DatePickerState(
     var currentDate: LocalDate
         set(value) {
             now = value
-            selectDay = value.dayOfMonth.toString()
+            selectDay = value.day.toString()
         }
         get() = if (selectDay.isEmpty()) now else now.withDayOfMonth(selectDay.toInt())
 
@@ -747,7 +748,7 @@ class DatePickerState(
             yearSwipe.snapTo(y)
         }
 
-        val m = monthArray.indexOf(currentDate.monthNumber.toString())
+        val m = monthArray.indexOf(currentDate.month.number.toString())
         if (m > -1) {
             monthSwipe.snapTo(m)
         }
@@ -775,8 +776,8 @@ class DatePickerState(
     private fun upMonthArray(now: LocalDate) {
         val start = if (now.year == startDate.year) {
             //小于开始时间的月份不要
-            if (now.monthNumber < startDate.monthNumber)
-                this.now = now.withMonth(startDate.monthNumber)
+            if (now.month.number < startDate.month.number)
+                this.now = now.withMonth(startDate.month.number)
 
             startDate.month.ordinal
         } else {
@@ -785,8 +786,8 @@ class DatePickerState(
 
         val end = if (now.year == endDate.year) {
             //大于结束时间的月份不要
-            if (now.monthNumber > endDate.monthNumber)
-                this.now = now.withMonth(endDate.monthNumber)
+            if (now.month.number > endDate.month.number)
+                this.now = now.withMonth(endDate.month.number)
 
             endDate.month.ordinal
         } else {
