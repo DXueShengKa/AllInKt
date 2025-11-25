@@ -1,14 +1,14 @@
 package cn.allin.ui.fileMamager
 
-import androidx.compose.material.icons.sharp.Downloading
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cn.allin.data.repository.FileRepository
-import cn.allin.theme.MainIcons
+import cn.allin.ui.Res
 import cn.allin.ui.components.ImageUrl
 import cn.allin.ui.fileManager.TransferItemData
 import cn.allin.ui.fileManager.TransferListData
+import cn.allin.ui.file_save
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ class TransferManagerViewModel(
     val l = Array(6) {
         TransferItemData(
             Random.nextInt().toString(),
-            ImageUrl(MainIcons.Downloading),
+            ImageUrl(Res.drawable.file_save),
             "下载"
         )
     }

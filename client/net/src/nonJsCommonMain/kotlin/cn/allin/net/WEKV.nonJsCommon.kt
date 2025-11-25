@@ -15,6 +15,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.reflect.KProperty
 
 
+@Suppress("UNCHECKED_CAST")
 internal actual inline operator fun <reified T> WEKV.getValue(thisRef: Any?, property: KProperty<*>): Data<T> {
     val d = when (T::class) {
         Int::class -> Data(intPreferencesKey(property.name), 0)

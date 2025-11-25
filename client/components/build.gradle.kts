@@ -1,5 +1,5 @@
 plugins {
-    id("allin.composeKmp")
+    id("compose-kmp")
 }
 
 
@@ -24,7 +24,6 @@ kotlin {
             implementation(projects.shared)
             implementation(libs.kotlinx.datetime)
             implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
             implementation(compose.uiUtil)
         }
     }

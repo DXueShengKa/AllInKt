@@ -4,36 +4,11 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material.icons.automirrored.sharp.InsertDriveFile
-import androidx.compose.material.icons.sharp.Add
-import androidx.compose.material.icons.sharp.AttachFile
-import androidx.compose.material.icons.sharp.Search
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.BottomSheetScaffoldState
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.rememberStandardBottomSheetState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
@@ -44,12 +19,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
-import cn.allin.theme.MainIcons
-import cn.allin.theme.MainIconsAutoMirrored
+import cn.allin.ui.*
 import cn.allin.ui.components.ImageUrl
 import cn.allin.ui.components.NetImage
 import cn.allin.ui.components.TopBar
 import kotlinx.coroutines.flow.StateFlow
+import org.jetbrains.compose.resources.painterResource
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -154,7 +129,7 @@ fun FileHomeScreen(
                     .align(Alignment.BottomEnd)
                     .padding(end = 30.dp, bottom = 30.dp),
             ) {
-                Icon(MainIcons.Add, contentDescription = null)
+                Icon(painterResource(Res.drawable.add), contentDescription = null)
             }
         }
     }
@@ -172,7 +147,7 @@ private fun FileTopBar(state: FileManagerState) {
             { state.searchFile = it },
             Modifier.fillMaxWidth().padding(horizontal = 8.dp),
             leadingIcon = {
-                Icon(MainIcons.Search, contentDescription = null)
+                Icon(painterResource(Res.drawable.search), contentDescription = null)
             },
             placeholder = {
                 Text("请输入查询文件的名称")
@@ -237,11 +212,11 @@ private fun FileManagerItem(data: FileManagerItem, onOptionClick: () -> Unit, on
             Box(Modifier.fillMaxSize().height(140.dp).background(MaterialTheme.colorScheme.surfaceContainer)) {
                 when (data.type) {
                     FileManagerItem.FILE_TYPE_DIR -> {
-                        Image(MainIconsAutoMirrored.InsertDriveFile, null, Modifier.fillMaxSize())
+                        Image(painterResource(Res.drawable.folder), null, Modifier.fillMaxSize())
                     }
 
                     FileManagerItem.FILE_TYPE_FILE -> {
-                        Image(MainIcons.AttachFile, null, Modifier.fillMaxSize())
+                        Image(painterResource(Res.drawable.files), null, Modifier.fillMaxSize())
                     }
 
                     else -> NetImage(

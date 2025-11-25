@@ -15,11 +15,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.DialogProperties
 import cn.allin.utils.getDateTime
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.atTime
+import kotlin.time.Clock
 
 @Composable
 actual fun SystemTimePicker(onCancel: () -> Unit, onSelect: (LocalDateTime) -> Unit) {

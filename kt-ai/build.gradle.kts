@@ -8,7 +8,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.ktorClient.core)
-                implementation(libs.ai.aallamOpenai)
+                implementation(libs.ai.koog.agents)
             }
         }
     }

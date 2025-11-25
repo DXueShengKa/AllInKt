@@ -4,47 +4,18 @@ package cn.allin.ui.fileManager
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.FlowRowScope
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.automirrored.sharp.More
-import androidx.compose.material.icons.sharp.Delete
-import androidx.compose.material.icons.sharp.Details
-import androidx.compose.material.icons.sharp.DriveFileMoveRtl
-import androidx.compose.material.icons.sharp.DriveFileRenameOutline
-import androidx.compose.material.icons.sharp.FileDownload
-import androidx.compose.material.icons.sharp.FileUpload
-import androidx.compose.material.icons.sharp.Image
-import androidx.compose.material.icons.sharp.MyLocation
-import androidx.compose.material.icons.sharp.PostAdd
-import androidx.compose.material.icons.sharp.Timer
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
-import cn.allin.theme.MainIcons
-import cn.allin.theme.MainIconsAutoMirrored
 import cn.allin.ui.components.FillScreenButton
 import cn.allin.ui.components.ImageUrl
 import cn.allin.ui.components.NetImage
@@ -63,15 +34,15 @@ fun FileManagerOptions(
         maxItemsInEachRow = 5,
         maxLines = 2
     ) {
-        OptionsItem(ImageUrl(MainIcons.FileDownload), "下载", onDown)
-        OptionsItem(ImageUrl(MainIcons.DriveFileMoveRtl), "移动", onMove)
-        OptionsItem(ImageUrl(MainIcons.Delete), "删除", onDelete)
-        OptionsItem(ImageUrl(MainIcons.DriveFileRenameOutline), "重命名", onRename)
-        OptionsItem(ImageUrl(MainIcons.Details), "查看详情", onDesc)
-        if (isDir) {
-            OptionsItem(ImageUrl(MainIconsAutoMirrored.More), "其他应用打开") {}
-            Spacer(Modifier.weight(4f))
-        }
+//        OptionsItem(ImageUrl(MainIcons.FileDownload), "下载", onDown)
+//        OptionsItem(ImageUrl(MainIcons.DriveFileMoveRtl), "移动", onMove)
+//        OptionsItem(ImageUrl(MainIcons.Delete), "删除", onDelete)
+//        OptionsItem(ImageUrl(MainIcons.DriveFileRenameOutline), "重命名", onRename)
+//        OptionsItem(ImageUrl(MainIcons.Details), "查看详情", onDesc)
+//        if (isDir) {
+//            OptionsItem(ImageUrl(MainIconsAutoMirrored.More), "其他应用打开") {}
+//            Spacer(Modifier.weight(4f))
+//        }
     }
 }
 
@@ -96,9 +67,9 @@ internal fun FileManagerNewAdd(
         maxItemsInEachRow = 3,
         maxLines = 1
     ) {
-        OptionsItem(ImageUrl(MainIcons.Image), "上传照片") {}
-        OptionsItem(ImageUrl(MainIcons.FileUpload), "选择文件") {}
-        OptionsItem(ImageUrl(MainIcons.PostAdd), "新建文件夹", state::openNewDir)
+//        OptionsItem(ImageUrl(MainIcons.Image), "上传照片") {}
+//        OptionsItem(ImageUrl(MainIcons.FileUpload), "选择文件") {}
+//        OptionsItem(ImageUrl(MainIcons.PostAdd), "新建文件夹", state::openNewDir)
     }
 }
 
@@ -203,10 +174,10 @@ class FileManagerDesc(
 internal fun FileManagerDesc(
     desc: FileManagerDesc,
 ) {
-    DescItem(MainIcons.Image, desc.path, desc.info)
-    DescItem(MainIcons.MyLocation, "位置", desc.path)
-    DescItem(MainIcons.Timer, "创建时间", desc.createTime)
-    DescItem(MainIcons.Timer, "最后修改时间", desc.createTime)
+//    DescItem(MainIcons.Image, desc.path, desc.info)
+//    DescItem(MainIcons.MyLocation, "位置", desc.path)
+//    DescItem(MainIcons.Timer, "创建时间", desc.createTime)
+//    DescItem(MainIcons.Timer, "最后修改时间", desc.createTime)
 }
 
 @Composable

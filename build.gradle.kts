@@ -9,4 +9,15 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.spring) apply false
     alias(libs.plugins.srpingDependencyManagement) apply false
+
+//    alias(libs.plugins.detekt.dev)
 }
+
+//detekt {
+//    config.from("config/detekt/compose.yaml")
+//}
+//
+//dependencies {
+//    detektPlugins(libs.detekt.rules.ktlint)
+//    detektPlugins(libs.detekt.rules.compose)
+//}

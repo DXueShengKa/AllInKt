@@ -11,4 +11,3 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "buildPlugin"
-include(":extend")

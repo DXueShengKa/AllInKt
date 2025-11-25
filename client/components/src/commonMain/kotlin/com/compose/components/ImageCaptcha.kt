@@ -16,9 +16,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +45,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import com.compose.Icons
+import com.compose.icons.KeyboardArrowRight
+import com.compose.icons.Refresh
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -76,7 +76,7 @@ fun ImageCaptcha(
             ) {
 
                 Icon(
-                    Icons.Default.Refresh, null,
+                    Icons.Refresh, null,
                     Modifier.rotate(state.reloadAnimatable.value),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -208,7 +208,7 @@ private fun SliderBar(state: ImageCaptchaState) {
     ) {
 
         Icon(
-            Icons.AutoMirrored.Rounded.KeyboardArrowRight, null,
+            Icons.KeyboardArrowRight, null,
             Modifier
                 .offset { state.offset }
                 .background(primary, CircleShape)

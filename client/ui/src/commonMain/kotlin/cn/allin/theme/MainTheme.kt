@@ -1,7 +1,6 @@
 package cn.allin.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -22,7 +21,3 @@ fun MainTheme(
     )
 }
 
-
-typealias MainIconsAutoMirrored = Icons.AutoMirrored.Sharp
-
-typealias MainIcons = Icons.Sharp

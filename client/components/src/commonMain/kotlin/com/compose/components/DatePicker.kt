@@ -27,8 +27,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
@@ -70,6 +68,7 @@ import cn.allin.utils.lastDayOfMonth
 import cn.allin.utils.withDayOfMonth
 import cn.allin.utils.withMonth
 import cn.allin.utils.withYear
+import com.compose.Icons
 import com.compose.components.DatePickerDayType.Companion.DayTypeDefault
 import com.compose.components.DatePickerDayType.Companion.DayTypeDisable
 import com.compose.components.DatePickerDayType.Companion.DayTypeNull
@@ -77,6 +76,7 @@ import com.compose.components.DatePickerDayType.Companion.DayTypePre
 import com.compose.components.DatePickerState.Companion.PickerUiDefault
 import com.compose.components.DatePickerState.Companion.PickerUiMonth
 import com.compose.components.DatePickerState.Companion.PickerUiYear
+import com.compose.icons.KeyboardArrowDown
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
@@ -191,7 +191,7 @@ fun DatePicker(
                     style = MaterialTheme.typography.headlineSmall
                 )
                 androidx.compose.material3.Icon(
-                    Icons.Rounded.KeyboardArrowDown, null,
+                    Icons.KeyboardArrowDown, null,
                     yearModifier
                         .padding(end = 4.dp)
                         .size(30.dp)
@@ -207,7 +207,7 @@ fun DatePicker(
                     style = MaterialTheme.typography.headlineSmall
                 )
                 androidx.compose.material3.Icon(
-                    Icons.Rounded.KeyboardArrowDown, null,
+                    Icons.KeyboardArrowDown, null,
                     monthModifier
                         .padding(end = 4.dp)
                         .size(30.dp)

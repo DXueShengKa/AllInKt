@@ -1,5 +1,5 @@
 plugins {
-    id("allin.composeKmp")
+    id("compose-kmp")
 }
 
 kotlin {
@@ -32,13 +32,15 @@ kotlin {
 
 compose.resources {
     publicResClass = true
+    packageOfResClass = "cn.allin.ui"
 }
 
 
 android {
     namespace = "cn.allin.ui"
 
-    dependencies {
-        debugImplementation(compose.uiTooling)
-    }
+}
+
+dependencies {
+    debugImplementation(compose.uiTooling)
 }

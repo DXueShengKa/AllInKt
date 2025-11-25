@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.icons.sharp.CalendarViewWeek
-import androidx.compose.material.icons.sharp.FileDownload
-import androidx.compose.material.icons.sharp.FileOpen
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -24,7 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -32,12 +29,16 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import cn.allin.ksp.navigation.NavRoute
-import cn.allin.theme.MainIcons
+import cn.allin.ui.Res
 import cn.allin.ui.RouteCalendar
+import cn.allin.ui.calendar_month
+import cn.allin.ui.draft
 import cn.allin.ui.fileMamager.RouteFileManager
 import cn.allin.ui.fileMamager.RouteTransferManager
+import cn.allin.ui.wifi_protected_setup
 import eu.wewox.lazytable.LazyTable
 import eu.wewox.lazytable.LazyTableItem
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.ComposeContextWrapper
 import org.koin.compose.LocalKoinApplication
 import org.koin.compose.LocalKoinScope
@@ -60,19 +61,19 @@ internal fun App() {
         contentPadding = PaddingValues(16.dp)
     ) {
         item {
-            AppItem(MainIcons.FileOpen, "文件管理") { nav.navigate(RouteFileManager) }
+            AppItem(painterResource(Res.drawable.draft), "文件管理") { nav.navigate(RouteFileManager) }
         }
         item {
-            AppItem(MainIcons.FileDownload, "传输管理") { nav.navigate(RouteTransferManager) }
+            AppItem(painterResource(Res.drawable.wifi_protected_setup), "传输管理") { nav.navigate(RouteTransferManager) }
         }
         item {
-            AppItem(MainIcons.CalendarViewWeek, "日历") { nav.navigate(RouteCalendar) }
+            AppItem(painterResource(Res.drawable.calendar_month), "日历") { nav.navigate(RouteCalendar) }
         }
     }
 }
 
 @Composable
-private fun AppItem(img: ImageVector, text: String, onItemClicked: () -> Unit) {
+private fun AppItem(img: Painter, text: String, onItemClicked: () -> Unit) {
     ElevatedCard(onClick = onItemClicked, Modifier.size(100.dp)) {
         Icon(img, text)
         Text(text)

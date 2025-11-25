@@ -5,9 +5,9 @@ android-targetSdk = "36"
 android-gradle = "8.12.2"
 
 #https://github.com/JetBrains/kotlin
-kotlin = "2.2.20"
+kotlin = "2.2.21"
 #https://github.com/JetBrains/kotlin-wrappers
-kotlin-wrappers = "2025.9.11"
+kotlin-wrappers = "2025.11.5"
 #https://ant-design.antgroup.com/changelog-cn
 antd = "5.23.2"
 #https://github.com/iamkun/dayjs/
@@ -30,49 +30,49 @@ kotlinx-datetime = "0.7.1"
 #https://github.com/Kotlin/kotlinx-io
 kotlinx-io = "0.8.0"
 #https://github.com/google/ksp
-ksp = "2.2.20-2.0.3"
+ksp = "2.3.3"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "2.2.0"
 #https://github.com/Kotlin/dokka
-dokka = "2.0.0"
+dokka = "2.1.0"
 #https://github.com/JetBrains/compose-multiplatform
-jetbrains-compose = "1.9.0"
-jetbrains-md3Adaptive = "1.1.2"
+jetbrains-compose = "1.9.3"
+jetbrains-md3Adaptive = "1.2.0"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/lifecycle/lifecycle-viewmodel-compose/
-jetbrains-lifecycle = "2.9.4"
+jetbrains-lifecycle = "2.9.6"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/navigation/navigation-common/
-jetbrains-navigation = "2.9.0"
+jetbrains-navigation = "2.9.1"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
 jetbrains-core-bundle = "1.0.1"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/savedstate/savedstate-compose/
-jetbrains-savedstate = "1.4.0-alpha01"
+jetbrains-savedstate = "1.4.0-rc01"
 #https://developer.android.google.cn/jetpack/androidx/releases/datastore?hl=zh-cn
 datastore = "1.1.7"
 #https://github.com/JetBrains/compose-hot-reload
-jetbrains-compose-hotReload = "1.0.0-beta09"
+jetbrains-compose-hotReload = "1.0.0-rc04"
 
 #https://github.com/square/okhttp
-okhttp3 = "5.1.0"
+okhttp3 = "5.3.2"
 #https://github.com/ktorio/ktor
-ktor = "3.3.0"
+ktor = "3.3.2"
 #https://github.com/coil-kt/coil
 coil3 = "3.3.0"
 #https://github.com/InsertKoinIO/koin
 koin = "4.1.1"
 #https://github.com/InsertKoinIO/koin-annotations
-koin-annotations = "2.1.0"
+koin-annotations = "2.3.1"
 #https://github.com/oleksandrbalan/lazytable
 lazytable = "1.10.0"
 #https://github.com/spring-projects/spring-boot
-spring-boot = "3.5.0"
+spring-boot = "4.0.0"
 #https://docs.spring.io/dependency-management-plugin/docs/current/reference/html/#introduction
 spring-dependencyManagement = "1.1.7"
 #https://github.com/JetBrains/Exposed
-exposed = "1.0.0-rc-1"
+exposed = "1.0.0-rc-3"
 #https://github.com/turansky/seskar
-seskar = "4.25.0"
+seskar = "4.27.0"
 #https://github.com/babyfish-ct/jimmer
-jimmer = "0.9.107"
+jimmer = "0.9.116"
 #https://developer.android.google.cn/jetpack/androidx/releases/activity?hl=zh-cn
 activity = "1.11.0"
 #https://developer.android.google.cn/jetpack/androidx/releases/paging?hl=zh-cn
@@ -82,32 +82,37 @@ slf4j = "2.0.17"
 #https://github.com/jwtk/jjwt
 jjwt = "0.13.0"
 #https://github.com/ben-manes/caffeine
-caffeine = "3.2.2"
+caffeine = "3.2.3"
 #https://github.com/Guardsquare/proguard
 proguard = "7.6.0"
 #https://github.com/aallam/openai-kotlin
 openai = "4.0.1"
 #https://docs.koog.ai/
-koog = "0.4.2"
+koog = "0.5.3"
+#https://detekt.dev/
+detekt = "2.0.0-alpha.1"
+#https://github.com/mrmans0n/compose-rules/releases
+detekt-rules-compose = "0.4.27"
 
 junit = "4.13.2"
 #https://jsoup.org/
 jsoup = "1.21.2"
 jspecify = "1.0.0"
 #https://github.com/arrow-kt/arrow
-arrow = "2.1.2"
+arrow = "2.2.0"
 #https://github.com/Reedyuk/blue-falcon
-bluefalcon = "2.3.0"
+bluefalcon = "2.3.1"
 #https://github.com/apache/poi
-apache-poi = "5.4.1"
+apache-poi = "5.5.0"
 #https://github.com/aws/aws-sdk-java-v2
-awssdk = "2.34.5"
+awssdk = "2.39.1"
 
 [plugins]
 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
+android-library-kmp = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "jetbrains-compose" }
 jetbrains-compose-hotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "jetbrains-compose-hotReload" }
 
@@ -119,6 +124,7 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 spring = { id = "org.springframework.boot", version.ref = "spring-boot" }
 srpingDependencyManagement = { id = "io.spring.dependency-management", version.ref = "spring-dependencyManagement" }
 seskar = { id = "io.github.turansky.seskar", version.ref = "seskar" }
+detekt-dev = { id = "dev.detekt", version.ref = "detekt" }
 
 [libraries]
 kotlin-gradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -264,6 +270,9 @@ bluefalcon = { module = "dev.bluefalcon:blue-falcon", version.ref = "bluefalcon"
 apache-poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "apache-poi" }
 
 awssdk-s3 = { module = "software.amazon.awssdk:s3", version.ref = "awssdk" }
+
+detekt-rules-ktlint = { module = "dev.detekt:detekt-rules-ktlint-wrapper" , version.ref = "detekt" }
+detekt-rules-compose = { module = "io.nlopez.compose.rules:detekt" , version.ref = "detekt-rules-compose" }
 
 [bundles]
 netLibs = [
