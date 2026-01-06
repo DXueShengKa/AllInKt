@@ -4,10 +4,6 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 
 pluginManagement {
-    plugins {
-        id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-    }
-
     includeBuild("buildPlugin")
     repositories {
         maven("https://packages.jetbrains.team/maven/p/grazi/grazie-platform-public")
@@ -15,10 +11,6 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-}
-
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 dependencyResolutionManagement {

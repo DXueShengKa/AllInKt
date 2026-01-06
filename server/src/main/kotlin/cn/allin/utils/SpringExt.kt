@@ -35,10 +35,10 @@ typealias SpringUser = org.springframework.security.core.userdetails.User
 
 
 val UserDetails.id: Int
-    get() = password.toInt()
+    get() = password!!.toInt()
 
 
-inline fun <reified T> Cache.getValue(key: Any): T? {
+inline fun <reified T: Any> Cache.getValue(key: Any): T? {
     return this.get(key, T::class.java)
 }
 
@@ -123,7 +123,7 @@ fun <T,R> Page<T>.toPageVO(transform: (T) -> R): PageVO<R> {
         totalPage = this.totalPageCount.toInt()
     )
 }
-fun <T,R>  org.springframework.data.domain.Page<T>.toPageVO(transform: (T) -> R): PageVO<R> {
+fun <T: Any,R>  org.springframework.data.domain.Page<T>.toPageVO(transform: (T) -> R): PageVO<R> {
     return PageVO(
         rows = this.content.map(transform),
         totalRow = this.totalElements,

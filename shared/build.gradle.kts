@@ -9,6 +9,9 @@ plugins {
 val isTest: String by project
 
 kotlin {
+    androidLibrary {
+        namespace = "cn.allin.shared"
+    }
     sourceSets {
 
         commonMain {
@@ -33,10 +36,6 @@ kotlin {
 
 ksp {
     arg("isTest", isTest)
-}
-
-android {
-    namespace = "cn.allin.shared"
 }
 
 tasks.withType<KotlinCompilationTask<*>>().all {

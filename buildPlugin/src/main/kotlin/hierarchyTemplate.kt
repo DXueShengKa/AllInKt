@@ -72,4 +72,56 @@ val hierarchyTemplate = KotlinHierarchyTemplate {
 }
 
 
+@ExperimentalKotlinGradlePluginApi
+val hierarchyTemplateAndroidKmp = KotlinHierarchyTemplate {
+    withSourceSetTree(
+        KotlinSourceSetTree.main,
+        KotlinSourceSetTree.test,
+    )
 
+    common {
+
+        group(jsCommon){
+            withJs()
+            withWasmJs()
+        }
+
+        group(jvmCommon){
+            withJvm()
+            //https://issuetracker.google.com/issues/442950553
+            withCompilations {
+                it is com.android.build.api.dsl.KotlinMultiplatformAndroidCompilation
+            }
+        }
+
+        group(native){
+            withNative()
+            group("darwin"){
+                withIos()
+                withMacos()
+            }
+        }
+
+        group(nonAndroid){
+            withJvm()
+            group(jsCommon)
+            group(native)
+        }
+
+        group(nonJvmCommon){
+            group(jsCommon)
+            group(native)
+        }
+
+        group(nonJsCommon){
+            group(jvmCommon)
+            group(native)
+        }
+
+        group(nonNative){
+            group(jvmCommon)
+            group(jsCommon)
+        }
+
+    }
+}

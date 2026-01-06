@@ -4,6 +4,9 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "cn.allin.data"
+    }
     sourceSets {
         commonMain {
             dependencies {
@@ -24,8 +27,4 @@ ksp {
 
 dependencies {
     kspAll(libs.koin.compiler)
-}
-
-android {
-    namespace = "cn.allin.data"
 }

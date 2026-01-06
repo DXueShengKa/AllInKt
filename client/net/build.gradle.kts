@@ -1,8 +1,13 @@
+
 plugins {
     id("shared-kmp")
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "cn.allin.net"
+    }
+
     sourceSets {
         commonMain {
             dependencies {
@@ -35,10 +40,4 @@ kotlin {
             implementation(libs.ktorClient.okhttp)
         }
     }
-}
-
-
-
-android {
-    namespace = "cn.allin.net"
 }

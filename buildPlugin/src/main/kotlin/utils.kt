@@ -1,6 +1,6 @@
 
 import com.android.build.gradle.LibraryExtension
-import gradle.kotlin.dsl.accessors._0b65097827fff587f8d04cb97812288f.versionCatalogs
+import gradle.kotlin.dsl.accessors._f00fc9e754c8021ee077f48669230c7f.versionCatalogs
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalog
@@ -53,7 +53,7 @@ fun DependencyHandler.kspNoJsAll(dependencyNotation: Any) {
 }
 
 
-fun TaskContainer.kotlinCompilerOptions() {
+internal fun TaskContainer.kotlinCompilerOptions() {
     withType(KotlinCompilationTask::class) {
         compilerOptions {
             if (this is KotlinJvmCompilerOptions) {
@@ -75,7 +75,7 @@ fun TaskContainer.kotlinCompilerOptions() {
 }
 
 
-fun Project.androidConfigure() {
+internal fun Project.androidConfigure() {
     val libs: VersionCatalog = versionCatalogs.named("libs")
     configure<LibraryExtension> {
         compileSdk = libs.findVersion("android-compileSdk").get().requiredVersion.toInt()

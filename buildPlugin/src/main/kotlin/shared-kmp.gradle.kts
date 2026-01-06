@@ -3,16 +3,21 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    id("com.android.library")
+    id("com.android.kotlin.multiplatform.library")
     kotlin("multiplatform")
 }
 
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class,ExperimentalWasmDsl::class)
 kotlin {
-    applyHierarchyTemplate(hierarchyTemplate)
+    applyHierarchyTemplate(hierarchyTemplateAndroidKmp)
 
-    androidTarget()
+    val libs: VersionCatalog = versionCatalogs.named("libs")
+
+    androidLibrary {
+        compileSdk = 36
+        compileSdk = libs.findVersion("android-compileSdk").get().requiredVersion.toInt()
+    }
 
     jvm()
 
@@ -38,5 +43,3 @@ kotlin {
 }
 
 tasks.kotlinCompilerOptions()
-
-androidConfigure()

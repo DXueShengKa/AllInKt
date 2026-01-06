@@ -4,6 +4,10 @@ plugins {
 }
 
 kotlin {
+    androidLibrary {
+        namespace = "cn.allin.ai"
+    }
+
     sourceSets {
         commonMain {
             dependencies {
@@ -15,7 +19,4 @@ kotlin {
 }
 
 
-android {
-    namespace = "cn.allin.ai"
-}
 

@@ -5,7 +5,7 @@ android-targetSdk = "36"
 android-gradle = "8.12.2"
 
 #https://github.com/JetBrains/kotlin
-kotlin = "2.2.21"
+kotlin = "2.3.0"
 #https://github.com/JetBrains/kotlin-wrappers
 kotlin-wrappers = "2025.11.5"
 #https://ant-design.antgroup.com/changelog-cn
@@ -28,9 +28,9 @@ kotlinx-serialization = "1.9.0"
 #https://github.com/Kotlin/kotlinx-datetime
 kotlinx-datetime = "0.7.1"
 #https://github.com/Kotlin/kotlinx-io
-kotlinx-io = "0.8.0"
+kotlinx-io = "0.8.2"
 #https://github.com/google/ksp
-ksp = "2.3.3"
+ksp = "2.3.4"
 #https://github.com/square/kotlinpoet
 kotlinpoet = "2.2.0"
 #https://github.com/Kotlin/dokka
@@ -45,16 +45,14 @@ jetbrains-navigation = "2.9.1"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
 jetbrains-core-bundle = "1.0.1"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/savedstate/savedstate-compose/
-jetbrains-savedstate = "1.4.0-rc01"
+jetbrains-savedstate = "1.4.0"
 #https://developer.android.google.cn/jetpack/androidx/releases/datastore?hl=zh-cn
-datastore = "1.1.7"
-#https://github.com/JetBrains/compose-hot-reload
-jetbrains-compose-hotReload = "1.0.0-rc04"
+datastore = "1.2.0"
 
 #https://github.com/square/okhttp
 okhttp3 = "5.3.2"
 #https://github.com/ktorio/ktor
-ktor = "3.3.2"
+ktor = "3.3.3"
 #https://github.com/coil-kt/coil
 coil3 = "3.3.0"
 #https://github.com/InsertKoinIO/koin
@@ -64,19 +62,19 @@ koin-annotations = "2.3.1"
 #https://github.com/oleksandrbalan/lazytable
 lazytable = "1.10.0"
 #https://github.com/spring-projects/spring-boot
-spring-boot = "4.0.0"
+spring-boot = "4.0.1"
 #https://docs.spring.io/dependency-management-plugin/docs/current/reference/html/#introduction
 spring-dependencyManagement = "1.1.7"
 #https://github.com/JetBrains/Exposed
-exposed = "1.0.0-rc-3"
+exposed = "1.0.0-rc-4"
 #https://github.com/turansky/seskar
-seskar = "4.27.0"
+seskar = "4.32.0"
 #https://github.com/babyfish-ct/jimmer
 jimmer = "0.9.116"
 #https://developer.android.google.cn/jetpack/androidx/releases/activity?hl=zh-cn
 activity = "1.11.0"
 #https://developer.android.google.cn/jetpack/androidx/releases/paging?hl=zh-cn
-paging = "3.4.0-alpha04"
+paging = "3.4.0-beta01"
 
 slf4j = "2.0.17"
 #https://github.com/jwtk/jjwt
@@ -88,24 +86,24 @@ proguard = "7.6.0"
 #https://github.com/aallam/openai-kotlin
 openai = "4.0.1"
 #https://docs.koog.ai/
-koog = "0.5.3"
+koog = "0.6.0"
 #https://detekt.dev/
 detekt = "2.0.0-alpha.1"
 #https://github.com/mrmans0n/compose-rules/releases
-detekt-rules-compose = "0.4.27"
+detekt-rules-compose = "0.5.3"
 
 junit = "4.13.2"
 #https://jsoup.org/
-jsoup = "1.21.2"
+jsoup = "1.22.1"
 jspecify = "1.0.0"
 #https://github.com/arrow-kt/arrow
-arrow = "2.2.0"
+arrow = "2.2.1.1"
 #https://github.com/Reedyuk/blue-falcon
-bluefalcon = "2.3.1"
+bluefalcon = "2.4.0"
 #https://github.com/apache/poi
-apache-poi = "5.5.0"
+apache-poi = "5.5.1"
 #https://github.com/aws/aws-sdk-java-v2
-awssdk = "2.39.1"
+awssdk = "2.41.2"
 
 [plugins]
 
@@ -114,7 +112,6 @@ android-application = { id = "com.android.application", version.ref = "android-g
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
 android-library-kmp = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradle" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "jetbrains-compose" }
-jetbrains-compose-hotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "jetbrains-compose-hotReload" }
 
 kotlin-composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
