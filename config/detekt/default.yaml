@@ -1,0 +1,6 @@
+formatting:
+  active: false
+
+# 启用 compose 规则集
+compose:
+  active: true

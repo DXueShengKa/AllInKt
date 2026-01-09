@@ -20,11 +20,10 @@ kotlin {
                     exclude("io.ktor")
                 }
 
-                implementation(compose.components.resources)
-                implementation(compose.components.uiToolingPreview)
-                implementation(compose.material3)
-                implementation(compose.materialIconsExtended)
-                implementation(compose.material3AdaptiveNavigationSuite)
+                implementation(libs.jetbrains.components.resources)
+                implementation(libs.jetbrains.components.uiToolingPPreview)
+                implementation(libs.jetbrains.material3)
+                implementation(libs.jetbrains.md3adaptive.navigation.suite)
             }
         }
     }
@@ -42,5 +41,5 @@ android {
 }
 
 dependencies {
-    debugImplementation(compose.uiTooling)
+    debugImplementation(libs.jetbrains.ui.tooling)
 }

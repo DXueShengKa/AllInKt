@@ -11,7 +11,6 @@ class DTest {
     @Test
     fun run() {
 
-        println(System.getenv().entries.joinToString("\n"))
 
     }
 }

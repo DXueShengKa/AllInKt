@@ -4,7 +4,6 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -35,14 +34,16 @@ kotlin {
         binaries.executable()
     }
 
-    if (isMacOS) listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
+    if (isMacOS) {
+        listOf(
+            iosX64(),
+            iosArm64(),
+            iosSimulatorArm64(),
+        ).forEach { iosTarget ->
+            iosTarget.binaries.framework {
+                baseName = "ComposeApp"
+                isStatic = true
+            }
         }
     }
 
@@ -57,14 +58,13 @@ kotlin {
         }
 
         commonMain.dependencies {
-            implementation(libs.jetbrains.navigation.compose)
+            implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.jetbrains.md3adaptive.navigation)
             implementation(libs.jetbrains.lifecycle.compose)
             implementation(libs.jetbrains.savedstate.compose)
-            implementation(libs.koin.kmp.compose.viewmodel)
-            implementation(compose.material3)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.jetbrains.material3)
+            implementation(libs.jetbrains.components.resources)
             implementation(projects.shared)
             implementation(projects.client.ui)
             implementation(projects.client.net)
@@ -90,7 +90,10 @@ kotlin {
 
 android {
     namespace = "cn.allin"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.android.compileSdk
+            .get()
+            .toInt()
     sourceSets["main"].apply {
         manifest.srcFile("src/androidMain/AndroidManifest.xml")
         res.srcDirs("src/androidMain/res")
@@ -99,8 +102,14 @@ android {
 
     defaultConfig {
         applicationId = "cn.allin"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.android.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.android.targetSdk
+                .get()
+                .toInt()
         versionCode = 1
         versionName = "1.0"
     }
@@ -124,7 +133,6 @@ android {
     buildFeatures {
         compose = true
     }
-
 }
 
 compose.resources {
@@ -150,16 +158,16 @@ compose.desktop {
     }
 }
 
-plugins.withType<NodeJsPlugin>{
-    the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec>()
-        .version = "22.18.0"
-}
+// plugins.withType<NodeJsPlugin>{
+//    the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec>()
+//        .version = "22.18.0"
+// }
 
 fun DependencyHandler.kspAll(dependencyNotation: Any) {
     add("kspAndroid", dependencyNotation)
     add("kspJvm", dependencyNotation)
     add("kspWasmJs", dependencyNotation)
-    if (isMacOS){
+    if (isMacOS) {
         add("kspIosSimulatorArm64", dependencyNotation)
         add("kspIosArm64", dependencyNotation)
         add("kspIosX64", dependencyNotation)
@@ -169,4 +177,3 @@ fun DependencyHandler.kspAll(dependencyNotation: Any) {
 dependencies {
     kspAll(projects.ksp.composeApp)
 }
-

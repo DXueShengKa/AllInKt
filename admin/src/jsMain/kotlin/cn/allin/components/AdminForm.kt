@@ -21,7 +21,6 @@ import react.PropsWithChildren
 import react.StateInstance
 import react.dom.html.ReactHTML.form
 import react.dom.onChange
-import react.router.useParams
 import react.useEffectOnceWithCleanup
 import react.useState
 import web.cssom.px
@@ -91,24 +90,24 @@ fun useAdminForm(): AdminFormState {
 val AdminForm = FC<AdminFormProps> { props ->
     val formState = props.formState
     val cs = useCoroutineScope()
-    val formParam = useParams()
+//todo    val formParam = useParams()
     var submitResult: Pair<AlertColor, String>? by useState()
     val (errorHelper) = formState.errorHelperState
 
     var formSubmitName by useState("")
 
-    useEffectOnceWithCleanup {
-        val id = props.dataId?.let { formParam[it] }?.toIntOrNull()
-        formSubmitName = if (id != null && id > 0) {
-            cs.launch {
-                props.getData(id)
-            }
-            "更新"
-        } else {
-            "添加 "
-        }
-
-    }
+//    useEffectOnceWithCleanup {
+//        val id = props.dataId?.let { formParam[it] }?.toIntOrNull()
+//        formSubmitName = if (id != null && id > 0) {
+//            cs.launch {
+//                props.getData(id)
+//            }
+//            "更新"
+//        } else {
+//            "添加 "
+//        }
+//
+//    }
 
     Stack {
         sx = unsafeJso {

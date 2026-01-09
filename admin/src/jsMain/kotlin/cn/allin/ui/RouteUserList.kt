@@ -162,4 +162,3 @@ private val UserListFC = FC {
     }
 }
 
-val RouteUserList = routes("list", "用户列表", UserListFC)

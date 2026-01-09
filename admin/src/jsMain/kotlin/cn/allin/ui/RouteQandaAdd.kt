@@ -31,9 +31,7 @@ import react.FC
 import react.Props
 import react.dom.aria.AriaRole
 import react.dom.html.ReactHTML.div
-import react.router.RouteObject
 import react.useState
-import toolpad.core.NavigationObj
 import web.cssom.Auto
 import web.cssom.pct
 import web.cssom.px
@@ -199,18 +197,5 @@ private val TagList = FC<TagListProps> { props ->
                 }
             }
         }
-    }
-}
-
-val RouteQandaAdd = object : Routes {
-
-    override val navigation: NavigationObj = unsafeJso {
-        title = "添加问答"
-        segment = "add/-1"
-    }
-
-    override val routeObj: RouteObject = unsafeJso {
-        Component = AddQandaFC
-        path = "add/:qaId"
     }
 }

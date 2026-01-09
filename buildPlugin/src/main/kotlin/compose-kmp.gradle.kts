@@ -39,4 +39,33 @@ kotlin {
 
 tasks.kotlinCompilerOptions()
 
-androidConfigure()
+
+android {
+    val libs: VersionCatalog = versionCatalogs.named("libs")
+
+    compileSdk = libs.findVersion("android-compileSdk").get().requiredVersion.toInt()
+
+    defaultConfig {
+        minSdk = libs.findVersion("android-minSdk").get().requiredVersion.toInt()
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    sourceSets["main"].apply {
+        manifest.srcFile("src/androidMain/AndroidManifest.xml")
+        res.srcDirs("src/androidMain/res")
+    }
+
+    buildTypes {
+        release {
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+}

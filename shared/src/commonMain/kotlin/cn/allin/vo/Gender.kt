@@ -5,5 +5,5 @@ package cn.allin.vo
  * @property cn.allin.vo.Gender.Male 男
  */
 enum class Gender {
-    Female,Male
+    Female,Male;
 }

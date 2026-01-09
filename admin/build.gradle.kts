@@ -1,11 +1,9 @@
-
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin
-
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.seskar)
 }
+
+version = "1.0.0"
 
 kotlin {
 
@@ -22,7 +20,8 @@ kotlin {
 
             testTask {
 
-                useKarma { //运行测试用的，安装了哪个浏览器就开哪个
+                useKarma {
+                    // 运行测试用的，安装了哪个浏览器就开哪个
 
 //                    useChromium()
                     useFirefox()
@@ -39,7 +38,6 @@ kotlin {
         }
     }
 
-
     sourceSets {
 
         jsMain.dependencies {
@@ -47,21 +45,29 @@ kotlin {
             implementation(libs.kotlin.wrappers.emotion.react)
             implementation(libs.kotlin.wrappers.react)
             implementation(libs.kotlin.wrappers.react.dom)
-            implementation(libs.kotlin.wrappers.react.router)
             implementation(libs.kotlin.wrappers.mui.material)
             implementation(libs.kotlin.wrappers.muix.treeView)
             implementation(libs.kotlin.wrappers.tanstack.table)
-            implementation(npm("@mui/x-date-pickers",""))
+            implementation(npm("@mui/x-date-pickers", ""))
 
-            implementation(npm("@mui/material",libs.versions.mui.material.get()))
-            //用mui kt封装库的，打包时不会被压缩，生成产物过大, 需要图标再手动声明
-            implementation(npm("@mui/icons-material",libs.versions.mui.material.get()))
-            implementation(npm("react-router","^7"))
+            implementation(
+                npm(
+                    "@mui/material",
+                    libs.versions.mui.material
+                        .get(),
+                ),
+            )
+            // 用mui kt封装库的，打包时不会被压缩，生成产物过大, 需要图标再手动声明
+            implementation(
+                npm(
+                    "@mui/icons-material",
+                    libs.versions.mui.material
+                        .get(),
+                ),
+            )
 
-            implementation(npm("@toolpad/core",libs.versions.mui.toolpad.get()))
-            implementation(npm("dayjs",libs.versions.dayjs.get()))
-            implementation(npm("@emotion/styled",libs.versions.emotionStyled.get()))
-            implementation(npm("mui-file-input",libs.versions.mui.fileInput.get()))
+            implementation(npm("dayjs", libs.versions.dayjs.get()))
+            implementation(npm("@emotion/styled", libs.versions.emotionStyled.get()))
             implementation(projects.shared)
             implementation(projects.client.net)
             implementation(projects.client.data)
@@ -74,7 +80,7 @@ kotlin {
     }
 }
 
-plugins.withType<NodeJsPlugin>{
-   the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec>()
-       .version = "22.18.0"
-}
+// plugins.withType<NodeJsPlugin>{
+//   the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec>()
+//       .version = "22.18.0"
+// }

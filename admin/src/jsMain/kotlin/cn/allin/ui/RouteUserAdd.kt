@@ -220,4 +220,3 @@ private fun BaseTextFieldProps.validatorMessage(errorMsg: VoValidatorMessage?, f
     }
 }
 
-val RouteUserAdd = routes("add", "添加用户", AddUserFC)

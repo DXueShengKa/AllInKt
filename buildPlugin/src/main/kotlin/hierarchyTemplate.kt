@@ -21,7 +21,7 @@ private const val nonNative = "nonNative"
 
 
 @ExperimentalKotlinGradlePluginApi
-val hierarchyTemplate = KotlinHierarchyTemplate {
+internal val hierarchyTemplate = KotlinHierarchyTemplate {
     withSourceSetTree(
         KotlinSourceSetTree.main,
         KotlinSourceSetTree.test,
@@ -73,7 +73,7 @@ val hierarchyTemplate = KotlinHierarchyTemplate {
 
 
 @ExperimentalKotlinGradlePluginApi
-val hierarchyTemplateAndroidKmp = KotlinHierarchyTemplate {
+internal val hierarchyTemplateAndroidKmp = KotlinHierarchyTemplate {
     withSourceSetTree(
         KotlinSourceSetTree.main,
         KotlinSourceSetTree.test,

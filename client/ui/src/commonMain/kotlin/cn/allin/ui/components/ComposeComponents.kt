@@ -306,35 +306,35 @@ fun WeTabRow(
 }
 
 
-fun CoroutineScope.getOneFormatString(formatId: StringResource, stringId: StringResource): String {
-    return runBlocking(coroutineContext) {
-        val format = getString(stringId)
-        getString(formatId, format)
-    }
-}
-
-fun getOneFormatString(formatId: StringResource, stringId: StringResource): String {
-    return runBlocking {
-        val format = getString(stringId)
-        getString(formatId, format)
-    }
-}
-
-suspend fun getOneFormatStringSuspend(formatId: StringResource, stringId: StringResource): String {
-    val format = getString(stringId)
-    return getString(formatId, format)
-}
-
-@Composable
-fun oneFormatStringResource(formatId: StringResource, stringId: StringResource): String {
-    val environment = rememberResourceEnvironment()
-    return remember {
-        runBlocking {
-            val s = getString(environment, stringId)
-            getString(environment, formatId, s)
-        }
-    }
-}
+//fun CoroutineScope.getOneFormatString(formatId: StringResource, stringId: StringResource): String {
+//    return runBlocking(coroutineContext) {
+//        val format = getString(stringId)
+//        getString(formatId, format)
+//    }
+//}
+//
+//fun getOneFormatString(formatId: StringResource, stringId: StringResource): String {
+//    return runBlocking {
+//        val format = getString(stringId)
+//        getString(formatId, format)
+//    }
+//}
+//
+//suspend fun getOneFormatStringSuspend(formatId: StringResource, stringId: StringResource): String {
+//    val format = getString(stringId)
+//    return getString(formatId, format)
+//}
+//
+//@Composable
+//fun oneFormatStringResource(formatId: StringResource, stringId: StringResource): String {
+//    val environment = rememberResourceEnvironment()
+//    return remember {
+//        runBlocking {
+//            val s = getString(environment, stringId)
+//            getString(environment, formatId, s)
+//        }
+//    }
+//}
 
 /**
  * 弹窗预览媒体文件

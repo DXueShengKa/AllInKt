@@ -1,4 +1,4 @@
-@file:JsModule("mui-file-input")
+//@file:JsModule("mui-file-input")
 package muix.fileInput
 
 import mui.material.IconButtonProps

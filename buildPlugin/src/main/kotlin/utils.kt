@@ -1,23 +1,14 @@
 
-import com.android.build.gradle.LibraryExtension
-import gradle.kotlin.dsl.accessors._f00fc9e754c8021ee077f48669230c7f.versionCatalogs
-import org.gradle.api.JavaVersion
-import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.tasks.TaskContainer
-import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
-
 val isMacOs = System.getProperty("os.name").startsWith("Mac OS")
 val isWindow = System.getProperty("os.name").startsWith("Window")
 val isLinux = System.getProperty("os.name").startsWith("Linux")
-
 
 fun DependencyHandler.kspAndroid(dependencyNotation: Any) {
     add("kspAndroid", dependencyNotation)
@@ -52,7 +43,6 @@ fun DependencyHandler.kspNoJsAll(dependencyNotation: Any) {
     kspIos(dependencyNotation)
 }
 
-
 internal fun TaskContainer.kotlinCompilerOptions() {
     withType(KotlinCompilationTask::class) {
         compilerOptions {
@@ -63,46 +53,12 @@ internal fun TaskContainer.kotlinCompilerOptions() {
             optIn.addAll(
                 "kotlin.RequiresOptIn",
                 "kotlin.js.ExperimentalJsStatic",
-                "kotlin.time.ExperimentalTime"
+                "kotlin.time.ExperimentalTime",
             )
 
             freeCompilerArgs.addAll(
-                "-Xexpect-actual-classes"
+                "-Xexpect-actual-classes",
             )
-
         }
     }
 }
-
-
-internal fun Project.androidConfigure() {
-    val libs: VersionCatalog = versionCatalogs.named("libs")
-    configure<LibraryExtension> {
-        compileSdk = libs.findVersion("android-compileSdk").get().requiredVersion.toInt()
-
-        defaultConfig {
-            minSdk = libs.findVersion("android-minSdk").get().requiredVersion.toInt()
-            consumerProguardFiles("consumer-rules.pro")
-        }
-
-        sourceSets["main"].apply {
-            manifest.srcFile("src/androidMain/AndroidManifest.xml")
-            res.srcDirs("src/androidMain/res")
-        }
-
-        buildTypes {
-            release {
-                proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
-                )
-            }
-        }
-
-        compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_21
-            targetCompatibility = JavaVersion.VERSION_21
-        }
-    }
-}
-

@@ -11,14 +11,28 @@ plugins {
     alias(libs.plugins.spring) apply false
     alias(libs.plugins.srpingDependencyManagement) apply false
 
-//    alias(libs.plugins.detekt.dev)
+    alias(libs.plugins.detekt.dev)
+    alias(libs.plugins.ktlint)
 }
 
-//detekt {
-//    config.from("config/detekt/compose.yaml")
-//}
-//
-//dependencies {
-//    detektPlugins(libs.detekt.rules.ktlint)
-//    detektPlugins(libs.detekt.rules.compose)
-//}
+detekt {
+    config = files("${rootDir}config/detekt/default.yaml")
+    buildUponDefaultConfig = true
+}
+
+ktlint {
+    android = false
+
+    filter {
+        // 包含所有 kotlin 源并排除 build 目录
+        include("**/src/**/kotlin/**")
+        include("**/src/**/kotlin/**/*.kt")
+        include("**/*.kts")
+        exclude("**/build/**")
+    }
+}
+
+
+dependencies {
+    detektPlugins(libs.detekt.rules.compose)
+}

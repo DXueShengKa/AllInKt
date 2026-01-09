@@ -24,7 +24,6 @@ import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import js.array.ReadonlyArray
 import js.objects.unsafeJso
-import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.datetime.format
 import mui.material.Button
@@ -46,7 +45,6 @@ import muix.icons.IconsEdit
 import react.FC
 import react.Props
 import react.create
-import react.router.useNavigate
 import react.useMemo
 import react.useState
 import tanstack.react.table.useReactTable
@@ -55,10 +53,6 @@ import tanstack.table.core.OnChangeFn
 import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.TableOptions
 import tanstack.table.core.getCoreRowModel
-import toolpad.core.SeverityMui
-import toolpad.core.show
-import toolpad.core.useDialogs
-import toolpad.core.useNotifications
 import web.cssom.px
 import web.dom.ElementId
 import web.file.File
@@ -140,7 +134,7 @@ private val QandaListFC = FC {
     var qaPage: PageVO<QandaVO>? by useState()
     val selectState = useRowSelectionState()
     val cs = useCoroutineScope()
-    val notifications = useNotifications()
+//    val notifications = useNotifications()
     val apiQanda: ApiQanda = useInject()
 
 
@@ -148,20 +142,20 @@ private val QandaListFC = FC {
         apiQanda.page(params.page.index, params.page.size, params.isAsc, params.tagId)
     }
 
-    val reactNavigate = useNavigate()
+//    val reactNavigate = useNavigate()
 
     val onEdit: (QandaVO) -> Unit = { vo ->
-        reactNavigate("/qanda/add/${vo.id}")
+//        reactNavigate("/qanda/add/${vo.id}")
     }
 
     val onDelete: (QandaVO) -> Unit = { vo ->
         cs.launch {
             apiQanda.delete(vo.id)
                 .onLeft {
-                    notifications.show("${vo.question} $it", severity = SeverityMui.error)
+//                    notifications.show("${vo.question} $it", severity = SeverityMui.error)
                 }.onRight {
                     query.refresh()
-                    notifications.show("${vo.question} 已删除")
+//                    notifications.show("${vo.question} 已删除")
                 }
         }
     }
@@ -195,7 +189,7 @@ private val QandaListFC = FC {
             if (ids.isNotEmpty()) cs.launch {
                 val count = apiQanda.delete(ids)
                 query.refresh()
-                notifications.show("删了 $count 条数据")
+//                notifications.show("删了 $count 条数据")
             }
         }
         onTagId = {
@@ -238,8 +232,8 @@ private external interface TableMenuProps : Props {
 private val TableMenu = FC<TableMenuProps> { props ->
 
     val (excelFile, setFile) = useState<File>()
-    val notifications = useNotifications()
-    val dialog = useDialogs()
+//    val notifications = useNotifications()
+//    val dialog = useDialogs()
 
     Stack {
         direction = responsive(StackDirection.row)
@@ -264,7 +258,7 @@ private val TableMenu = FC<TableMenuProps> { props ->
 
                 Req.uploadExcel(f)
 
-                notifications.show("已更新")
+//                notifications.show("已更新")
 
                 props.onRefresh()
             }
@@ -275,12 +269,12 @@ private val TableMenu = FC<TableMenuProps> { props ->
         Button {
 
             onClick = asyncFunction {
-                val b = dialog.confirm(reactNode("是否删除选中"), unsafeJso {
-                    okText = reactNode("删除")
-                    cancelText = reactNode("取消")
-                }).await()
+//                val b = dialog.confirm(reactNode("是否删除选中"), unsafeJso {
+//                    okText = reactNode("删除")
+//                    cancelText = reactNode("取消")
+//                }).await()
 
-                if (b) props.onDeleteSelect()
+//                if (b) props.onDeleteSelect()
 
             }.asDynamic()
 
@@ -355,6 +349,6 @@ private val FilterTag: FC<FilterTagProps> = FC { props ->
 }
 
 
-val RouteQandaList = routes(
-    "list", "问题列表", QandaListFC
-)
+//val RouteQandaList = routes(
+//    "list", "问题列表", QandaListFC
+//)

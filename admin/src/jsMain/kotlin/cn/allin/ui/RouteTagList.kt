@@ -19,7 +19,6 @@ import mui.material.IconButton
 import muix.icons.IconsDelete
 import muix.icons.IconsEdit
 import react.FC
-import react.router.useNavigate
 import react.useMemo
 import react.useState
 import tanstack.react.table.useReactTable
@@ -27,9 +26,6 @@ import tanstack.table.core.ColumnDef
 import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.TableOptions
 import tanstack.table.core.getCoreRowModel
-import toolpad.core.SeverityMui
-import toolpad.core.show
-import toolpad.core.useNotifications
 
 
 private fun tagListColumnDef(
@@ -88,8 +84,8 @@ private val TagListFC = FC {
     val (pageParams, setPageParams) = useState(PageParams())
     var userPage: PageVO<QaTagVO>? by useState()
     val apiQandaTag: ApiQandaTag = useInject()
-    val notification = useNotifications()
-    val reactNavigate = useNavigate()
+//    val notification = useNotifications()
+//    val reactNavigate = useNavigate()
     val cs = useCoroutineScope()
 
     val query = useQuery(pageParams) {
@@ -105,17 +101,17 @@ private val TagListFC = FC {
         TableOptions(
             columns = tagListColumnDef(
                 onEdit = { tag ->
-                    reactNavigate("/qanda/tag/add/${tag.id}")
+//                    reactNavigate("/qanda/tag/add/${tag.id}")
                 },
                 onDelete = { tag ->
                     cs.launch {
                         apiQandaTag.delete(tag.id)
                             .onLeft {
-                                notification.show(it, severity = SeverityMui.error)
+//                                notification.show(it, severity = SeverityMui.error)
                             }
                             .onRight {
                                 query.refresh()
-                                notification.show("删除${tag.tagName}")
+//                                notification.show("删除${tag.tagName}")
                             }
                     }
                 }),
@@ -132,4 +128,3 @@ private val TagListFC = FC {
 
 }
 
-val RouteTagList = routes("tag/list", "标签列表", TagListFC)

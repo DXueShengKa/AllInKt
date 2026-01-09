@@ -4,7 +4,6 @@ package cn.allin.net
 
 import cn.allin.ValidatorError
 import cn.allin.api.ApiQanda
-import cn.allin.api.ApiUser
 import cn.allin.apiRoute
 import cn.allin.vo.MsgVO
 import cn.allin.vo.UserVO
@@ -15,10 +14,8 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
-import js.objects.unsafeJso
 import js.typedarrays.Uint8Array
 import js.typedarrays.toByteArray
-import toolpad.core.UserSession
 import web.blob.arrayBuffer
 import web.file.File
 
@@ -95,18 +92,6 @@ suspend fun Req.deleteAuth() {
     }
 
 }
-
-suspend fun ApiUser.userSession(): UserSession? {
-    val user: UserVO? = get()
-    return if (user != null) {
-        unsafeJso {
-            id = user.id.toString()
-            name = user.name
-            email = user.email
-        }
-    } else null
-}
-
 
 
 suspend fun Req.uploadExcel(file: File): Boolean {
