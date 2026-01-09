@@ -2,7 +2,7 @@
 android-compileSdk = "36"
 android-minSdk = "26"
 android-targetSdk = "36"
-android-gradle = "8.12.2"
+android-gradle = "8.12.3"
 
 #https://github.com/JetBrains/kotlin
 kotlin = "2.3.0"
@@ -151,6 +151,7 @@ kotlin-wrappers-muix-datePickers = { module = "org.jetbrains.kotlin-wrappers:kot
 kotlin-wrappers-muix-treeView = { module = "org.jetbrains.kotlin-wrappers:kotlin-muix-tree-view" }
 kotlin-wrappers-mui-icons = { module = "org.jetbrains.kotlin-wrappers:kotlin-mui-icons-material" }
 kotlin-wrappers-tanstack-table = { module = "org.jetbrains.kotlin-wrappers:kotlin-tanstack-react-table" }
+kotlin-wrappers-tanstack-route = { module = "org.jetbrains.kotlin-wrappers:kotlin-tanstack-react-router" }
 
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp-aa = { group = "com.google.devtools.ksp", name = "symbol-processing-aa", version.ref = "ksp" }
@@ -223,7 +224,6 @@ spring-starter-data-r2dbc = { module = "org.springframework.boot:spring-boot-sta
 
 spring-securityTest = { module = "org.springframework.security:spring-security-test" }
 spring-starter-dataJdbc = { module = "org.springframework.boot:spring-boot-starter-data-jdbc" }
-jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 spring-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
 spring-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-session-core = { module = "org.springframework.session:spring-session-core" }
@@ -233,6 +233,7 @@ spring-integration-mqtt = { module = "org.springframework.integration:spring-int
 spring-integration-ip = { module = "org.springframework.integration:spring-integration-ip" }
 
 exposed-spring = { group = "org.jetbrains.exposed", name = "exposed-spring-boot-starter", version.ref = "exposed" }
+exposed-migration-r2dbc = { group = "org.jetbrains.exposed", name = "exposed-migration-r2dbc", version.ref = "exposed" }
 exposed-kotlinDatetime = { group = "org.jetbrains.exposed", name = "exposed-kotlin-datetime", version.ref = "exposed" }
 
 postgresql = { module = "org.postgresql:postgresql" }
