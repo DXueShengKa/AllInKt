@@ -34,5 +34,5 @@ ktlint {
 
 
 dependencies {
-    detektPlugins(libs.detekt.rules.compose)
+    ktlintRuleset(libs.compose.rules.ktlint)
 }

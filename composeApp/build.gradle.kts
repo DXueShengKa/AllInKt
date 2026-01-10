@@ -63,7 +63,6 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.compose)
             implementation(libs.jetbrains.savedstate.compose)
             implementation(libs.koin.compose.viewmodel)
-            implementation(libs.jetbrains.material3)
             implementation(libs.jetbrains.components.resources)
             implementation(projects.shared)
             implementation(projects.client.ui)

@@ -88,10 +88,11 @@ proguard = "7.6.0"
 openai = "4.0.1"
 #https://docs.koog.ai/
 koog = "0.6.0"
+
 #https://detekt.dev/
 detekt = "2.0.0-alpha.1"
 #https://github.com/mrmans0n/compose-rules/releases
-detekt-rules-compose = "0.5.3"
+compose-rules= "0.5.3"
 #https://github.com/jlleitschuh/ktlint-gradle
 ktlint-gradle = "14.0.1"
 
@@ -282,7 +283,8 @@ apache-poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref =
 awssdk-s3 = { module = "software.amazon.awssdk:s3", version.ref = "awssdk" }
 
 detekt-rules-ktlint = { module = "dev.detekt:detekt-rules-ktlint-wrapper" , version.ref = "detekt" }
-detekt-rules-compose = { module = "io.nlopez.compose.rules:detekt" , version.ref = "detekt-rules-compose" }
+compose-rules-detekt = { module = "io.nlopez.compose.rules:detekt" , version.ref = "compose-rules" }
+compose-rules-ktlint = { module = "io.nlopez.compose.rules:ktlint" , version.ref = "compose-rules" }
 
 [bundles]
 netLibs = [

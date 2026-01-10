@@ -1,4 +1,3 @@
-
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
@@ -10,10 +9,8 @@ plugins {
 plugins.apply("org.jetbrains.kotlin.plugin.compose")
 plugins.apply("org.jetbrains.compose")
 
-
 @OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 kotlin {
-
 
     applyHierarchyTemplate(hierarchyTemplate)
 
@@ -34,19 +31,34 @@ kotlin {
 
     jvmToolchain(21)
 
+    sourceSets {
+        val libs: VersionCatalog = versionCatalogs.named("libs")
 
+        commonMain.dependencies {
+            implementation(libs.findLibrary("jetbrains-material3").get())
+        }
+    }
 }
 
 tasks.kotlinCompilerOptions()
 
-
 android {
     val libs: VersionCatalog = versionCatalogs.named("libs")
 
-    compileSdk = libs.findVersion("android-compileSdk").get().requiredVersion.toInt()
+    compileSdk =
+        libs
+            .findVersion("android-compileSdk")
+            .get()
+            .requiredVersion
+            .toInt()
 
     defaultConfig {
-        minSdk = libs.findVersion("android-minSdk").get().requiredVersion.toInt()
+        minSdk =
+            libs
+                .findVersion("android-minSdk")
+                .get()
+                .requiredVersion
+                .toInt()
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -59,7 +71,7 @@ android {
         release {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }

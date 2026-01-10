@@ -1,6 +1,15 @@
+build:
+  maxIssues: 0
+
+# 关闭 formatting（由 ktlint 负责）
 formatting:
   active: false
 
 # 启用 compose 规则集
 compose:
   active: true
+
+# 排除扫描
+exclude:
+  - '**/build/**'
+  - '**/.gradle/**'

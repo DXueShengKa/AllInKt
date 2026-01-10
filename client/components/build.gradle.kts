@@ -23,8 +23,7 @@ kotlin {
 
             implementation(projects.shared)
             implementation(libs.kotlinx.datetime)
-            implementation(compose.material3)
-            implementation(compose.uiUtil)
+            implementation(libs.jetbrains.ui.util)
         }
     }
 }
