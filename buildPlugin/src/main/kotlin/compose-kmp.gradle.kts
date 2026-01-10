@@ -40,7 +40,6 @@ kotlin {
     }
 }
 
-tasks.kotlinCompilerOptions()
 
 android {
     val libs: VersionCatalog = versionCatalogs.named("libs")

@@ -4,9 +4,13 @@ import cn.allin.ServerParams
 import cn.allin.api.ApiUser
 import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.delete
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import org.koin.core.annotation.Single
 
 @Single([ApiUser::class])
@@ -15,7 +19,7 @@ internal class UserRepository(
 ): ApiUser {
 
      override suspend fun page(pageIndex: Int?, pageSize: Int?): PageVO<UserVO> {
-        return http.get(ApiUser.pathPage) {
+        return http.get(ApiUser.PATH_PAGE) {
             parameter(ServerParams.PAGE_INDEX, pageIndex)
             parameter(ServerParams.PAGE_SIZE, pageSize)
         }.body()

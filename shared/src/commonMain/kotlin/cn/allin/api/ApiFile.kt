@@ -5,7 +5,6 @@ import cn.allin.vo.FilePathVO
 import kotlin.jvm.JvmStatic
 
 interface ApiFile {
-
     suspend fun uploadUrl(filePath: String): Either<String, String>
 
     suspend fun list(pathId: Int?): FilePathVO
@@ -13,7 +12,6 @@ interface ApiFile {
     suspend fun delete(pathId: Int)
 
     suspend fun newDir(pathVO: FilePathVO): Either<String, Int>
-
 
     companion object {
         const val FILE = "file"
@@ -27,6 +25,5 @@ interface ApiFile {
 
         @JvmStatic
         fun pathNewDir() = "$FILE/$NEW_DIR"
-
     }
 }

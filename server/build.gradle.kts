@@ -25,7 +25,7 @@ kotlin {
     }
 }
 
-//把依赖的jar分开打包
+// 把依赖的jar分开打包
 tasks.register<Copy>("copyLibs") {
     into("build/libs/lib")
     from(configurations.runtimeClasspath)
@@ -37,13 +37,15 @@ tasks.bootJar {
     setExcludes(listOf("*.jar"))
     dependsOn("copyLibs")
     manifest {
-        //引用分开打包的jar包
-        attributes["Class-Path"] = configurations.runtimeClasspath
-            .get().files
-            .joinToString(" ") { "lib/${it.name}" }
+        // 引用分开打包的jar包
+        attributes["Class-Path"] =
+            configurations.runtimeClasspath
+                .get()
+                .files
+                .joinToString(" ") { "lib/${it.name}" }
     }
 
-    //把admin打包的文件复制到静态文件里
+    // 把admin打包的文件复制到静态文件里
 //    from(projectDir.parent + "/admin/build/dist/js/productionExecutable") {
 //        into("BOOT-INF/classes/static/admin")
 //    }
@@ -55,21 +57,25 @@ tasks.withType<Test> {
 
 dependencies {
     ksp(projects.ksp.server)
-    ksp(libs.jimmer.ksp)
-    implementation(libs.jimmer.spring) {
-        exclude(group = "org.babyfish.jimmer", module = "jimmer-client")
-    }
     implementation(projects.shared)
-    implementation(libs.spring.starter.webflux)
+    implementation(libs.spring.starter.webflux) {
+        exclude(group = "org.springframework.boot", module = "spring-boot-jackson")
+        exclude(group = "com.fasterxml.jackson.core", module = "jackson-databind")
+        exclude(group = "com.fasterxml.jackson.core", module = "jackson-annotations")
+        exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
+    }
     implementation(libs.spring.starter.security)
     implementation(libs.spring.starter.cache)
     implementation(libs.spring.starter.actuator)
     implementation(libs.spring.starter.data.redis)
+    implementation(libs.spring.starter.data.r2dbc)
     implementation(libs.spring.session.data.redis)
     implementation(libs.spring.session.core)
 
     developmentOnly(libs.spring.devtools)
-    implementation(libs.postgresql)
+    implementation(libs.exposed.kotlinDatetime)
+    implementation(libs.exposed.migration.r2dbc)
+    implementation(libs.postgresql.r2dbc)
 
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.coroutines.reactor)

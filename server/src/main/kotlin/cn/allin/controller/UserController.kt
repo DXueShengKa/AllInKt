@@ -5,12 +5,8 @@ import cn.allin.PutUserValidator
 import cn.allin.api.ApiUser
 import cn.allin.apiRoute
 import cn.allin.repository.UserRepository
-import cn.allin.utils.UserAuthenticationToken
-import cn.allin.utils.toUserVO
 import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
-import kotlinx.coroutines.reactor.awaitSingle
-import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -36,18 +32,24 @@ class UserController(
      */
     @GetMapping(apiRoute.PAGE)
     override suspend fun page(pageIndex: Int?, pageSize: Int?): PageVO<UserVO> {
-        return userRepository.getUsers(pageIndex ?: 0, pageSize ?: 10)
+        return PageVO(
+            userRepository.getUserAll(),
+            10,10
+        )
+        TODO()
+//        return userRepository.getUsers(pageIndex ?: 0, pageSize ?: 10)
     }
 
 
     @GetMapping
     override suspend fun get(): UserVO? {
-        return ReactiveSecurityContextHolder.getContext()
-            .mapNotNull {
-                val token = it.authentication as UserAuthenticationToken
-                userRepository.findById(token.id)?.toUserVO()
-            }
-            .awaitSingle()
+        TODO()
+//        return ReactiveSecurityContextHolder.getContext()
+//            .mapNotNull {
+//                val token = it.authentication as UserAuthenticationToken
+//                userRepository.findById(token.id)?.toUserVO()
+//            }
+//            .awaitSingle()
     }
 
 
@@ -70,7 +72,7 @@ class UserController(
      */
     @PostMapping
     override suspend fun add(@Validated(PostUserValidator::class) @RequestBody user: UserVO) {
-        userRepository.add(user)
+//        userRepository.add(user)
     }
 
 

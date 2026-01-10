@@ -1,73 +1,30 @@
 package cn.allin.service
 
-import cn.allin.model.FilePathEntity
-import cn.allin.model.by
-import cn.allin.repository.FileObjectRepository
-import cn.allin.repository.FilePathRepository
-import cn.allin.utils.toFileVO
 import cn.allin.vo.FilePathVO
+import java.time.Duration
+import java.util.stream.Stream
+import kotlin.jvm.optionals.getOrNull
 import kotlinx.coroutines.future.await
-import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.http.MediaTypeFactory
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.s3.S3AsyncClient
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest
-import java.time.Duration
-import java.util.stream.Stream
-import kotlin.jvm.optionals.getOrNull
 
 @Service
 class FileService(
     private val s3Client: S3AsyncClient,
     private val s3PreSigner: S3Presigner,
-    private val objectRepository: FileObjectRepository,
-    private val pathRepository: FilePathRepository
+//    private val objectRepository: FileObjectRepository,
+//    private val pathRepository: FilePathRepository
 ) {
 
     suspend fun listDir(pathId: Int?): FilePathVO {
-        var path = ""
-        var parentId: Int? = null
-        val paths = if (pathId != null) {
-            val entity = pathRepository.findById(pathId, newFetcher(FilePathEntity::class).by {
-                path()
-                parentId()
-                `childList*` {
-                    depth(1)
-                }
-            }).get()
-            path = entity.path
-            parentId = entity.parentId
-            entity.childList
-        } else {
-            pathRepository.findAllByParentIdIsNull()
-        }
-
-        val files = pathId?.let(objectRepository::findAllByPathId)
-
-        return FilePathVO(
-            id = pathId ?: 0,
-            path = path,
-            parentId = parentId,
-            childs = paths.map { p ->
-                FilePathVO(
-                    id = p.id,
-                    path = p.path,
-                    parentId = p.parentId
-                )
-            },
-            fileList = files?.map {
-                it.toFileVO()
-            }
-        )
+        TODO()
     }
 
     fun addPath(parentId: Int, path: String):Int {
-       return pathRepository.save(FilePathEntity {
-            this.parentId = parentId
-            this.path = path
-        }, org.babyfish.jimmer.sql.ast.mutation.SaveMode.INSERT_ONLY)
-            .id
+        TODO()
     }
 
     suspend fun listDir(bucket: String, path: String): List<String> {

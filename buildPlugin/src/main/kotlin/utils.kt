@@ -1,10 +1,5 @@
 
 import org.gradle.api.artifacts.dsl.DependencyHandler
-import org.gradle.api.tasks.TaskContainer
-import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 val isMacOs = System.getProperty("os.name").startsWith("Mac OS")
 val isWindow = System.getProperty("os.name").startsWith("Window")
@@ -41,24 +36,4 @@ fun DependencyHandler.kspNoJsAll(dependencyNotation: Any) {
     kspAndroid(dependencyNotation)
     kspJvm(dependencyNotation)
     kspIos(dependencyNotation)
-}
-
-internal fun TaskContainer.kotlinCompilerOptions() {
-    withType(KotlinCompilationTask::class) {
-        compilerOptions {
-            if (this is KotlinJvmCompilerOptions) {
-                jvmTarget.set(JvmTarget.JVM_21)
-            }
-
-            optIn.addAll(
-                "kotlin.RequiresOptIn",
-                "kotlin.js.ExperimentalJsStatic",
-                "kotlin.time.ExperimentalTime",
-            )
-
-            freeCompilerArgs.addAll(
-                "-Xexpect-actual-classes",
-            )
-        }
-    }
 }

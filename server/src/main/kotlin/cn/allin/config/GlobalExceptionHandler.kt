@@ -9,15 +9,15 @@ import org.springframework.web.bind.support.WebExchangeBindException
 
 @ControllerAdvice
 class GlobalExceptionHandler {
-
     @ExceptionHandler(WebExchangeBindException::class)
     fun handleValidationExceptions(ex: WebExchangeBindException): ResponseEntity<VoValidatorMessage> {
-        val errors = ex.bindingResult.allErrors.asSequence()
-            .mapNotNull {
-                it as FieldError
-                VoValidatorMessage(it.field, it.code ?: return@mapNotNull null, it.defaultMessage ?: return@mapNotNull null)
-            }
-            .first()
+        val errors =
+            ex.bindingResult.allErrors
+                .asSequence()
+                .mapNotNull {
+                    it as FieldError
+                    VoValidatorMessage(it.field, it.code ?: return@mapNotNull null, it.defaultMessage ?: return@mapNotNull null)
+                }.first()
         return ResponseEntity(errors, ex.statusCode)
     }
 }

@@ -4,7 +4,7 @@ import cn.allin.BuildConfig
 import java.util.logging.Logger
 
 actual class InLogger(
-    private val logger: Logger
+    private val logger: Logger,
 ) {
     constructor(tag: String) : this(Logger.getLogger(tag))
 
@@ -31,5 +31,4 @@ actual class InLogger(
             logger.severe(message)
         }
     }
-
 }

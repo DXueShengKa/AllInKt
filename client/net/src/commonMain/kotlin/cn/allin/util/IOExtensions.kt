@@ -1,6 +1,9 @@
 package cn.allin.util
 
-import io.ktor.utils.io.*
+import io.ktor.utils.io.ByteReadChannel
+import io.ktor.utils.io.close
+import io.ktor.utils.io.writeBuffer
+import io.ktor.utils.io.writer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.io.Buffer
 import kotlinx.io.RawSink
@@ -14,36 +17,40 @@ fun RawSource.toByteReadChannel(
     fileLength: Long = 0,
     context: CoroutineContext,
     onProgress: ((Int) -> Unit)? = null,
-): ByteReadChannel = CoroutineScope(context).writer(autoFlush = true) {
-    val buffer = Buffer()
-    val byteCount = 1024L * 8
-    try {
-        var totalBytesWrite = 0L
+): ByteReadChannel =
+    CoroutineScope(context)
+        .writer(autoFlush = true) {
+            val buffer = Buffer()
+            val byteCount = 1024L * 8
+            try {
+                var totalBytesWrite = 0L
 
-        while (true) {
+                while (true) {
+                    val readCount = readAtMostTo(buffer, byteCount)
+                    if (readCount == -1L) break
 
-            val readCount = readAtMostTo(buffer, byteCount)
-            if (readCount == -1L) break
+                    channel.writeBuffer(buffer)
 
-            channel.writeBuffer(buffer)
+                    if (onProgress != null) {
+                        totalBytesWrite += readCount
+                        onProgress((totalBytesWrite * 100 / fileLength).toInt())
+                    }
+                }
 
-            if (onProgress != null) {
-                totalBytesWrite += readCount
-                onProgress((totalBytesWrite * 100 / fileLength).toInt())
+                channel.flush()
+            } catch (cause: Throwable) {
+                channel.close(cause)
+            } finally {
+                buffer.close()
+                close()
             }
-        }
+        }.channel
 
-        channel.flush()
-    } catch (cause: Throwable) {
-        channel.close(cause)
-    } finally {
-        buffer.close()
-        close()
-    }
-}.channel
-
-
-fun RawSource.copyTo(target: RawSink, sourceLength: Long, onProgress: (Byte) -> Unit) {
+fun RawSource.copyTo(
+    target: RawSink,
+    sourceLength: Long,
+    onProgress: (Byte) -> Unit,
+) {
     val buffer = Buffer()
     val byteCount = 1024L * 8
     target.use { out ->
@@ -60,23 +67,21 @@ fun RawSource.copyTo(target: RawSink, sourceLength: Long, onProgress: (Byte) -> 
     }
 }
 
-
-fun RawSource.copyTo(target: Path, sourceLength: Long, onProgress: (Byte) -> Unit) {
+fun RawSource.copyTo(
+    target: Path,
+    sourceLength: Long,
+    onProgress: (Byte) -> Unit,
+) {
     copyTo(SystemFileSystem.sink(target), sourceLength, onProgress)
 }
-
-
 
 val Path.fileSize: Long
     get() = metadata?.size ?: 0
 
-
 inline val Path.metadata: FileMetadata?
     get() = SystemFileSystem.metadataOrNull(this)
 
-
 fun String.toKtIoPath(): Path = Path(path = this)
-
 
 fun Path.deleteAll() {
     SystemFileSystem.apply {
@@ -87,5 +92,4 @@ fun Path.deleteAll() {
             delete(it)
         }
     }
-
 }

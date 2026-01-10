@@ -6,8 +6,10 @@ import cn.allin.vo.UserVO
 import kotlin.jvm.JvmStatic
 
 interface ApiUser {
-
-    suspend fun page(pageIndex: Int?, pageSize: Int?): PageVO<UserVO>
+    suspend fun page(
+        pageIndex: Int?,
+        pageSize: Int?,
+    ): PageVO<UserVO>
 
     suspend fun get(): UserVO?
 
@@ -17,16 +19,14 @@ interface ApiUser {
 
     suspend fun delete(id: Long): Boolean
 
-
     suspend fun deleteAll(ids: List<Long>): Int
-
 
     companion object {
         const val USER = "user"
 
-        const val pathPage = "${USER}/${apiRoute.PAGE}"
+        const val PATH_PAGE = "$USER/${apiRoute.PAGE}"
 
         @JvmStatic
-        fun pathDelete(userId: String) = "${USER}/$userId"
+        fun pathDelete(userId: String) = "$USER/$userId"
     }
 }

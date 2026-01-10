@@ -1,3 +1,8 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJsCompilation
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
@@ -32,7 +37,30 @@ ktlint {
     }
 }
 
-
 dependencies {
     ktlintRuleset(libs.compose.rules.ktlint)
+}
+
+subprojects {
+    tasks.withType<KotlinCompilationTask<*>> {
+        compilerOptions {
+            if (this is KotlinJvmCompilerOptions) {
+                jvmTarget = JvmTarget.JVM_21
+            }
+            if (this is KotlinJsCompilation) {
+                freeCompilerArgs.add("-Xenable-suspend-function-exporting")
+            }
+
+            optIn.addAll(
+                "kotlin.RequiresOptIn",
+                "kotlin.js.ExperimentalJsStatic",
+//                "kotlin.time.ExperimentalTime",
+            )
+
+            freeCompilerArgs.addAll(
+                "-Xexpect-actual-classes",
+                "-Xexplicit-backing-fields",
+            )
+        }
+    }
 }

@@ -1,7 +1,5 @@
 package cn.allin.ksp
 
-import cn.allin.ksp.navigation.GenerateNav
-import cn.allin.ksp.viewmodel.generateViewModel
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
@@ -21,10 +19,10 @@ class CodeProcessor(environment: SymbolProcessorEnvironment) : SymbolProcessor {
         if (invoked) return emptyList()
         invoked = true
 
-        val nav = GenerateNav(codeGenerator, resolver, logger, "App")
-        nav.generateNavGraphDsl()
-        nav.writeFile()
-        generateViewModel("App", codeGenerator, resolver, "cn.allin")
+//        val nav = GenerateNav(codeGenerator, resolver, logger, "App")
+//        nav.generateNavGraphDsl()
+//        nav.writeFile()
+//        generateViewModel("App", codeGenerator, resolver, "cn.allin")
 
         return emptyList()
     }

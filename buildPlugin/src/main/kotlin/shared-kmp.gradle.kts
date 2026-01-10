@@ -42,4 +42,3 @@ kotlin {
 
 }
 
-tasks.kotlinCompilerOptions()
