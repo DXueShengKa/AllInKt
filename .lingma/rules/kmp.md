@@ -14,10 +14,10 @@ trigger: always_on
 - **前端框架**:
     - 移动端: Jetpack Compose
     - Web端: [kotlin wrappers](https://github.com/JetBrains/kotlin-wrappers),web 主流框架的kotlin官方封装库，包含react、mui、TanStack
-- **后端框架**: Spring Boot
+- **后端框架**: Spring Boot 4
 - **数据库**: PostgreSQL
-- **ORM框架**: Exposed
-- **构建工具**: Gradle (Kotlin DSL)
+- **ORM框架**: Exposed 1.0
+- **构建工具**: Gradle 9 (Kotlin DSL)
 - **客户端依赖注入**: Koin
 - **序列化**: kotlinx.serialization
 - **代码生成**: Kotlin Symbol Processing (KSP)

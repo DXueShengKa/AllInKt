@@ -14,22 +14,15 @@ import org.springframework.web.reactive.config.WebFluxConfigurer
 
 @Configuration
 class AllInWebConfig : WebFluxConfigurer {
-
     @OptIn(ExperimentalSerializationApi::class)
     override fun configureHttpMessageCodecs(configurer: ServerCodecConfigurer) {
         val codecs: ServerCodecConfigurer.ServerDefaultCodecs = configurer.defaultCodecs()
         codecs.kotlinSerializationJsonDecoder(KotlinSerializationJsonDecoder(AllJson))
         codecs.kotlinSerializationJsonEncoder(KotlinSerializationJsonEncoder(AllJson))
 
-
-        codecs.kotlinSerializationProtobufDecoder(KotlinSerializationProtobufDecoder(AllProtoBuf as  kotlinx.serialization.protobuf.ProtoBuf))
-        codecs.kotlinSerializationProtobufEncoder(KotlinSerializationProtobufEncoder(AllProtoBuf as  kotlinx.serialization.protobuf.ProtoBuf))
-
+        codecs.kotlinSerializationProtobufDecoder(KotlinSerializationProtobufDecoder(AllProtoBuf as kotlinx.serialization.protobuf.ProtoBuf))
+        codecs.kotlinSerializationProtobufEncoder(KotlinSerializationProtobufEncoder(AllProtoBuf as kotlinx.serialization.protobuf.ProtoBuf))
     }
 
-
-    override fun getValidator(): Validator? {
-        return SerializableValidator()
-    }
-
+    override fun getValidator(): Validator? = SerializableValidator()
 }

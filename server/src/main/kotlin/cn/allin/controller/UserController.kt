@@ -26,20 +26,20 @@ import org.springframework.web.bind.annotation.RestController
 class UserController(
     private val userRepository: UserRepository,
 ) : ApiUser {
-
     /**
      * 获取用户列表
      */
     @GetMapping(apiRoute.PAGE)
-    override suspend fun page(pageIndex: Int?, pageSize: Int?): PageVO<UserVO> {
+    override suspend fun page(
+        pageIndex: Int?,
+        pageSize: Int?,
+    ): PageVO<UserVO> {
         return PageVO(
             userRepository.getUserAll(),
-            10,10
+            10,
+            10,
         )
-        TODO()
-//        return userRepository.getUsers(pageIndex ?: 0, pageSize ?: 10)
     }
-
 
     @GetMapping
     override suspend fun get(): UserVO? {
@@ -52,32 +52,34 @@ class UserController(
 //            .awaitSingle()
     }
 
-
     @DeleteMapping(apiRoute.PATH_ID)
-    override suspend fun delete(@PathVariable id: Long): Boolean {
-        return userRepository.delete(userId = id)
-    }
+    override suspend fun delete(
+        @PathVariable id: Long,
+    ): Boolean = userRepository.delete(userId = id)
 
     /**
      * 删除用户
      * @param ids 用户id集合
      */
     @DeleteMapping
-   override suspend fun deleteAll(@RequestParam("ids") ids: List<Long>): Int {
-        return userRepository.delete(ids)
-    }
+    override suspend fun deleteAll(
+        @RequestParam("ids") ids: List<Long>,
+    ): Int = userRepository.delete(ids)
 
     /**
      * 添加用户
      */
     @PostMapping
-    override suspend fun add(@Validated(PostUserValidator::class) @RequestBody user: UserVO) {
+    override suspend fun add(
+        @Validated(PostUserValidator::class) @RequestBody user: UserVO,
+    ) {
 //        userRepository.add(user)
     }
 
-
     @PutMapping
-    override suspend fun update(@Validated(PutUserValidator::class) @RequestBody user: UserVO) {
+    override suspend fun update(
+        @Validated(PutUserValidator::class) @RequestBody user: UserVO,
+    ) {
         userRepository.update(user)
     }
 }

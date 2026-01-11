@@ -10,12 +10,10 @@ import java.util.concurrent.Executor
 @Configuration
 @EnableAsync
 class ThreadConfig : AsyncConfigurer {
-
-    override fun getAsyncExecutor(): Executor? {
-        return TaskExecutorAdapter(
-            DefaultVirtualExecutor
+    override fun getAsyncExecutor(): Executor? =
+        TaskExecutorAdapter(
+            DefaultVirtualExecutor,
         )
-    }
 
 //    @Bean
 //    fun <T : ProtocolHandler> protocolHandler() = TomcatProtocolHandlerCustomizer<T> {

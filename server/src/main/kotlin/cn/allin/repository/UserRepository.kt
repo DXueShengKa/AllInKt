@@ -5,24 +5,24 @@ import cn.allin.vo.UserVO
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import org.jetbrains.exposed.v1.r2dbc.selectAll
-import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 
 @Repository
+@Transactional
 class UserRepository {
-    suspend fun getUserAll(): List<UserVO> {
-        return suspendTransaction {
-            UserTable
-                .selectAll()
-                .map {
-                    UserVO(
-                        id = it[UserTable.id].value,
-                        name = it[UserTable.name],
-                        password = it[UserTable.password],
-                    )
-                }.toList()
-        }
-    }
+    suspend fun getUserAll(): List<UserVO> =
+        UserTable
+            .selectAll()
+            .map {
+                UserVO(
+                    id = it[UserTable.id].value,
+                    name = it[UserTable.name],
+                    password = it[UserTable.password],
+                    gender = it[UserTable.gender],
+                    role = it[UserTable.role].name,
+                )
+            }.toList()
 
 //    fun getUsers(index: Int, size: Int): PageVO<UserVO> {
 //        return sqlClient.createQuery(UserEntity::class) {

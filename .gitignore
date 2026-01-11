@@ -19,3 +19,4 @@ captures
 kotlin-js-store
 /server/src/main/resources/application-ali.yaml
 /server/src/main/resources/application-prod.yaml
+/tmp/
