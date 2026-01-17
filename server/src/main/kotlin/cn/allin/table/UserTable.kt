@@ -1,12 +1,17 @@
-package cn.allin.model
+package cn.allin.table
 
 import cn.allin.config.UserRole
+import cn.allin.ksp.server.TableToVo
 import cn.allin.vo.Gender
+import cn.allin.vo.UserVO
 import org.jetbrains.exposed.v1.core.dao.id.LongIdTable
 import org.jetbrains.exposed.v1.datetime.CurrentDateTime
 import org.jetbrains.exposed.v1.datetime.date
 import org.jetbrains.exposed.v1.datetime.datetime
 
+@TableToVo(
+    [UserVO::class]
+)
 object UserTable : LongIdTable("users") {
     val name = varchar("name", length = 30)
     val email = varchar("email", length = 128).nullable()

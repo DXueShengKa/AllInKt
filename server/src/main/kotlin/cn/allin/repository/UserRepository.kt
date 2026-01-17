@@ -1,10 +1,20 @@
 package cn.allin.repository
 
-import cn.allin.model.UserTable
+import cn.allin.model.toUserVO
+import cn.allin.model.updateBuilder
+import cn.allin.table.UserTable
 import cn.allin.vo.UserVO
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
+import org.jetbrains.exposed.v1.core.ResultRow
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.r2dbc.deleteWhere
+import org.jetbrains.exposed.v1.r2dbc.insertAndGetId
+import org.jetbrains.exposed.v1.r2dbc.select
 import org.jetbrains.exposed.v1.r2dbc.selectAll
+import org.jetbrains.exposed.v1.r2dbc.update
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -13,36 +23,31 @@ import org.springframework.transaction.annotation.Transactional
 class UserRepository {
     suspend fun getUserAll(): List<UserVO> =
         UserTable
-            .selectAll()
-            .map {
-                UserVO(
-                    id = it[UserTable.id].value,
-                    name = it[UserTable.name],
-                    password = it[UserTable.password],
-                    gender = it[UserTable.gender],
-                    role = it[UserTable.role].name,
-                )
-            }.toList()
+            .select(UserTable.name)
+            .map(ResultRow::toUserVO)
+            .toList()
 
-//    fun getUsers(index: Int, size: Int): PageVO<UserVO> {
+    //    fun getUsers(index: Int, size: Int): PageVO<UserVO> {
 //        return sqlClient.createQuery(UserEntity::class) {
 //            select(table)
 //        }.fetchPage(pageIndex = index, pageSize = size)
 //            .toPageVO { it.toUserVO() }
 //    }
-//
-//    fun add(userVO: UserVO) {
-//        sqlClient.saveCommand(userVO.toEntity(), SaveMode.INSERT_ONLY).execute()
-//    }
-//
-//    fun findRole(username: String): UserEntity? {
-//        return sqlClient.executeQuery(UserEntity::class, limit = 1) {
-//            where(table.name eq username)
-//            select(table.fetchBy {
-//                role()
-//            })
-//        }.firstOrNull()
-//    }
+
+    suspend fun add(userVO: UserVO) {
+        UserTable
+            .insertAndGetId {
+                updateBuilder(it, userVO)
+            }.value
+    }
+
+    suspend fun findRole(username: String): UserVO? =
+        UserTable
+            .run {
+                select(role)
+                    .where { name eq username }
+            }.firstOrNull()
+            ?.toUserVO()
 //
 //
 //    fun findPasswordRole(id: Long): UserEntity? {
@@ -55,18 +60,27 @@ class UserRepository {
 //        }.firstOrNull()
 //    }
 
-//    fun findById(id: Long): UserEntity? {
-//        return sqlClient.findOneById(UserEntity::class, id)
-//    }
+    suspend fun findById(id: Long): UserVO? =
+        UserTable
+            .selectAll()
+            .where { UserTable.id eq id }
+            .limit(1)
+            .firstOrNull()
+            ?.toUserVO()
 
-    fun update(user: UserVO) {
+    suspend fun update(user: UserVO) {
+        UserTable.update {
+            updateBuilder(it, user)
+        }
     }
 
-    fun delete(userId: Long): Boolean {
-        TODO()
-    }
+    suspend fun delete(userId: Long): Boolean =
+        UserTable.deleteWhere {
+            id eq userId
+        } > 0
 
-    fun delete(ids: List<Long>): Int {
-        TODO()
-    }
+    suspend fun delete(ids: List<Long>): Int =
+        UserTable.deleteWhere {
+            id inList ids
+        }
 }

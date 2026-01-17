@@ -2,9 +2,8 @@ package cn.allin.utils
 
 class BiMap<K, V>(
     private val kMap: MutableMap<K, V>,
-    private val vMap: MutableMap<V, K>
+    private val vMap: MutableMap<V, K>,
 ) : MutableMap<K, V> {
-
     constructor() : this(HashMap(), HashMap())
 
     override val keys: MutableSet<K>
@@ -16,13 +15,16 @@ class BiMap<K, V>(
     override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
         get() = kMap.entries
 
-    override fun put(key: K, value: V): V {
+    override fun put(
+        key: K,
+        value: V,
+    ): V {
         if (containsKey(key)) {
             val v = kMap[key]
             if (v == value) return v
 
             kMap[key] = value
-            //删除原来的value再存v k map
+            // 删除原来的value再存v k map
             vMap.remove(v)
             vMap[value] = key
             return value
@@ -59,25 +61,13 @@ class BiMap<K, V>(
     override val size: Int
         get() = kMap.size
 
-    override fun isEmpty(): Boolean {
-        return kMap.isEmpty() && vMap.isEmpty()
-    }
+    override fun isEmpty(): Boolean = kMap.isEmpty() && vMap.isEmpty()
 
-    override fun containsKey(key: K): Boolean {
-        return kMap.containsKey(key)
-    }
+    override fun containsKey(key: K): Boolean = kMap.containsKey(key)
 
-    override fun containsValue(value: V): Boolean {
-        return vMap.containsKey(value)
-    }
+    override fun containsValue(value: V): Boolean = vMap.containsKey(value)
 
-    override fun get(key: K): V? {
-        return kMap[key]
-    }
+    override fun get(key: K): V? = kMap[key]
 
-    fun getKevByValue(value: V): K? {
-        return vMap[value]
-    }
-
+    fun getKevByValue(value: V): K? = vMap[value]
 }
-

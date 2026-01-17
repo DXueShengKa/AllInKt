@@ -2,7 +2,6 @@ package cn.allin.vo
 
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 data class OffiAccoutMsgVO(
     val toUserName: String,

@@ -9,33 +9,28 @@ import androidx.collection.longListOf
 import androidx.collection.mutableIntListOf
 import androidx.collection.mutableLongListOf
 
-
 inline infix fun <T, reified R> Array<T>.map(transform: (T) -> R) = Array(size) { transform(this[it]) }
 
-inline infix fun <T, reified R> Array<T>.mapIndexed(transform: (index: Int, T) -> R) =
-    Array(size) { transform(it, this[it]) }
+inline infix fun <T, reified R> Array<T>.mapIndexed(transform: (index: Int, T) -> R) = Array(size) { transform(it, this[it]) }
 
 inline infix fun <T, reified R> List<T>.mapToArray(transform: (T) -> R) = Array(size) { transform(this[it]) }
 
-
 inline infix fun <T> List<T>.mapToIntArray(transform: (T) -> Int) = IntArray(size) { transform(this[it]) }
 
-
-inline fun <T, reified R> List<T>.mapToArrayIndexed(transform: (index: Int, T) -> R) =
-    Array(size) { transform(it, this[it]) }
+inline fun <T, reified R> List<T>.mapToArrayIndexed(transform: (index: Int, T) -> R) = Array(size) { transform(it, this[it]) }
 
 @Suppress("UNCHECKED_CAST")
 fun <T> Iterator<Any>.nextType(): T = next() as T
 
-
-
 fun <T> Sequence<T>.toLongList(transform: (T) -> Long): LongList {
     val it = iterator()
-    if (!it.hasNext())
+    if (!it.hasNext()) {
         return longListOf()
+    }
     val element = it.next()
-    if (!it.hasNext())
+    if (!it.hasNext()) {
         return longListOf(transform(element))
+    }
 
     val dst = mutableLongListOf()
     dst.add(transform(element))
@@ -43,19 +38,17 @@ fun <T> Sequence<T>.toLongList(transform: (T) -> Long): LongList {
     return dst
 }
 
-
-fun LongList.toArray(): LongArray {
-    return LongArray(size) { this[it] }
-}
-
+fun LongList.toArray(): LongArray = LongArray(size) { this[it] }
 
 fun <T> Sequence<T>.toIntList(transform: (T) -> Int): IntList {
     val it = iterator()
-    if (!it.hasNext())
+    if (!it.hasNext()) {
         return intListOf()
+    }
     val element = it.next()
-    if (!it.hasNext())
+    if (!it.hasNext()) {
         return intListOf(transform(element))
+    }
 
     val dst = mutableIntListOf()
     dst.add(transform(element))
@@ -64,8 +57,9 @@ fun <T> Sequence<T>.toIntList(transform: (T) -> Int): IntList {
 }
 
 fun intIntMapKvOf(vararg kevValue: Int): MutableIntIntMap {
-    if (kevValue.size % 2 != 0)
+    if (kevValue.size % 2 != 0) {
         error("kevValue 必须是成对的")
+    }
 
     return MutableIntIntMap(kevValue.size / 2).apply {
         var i = 0
@@ -77,8 +71,9 @@ fun intIntMapKvOf(vararg kevValue: Int): MutableIntIntMap {
 }
 
 fun longLongMapKvOf(vararg kevValue: Long): MutableLongLongMap {
-    if (kevValue.size % 2 != 0)
+    if (kevValue.size % 2 != 0) {
         error("kevValue 必须是成对的")
+    }
 
     return MutableLongLongMap(kevValue.size / 2).apply {
         var i = 0

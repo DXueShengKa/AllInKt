@@ -15,51 +15,65 @@ import kotlin.reflect.KClass
 class RedisService(
     private val reactiveRedisTemplateByte: ReactiveRedisTemplate<String, ByteArray>,
 ) {
-
-    fun <T : Any> get(key: String, clazz: KClass<T>): Mono<T> {
-        return reactiveRedisTemplateByte.opsForValue().get(key)
+    fun <T : Any> get(
+        key: String,
+        clazz: KClass<T>,
+    ): Mono<T> =
+        reactiveRedisTemplateByte
+            .opsForValue()
+            .get(key)
             .map {
                 ProtoBuf.decodeFromByteArray(clazz.serializer(), it)
             }
-    }
 
-    fun <T : Any> set(key: String, value: T, clazz: KClass<T>): Mono<Boolean> {
-        return reactiveRedisTemplateByte.opsForValue().set(
+    fun <T : Any> set(
+        key: String,
+        value: T,
+        clazz: KClass<T>,
+    ): Mono<Boolean> =
+        reactiveRedisTemplateByte.opsForValue().set(
             key,
-            ProtoBuf.encodeToByteArray(clazz.serializer(), value)
+            ProtoBuf.encodeToByteArray(clazz.serializer(), value),
         )
-    }
 
-    fun get(key: String): Mono<String> {
-
-        return reactiveRedisTemplateByte.opsForValue().get(key).map { String(it) }
-
-    }
-
-    fun set(key: String, value: String): Mono<Boolean> {
-        return reactiveRedisTemplateByte.opsForValue().set(
-            key, value.toByteArray()
+    fun <T : Any> set(
+        key: String,
+        value: T,
+        seconds: Long,
+        clazz: KClass<T>,
+    ): Mono<Boolean> =
+        reactiveRedisTemplateByte.opsForValue().set(
+            key,
+            ProtoBuf.encodeToByteArray(clazz.serializer(), value),
+            Duration.ofSeconds(seconds),
         )
-    }
 
-    fun set(key: String, value: String, seconds: Long): Mono<Boolean> {
-        return reactiveRedisTemplateByte.opsForValue()
+    fun get(key: String): Mono<String> = reactiveRedisTemplateByte.opsForValue().get(key).map { String(it) }
+
+    fun set(
+        key: String,
+        value: String,
+    ): Mono<Boolean> =
+        reactiveRedisTemplateByte.opsForValue().set(
+            key,
+            value.toByteArray(),
+        )
+
+    fun set(
+        key: String,
+        value: String,
+        seconds: Long,
+    ): Mono<Boolean> =
+        reactiveRedisTemplateByte
+            .opsForValue()
             .set(key, value.toByteArray(), Duration.ofSeconds(seconds))
-    }
 
-
-    fun delete(key: String): Mono<Boolean> {
-        return reactiveRedisTemplateByte.opsForValue().delete(key)
-    }
-
-
+    fun delete(key: String): Mono<Boolean> = reactiveRedisTemplateByte.opsForValue().delete(key)
 }
 
-inline fun <reified T : Any> RedisService.get(key: String): Mono<T> {
-    return get(key, T::class)
-}
+inline fun <reified T : Any> RedisService.get(key: String): Mono<T> = get(key, T::class)
 
-
-inline fun <reified T : Any> RedisService.set(key: String, value: T): Mono<Boolean> {
-    return set(key, value, T::class)
-}
+inline fun <reified T : Any> RedisService.set(
+    key: String,
+    value: T,
+): Mono<Boolean> = set(key, value, T::class)

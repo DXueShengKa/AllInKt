@@ -12,24 +12,21 @@ import kotlin.random.Random
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = [Application::class]
+    classes = [Application::class],
 )
 class UserTest {
-
-
     @Autowired
     lateinit var userRepository: UserRepository
 
     @Test
-    fun showUser(){
+    suspend fun showUser() {
         userRepository.getUserAll().forEach {
             println(it)
         }
     }
 
-
     @Test
-    fun add(){
+    suspend fun add() {
         repeat(100) {
             userRepository.add(
                 UserVO(
@@ -37,8 +34,8 @@ class UserTest {
                     address = Random.nextDouble().toString(),
                     gender = if (Random.nextBoolean()) Gender.Male else Gender.Female,
                     password = "1234",
-                    birthday = LocalDate(2008, 1, 1)
-                )
+                    birthday = LocalDate(2008, 1, 1),
+                ),
             )
         }
     }

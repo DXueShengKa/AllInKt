@@ -21,6 +21,7 @@ trigger: always_on
 - **客户端依赖注入**: Koin
 - **序列化**: kotlinx.serialization
 - **代码生成**: Kotlin Symbol Processing (KSP)
+- **代码规范**：ktlint
 
 ## 项目结构
 
@@ -75,6 +76,7 @@ trigger: always_on
 - 数据模型 (VO)
 - 工具类函数
 - 常量定义
+- 使用`arrow`数据验证
 
 ### client (客户端模块)
 专为客户端应用设计的模块集合。
@@ -91,7 +93,7 @@ trigger: always_on
 功能包括：
 - Compose 导航代码生成
 - 服务端 Entity 到 VO 的转换
-- vo生成字段名常量
+- vo在共享模块中生成字段名常量，确保前后端一致性
 
 ### kt-ai (AI模块)
 Kotlin Multiplatform AI 客户端。
@@ -112,14 +114,6 @@ Kotlin Multiplatform AI 客户端。
 - Node.js 和 npm (用于 Web 前端)
 - Android SDK (用于 Android 客户端)
 - Xcode (用于 iOS 客户端，仅限 macOS)
-
-## 代码生成机制
-
-项目利用 KSP (Kotlin Symbol Processing) 实现代码自动生成，包括：
-
-1. **导航路由生成**: 自动为带有 @NavRoute 注解的 Composable 函数生成导航代码
-2. **VO 转换**: 在服务端自动将 Entity 转换为 VO 对象
-3. **字段名共享**: 在共享模块中生成字段名常量，确保前后端一致性
 
 
 ### 网络请求
