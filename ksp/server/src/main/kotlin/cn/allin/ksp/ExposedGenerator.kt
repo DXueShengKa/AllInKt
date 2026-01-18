@@ -60,7 +60,7 @@ fun tableToVo(
 ) {
     val toVoName = TableToVo::class.java.name
 
-    val d = mutableListOf<KSFile>()
+    val dependencies = mutableListOf<KSFile>()
 
     val fs =
         FileSpec
@@ -91,6 +91,7 @@ fun tableToVo(
                     .mapNotNull {
                         it.declaration as? KSClassDeclaration
                     }.map { d ->
+                        d.containingFile?.also(dependencies::add)
                         val fields =
                             d.primaryConstructor!!
                                 .parameters
@@ -107,12 +108,12 @@ fun tableToVo(
                     }
 
             a.accept(GenerateTableToVo(logger, resolver, voTypes), fs)
-            a.containingFile?.also(d::add)
+            a.containingFile?.also(dependencies::add)
         }
 
     fs
         .build()
-        .writeTo(codeGenerator, Dependencies(false, *d.toTypedArray()))
+        .writeTo(codeGenerator, Dependencies(false, *dependencies.toTypedArray()))
 }
 
 private class GenerateTableToVo(
@@ -197,7 +198,7 @@ private class GenerateTableToVo(
 
     private fun toVoFun(
         voType: VoType,
-        entityField: Map<String, KSType>,
+        tableField: Map<String, KSType>,
         tableType: ClassName,
     ): FunSpec {
         val code: CodeBlock.Builder =
@@ -206,7 +207,7 @@ private class GenerateTableToVo(
                 .add("return %T(", voType.voName)
 
         for (field in voType.fields) {
-            val entityType = entityField[field.name] ?: continue
+            val entityType = tableField[field.name] ?: continue
 
             logger.warn(field.name)
 

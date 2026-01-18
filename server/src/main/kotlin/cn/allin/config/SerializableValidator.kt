@@ -9,25 +9,25 @@ import org.springframework.validation.SmartValidator
 
 @OptIn(InternalSerializationApi::class)
 class SerializableValidator : SmartValidator {
+    override fun supports(clazz: Class<*>): Boolean = clazz.kotlin.serializerOrNull() != null
 
-    override fun supports(clazz: Class<*>): Boolean {
-        return clazz.kotlin.serializerOrNull() != null
-    }
-
-
-    override fun validate(target: Any, errors: Errors) {
+    override fun validate(
+        target: Any,
+        errors: Errors,
+    ) {
         VoValidatorMessage.validator(target)?.also {
             errors.rejectValue(it.field, it.code, it.message)
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun validate(
         target: Any,
         errors: Errors,
-        vararg validationHints: Any
+        vararg validationHints: Any,
     ) {
-      validationHints.forEach { hint ->
-            if (hint is Class<*>){
+        validationHints.forEach { hint ->
+            if (hint is Class<*>) {
                 val v = hint.constructors?.firstOrNull()?.newInstance() as? VoValidator<Any>
                 v?.validator(target)?.also { it ->
                     errors.rejectValue(it.field, it.code, it.message)
@@ -35,5 +35,4 @@ class SerializableValidator : SmartValidator {
             }
         }
     }
-
 }

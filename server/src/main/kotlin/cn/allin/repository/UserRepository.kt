@@ -1,5 +1,7 @@
 package cn.allin.repository
 
+import cn.allin.model.UserDTO
+import cn.allin.model.toUserDTO
 import cn.allin.model.toUserVO
 import cn.allin.model.updateBuilder
 import cn.allin.table.UserTable
@@ -45,20 +47,17 @@ class UserRepository {
         UserTable
             .run {
                 select(role)
-                    .where { name eq username }
+                    .where(name eq username)
             }.firstOrNull()
             ?.toUserVO()
-//
-//
-//    fun findPasswordRole(id: Long): UserEntity? {
-//        return sqlClient.executeQuery(UserEntity::class, limit = 1) {
-//            where(table.id eq id)
-//            select(table.fetchBy {
-//                role()
-//                password()
-//            })
-//        }.firstOrNull()
-//    }
+
+    suspend fun findPasswordRole(id: Long): UserDTO? =
+        UserTable
+            .select(UserTable.id, UserTable.role, UserTable.password)
+            .where(UserTable.id eq id)
+            .limit(1)
+            .firstOrNull()
+            ?.toUserDTO()
 
     suspend fun findById(id: Long): UserVO? =
         UserTable

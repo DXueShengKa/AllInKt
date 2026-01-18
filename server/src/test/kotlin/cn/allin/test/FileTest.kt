@@ -20,37 +20,37 @@ class FileTest {
 
     @Test
     fun createBucket() {
-        runBlocking {
-            val b = fileService.s3Client().createBucket {
-                it.bucket("archive")
-            }.await()
-            println(b.location())
-        }
+//        runBlocking {
+//            val b = fileService.s3Client().createBucket {
+//                it.bucket("archive")
+//            }.await()
+//            println(b.location())
+//        }
     }
 
 
     @Test
     fun showBuckets(){
 
-        runBlocking {
-            fileService.s3Client()
-                .listBuckets()
-                .await()
-                .buckets()
-                .forEach { bucket ->
-                    println("桶 ${bucket.name()}")
-                }
-        }
+//        runBlocking {
+//            fileService.s3Client()
+//                .listBuckets()
+//                .await()
+//                .buckets()
+//                .forEach { bucket ->
+//                    println("桶 ${bucket.name()}")
+//                }
+//        }
     }
 
     @Test
     fun showObj(){
-        runBlocking {
-            println()
-            fileService.listDir("")
-                .forEach { s ->
-                    println(s)
-                }
-        }
+//        runBlocking {
+//            println()
+//            fileService.listDir("")
+//                .forEach { s ->
+//                    println(s)
+//                }
+//        }
     }
 }
