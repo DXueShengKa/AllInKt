@@ -10,35 +10,31 @@ import org.springframework.web.reactive.function.server.coRouter
 
 @Configuration
 class RouterConfig {
-
-
-    private suspend inline fun createResponse(body: Any): ServerResponse {
-        return ServerResponse
+    private suspend inline fun createResponse(body: Any): ServerResponse =
+        ServerResponse
             .ok()
             .bodyValueAndAwait(body)
-    }
-
 
     @Bean
-    fun region(handler: RegionHandler) = coRouter {
-        contentType(MediaType.APPLICATION_JSON)
-            .nest {
-                GET(ApiRegion.pathProvince()) {
-                    createResponse(handler.getAllProvince())
-                }
+    fun region(handler: RegionHandler) =
+        coRouter {
+            contentType(MediaType.APPLICATION_JSON)
+                .nest {
+                    GET(ApiRegion.pathProvince()) {
+                        createResponse(handler.getAllProvince())
+                    }
 
-                GET(ApiRegion.pathCity) {
-                    createResponse(
-                        handler.getCity(it.pathVariable(ApiRegion.PROVINCE_ID).toInt())
-                    )
-                }
+                    GET(ApiRegion.pathCity) {
+                        createResponse(
+                            handler.getCity(it.pathVariable(ApiRegion.PROVINCE_ID).toInt()),
+                        )
+                    }
 
-                GET(ApiRegion.pathCountry) {
-                    createResponse(
-                        handler.getCounty(it.pathVariable(ApiRegion.CITY_ID).toInt())
-                    )
+                    GET(ApiRegion.pathCountry) {
+                        createResponse(
+                            handler.getCounty(it.pathVariable(ApiRegion.CITY_ID).toInt()),
+                        )
+                    }
                 }
-            }
-
-    }
+        }
 }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import cn.allin.data.DataDI
-import cn.allin.navigation.appNavGraphs
 import cn.allin.theme.MainTheme
 import org.koin.ksp.generated.module
 
@@ -16,11 +15,11 @@ class MainActivity : ComponentActivity() {
             MainTheme {
                 MainApp(
                     application = {
-                        modules(DataDI.module, AppKoinViewModel)
+                        modules(DataDI.module,
+//                            AppKoinViewModel
+                        )
                     }
-                ) {
-                    appNavGraphs()
-                }
+                )
             }
         }
     }

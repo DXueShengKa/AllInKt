@@ -5,6 +5,8 @@ import cn.allin.model.toUserDTO
 import cn.allin.model.toUserVO
 import cn.allin.model.updateBuilder
 import cn.allin.table.UserTable
+import cn.allin.utils.paginate
+import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -29,12 +31,13 @@ class UserRepository {
             .map(ResultRow::toUserVO)
             .toList()
 
-    //    fun getUsers(index: Int, size: Int): PageVO<UserVO> {
-//        return sqlClient.createQuery(UserEntity::class) {
-//            select(table)
-//        }.fetchPage(pageIndex = index, pageSize = size)
-//            .toPageVO { it.toUserVO() }
-//    }
+    suspend fun getUsers(
+        index: Int,
+        size: Int,
+    ): PageVO<UserVO> =
+        UserTable
+            .selectAll()
+            .paginate(index, size) { it.toUserVO() }
 
     suspend fun add(userVO: UserVO) {
         UserTable

@@ -78,6 +78,8 @@ fun tableToVo(
         .forEach { a ->
             a as KSClassDeclaration
 
+            a.containingFile?.also(dependencies::add)
+
             val voList =
                 a.annotations
                     .first { it.shortName.asString() == TableToVo::class.simpleName }

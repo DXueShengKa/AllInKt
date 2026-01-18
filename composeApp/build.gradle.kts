@@ -58,6 +58,7 @@ kotlin {
         }
 
         commonMain.dependencies {
+            implementation(libs.jetbrains.material3)
             implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.jetbrains.md3adaptive.navigation)
             implementation(libs.jetbrains.lifecycle.compose)

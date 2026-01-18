@@ -37,10 +37,9 @@ class UserController(
         pageIndex: Int?,
         pageSize: Int?,
     ): PageVO<UserVO> =
-        PageVO(
-            userRepository.getUserAll(),
-            10,
-            10,
+        userRepository.getUsers(
+            pageIndex ?: 1,
+            pageSize ?: 10,
         )
 
     @GetMapping
