@@ -83,3 +83,12 @@ fun longLongMapKvOf(vararg kevValue: Long): MutableLongLongMap {
         }
     }
 }
+
+fun <T> MutableList<T>.swap(
+    a: Int,
+    b: Int,
+) {
+    val tmp = get(a)
+    set(a, get(b))
+    set(b, tmp)
+}

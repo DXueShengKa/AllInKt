@@ -1,17 +1,16 @@
 package cn.allin
 
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import cn.allin.data.DataDI
-import cn.allin.navigation.appNavGraphs
 import cn.allin.net.WEKV
 import cn.allin.net.initialize
 import cn.allin.theme.MainTheme
 import kotlinx.io.files.SystemTemporaryDirectory
-import org.koin.ksp.generated.module
 
 private fun init(){
     WEKV.initialize(SystemTemporaryDirectory)
@@ -30,13 +29,16 @@ fun main() = application {
         title = "AllInKt",
     ) {
         MainTheme {
-            MainApp(
-                application = {
-                    modules(DataDI.module, AppKoinViewModel)
-                }
-            ) {
-                appNavGraphs()
+            Button({}){
+                Text("ssss")
             }
+//            MainApp(
+//                application = {
+//                    modules(DataDI.module, AppKoinViewModel)
+//                }
+//            ) {
+//                appNavGraphs()
+//            }
         }
     }
 }

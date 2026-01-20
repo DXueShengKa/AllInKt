@@ -62,6 +62,7 @@ kotlin {
             implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.jetbrains.md3adaptive.navigation)
             implementation(libs.jetbrains.lifecycle.compose)
+            implementation(libs.jetbrains.lifecycle.navigation3)
             implementation(libs.jetbrains.savedstate.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.jetbrains.components.resources)
@@ -82,7 +83,9 @@ kotlin {
 
         jvmMain.dependencies {
             implementation(libs.slf4j.simple)
-            implementation(compose.desktop.currentOs)
+            implementation(compose.desktop.currentOs){
+                exclude("org.jetbrains.compose.material","material-desktop")
+            }
             implementation(libs.jspecify)
         }
     }

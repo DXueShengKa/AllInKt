@@ -1,7 +1,6 @@
 package cn.allin.ui.fileMamager
 
 import androidx.compose.runtime.Composable
-import cn.allin.LocalNavController
 import cn.allin.ksp.navigation.NavRoute
 import cn.allin.ui.fileManager.FileHomeScreen
 import cn.allin.ui.fileManager.rememberFileManagerState
@@ -15,16 +14,15 @@ const val RouteFileManager = "RouteFileManager"
 )
 @Composable
 internal fun RouteFileManager() {
-    val nav = LocalNavController.current
     val vm = koinViewModel<FileManagerViewModel>()
 
     val state = rememberFileManagerState(
         vm.fileListFlow,
         onBack = {
-            if (vm.currentPath == null)
-                nav.navigateUp()
-            else
-                vm.previous()
+//            if (vm.currentPath == null)
+//                nav.navigateUp()
+//            else
+//                vm.previous()
         },
         onItemClick = {
             vm.next(it)

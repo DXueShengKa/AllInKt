@@ -172,6 +172,7 @@ jetbrains-navigation-compose = { group = "org.jetbrains.androidx.navigation", na
 jetbrains-navigation-runtime = { group = "org.jetbrains.androidx.navigation", name = "navigation-runtime", version.ref = "jetbrains-navigation" }
 jetbrains-navigation3-ui = { group = "org.jetbrains.androidx.navigation3", name = "navigation3-ui", version.ref = "jetbrains-navigation3" }
 jetbrains-lifecycle-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "jetbrains-lifecycle" }
+jetbrains-lifecycle-navigation3 = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "jetbrains-lifecycle" }
 jetbrains-lifecycle-viewmodelCompose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "jetbrains-lifecycle" }
 jetbrains-lifecycle-vmSavedState = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "jetbrains-lifecycle" }
 jetbrains-savedstate-compose = { group = "org.jetbrains.androidx.savedstate", name = "savedstate-compose", version.ref = "jetbrains-savedstate" }
