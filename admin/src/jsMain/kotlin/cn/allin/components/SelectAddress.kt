@@ -11,6 +11,7 @@ import mui.material.InputLabel
 import mui.material.MenuItem
 import mui.material.Select
 import react.FC
+import react.Key
 import react.Props
 import react.useEffect
 import react.useState
@@ -117,7 +118,7 @@ private val ProvinceSelect = FC<SelectProps> { p ->
 
             value = p.value?.name ?: ""
             onChange = { e, r ->
-                val n = e.target.value
+                val n = e.target.nodeValue
                 regionList.find { it.name == n }?.let {
                     p.onValue(it)
                 }
@@ -128,7 +129,7 @@ private val ProvinceSelect = FC<SelectProps> { p ->
             }
             regionList.forEach {
                 MenuItem {
-                    key = it.id.toString()
+                    key = Key(it.id)
                     value = it.name
                     +it.name
                 }

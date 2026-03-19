@@ -10,6 +10,7 @@ import mui.material.TableProps
 import mui.material.TableRow
 import react.ChildrenBuilder
 import react.FC
+import react.Key
 import react.ReactDsl
 import react.useState
 import tanstack.react.table.renderCell
@@ -100,10 +101,10 @@ fun <T : RowData> TableProps.tanstackHead(groups: ReadonlyArray<HeaderGroup<T>>)
     TableHead {
         for (group in groups) {
             TableRow {
-                key = group.id
+                key = Key(group.id)
                 for (header in group.headers) {
                     TableCell {
-                        key = header.id
+                        key = Key(header.id)
                         +renderHeader(header)
                     }
                 }
@@ -116,10 +117,10 @@ fun <T : RowData> TableProps.tanstackBody(rows: ReadonlyArray<Row<T>>) {
     TableBody {
         for (row in rows) {
             TableRow {
-                key = row.id
+                key = Key(row.id)
                 for (cell in row.getVisibleCells()) {
                     TableCell {
-                        key = cell.id
+                        key = Key(cell.id)
                         +renderCell(cell)
                     }
                 }

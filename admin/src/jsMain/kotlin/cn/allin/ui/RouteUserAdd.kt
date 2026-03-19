@@ -37,7 +37,7 @@ import mui.system.sx
 import muix.pickers.DatePicker
 import react.FC
 import react.create
-import react.dom.events.FormEvent
+import react.dom.events.ChangeEventHandler
 import react.dom.html.ReactHTML.form
 import react.dom.onChange
 import react.useState
@@ -58,7 +58,8 @@ private val AddUserFC = FC {
 
     val apiUser: ApiUser = useInject()
 
-    val handle: (FormEvent<HTMLElement>) -> Unit = {
+    val handle: ChangeEventHandler<HTMLElement, *> = {
+
         val t = it.target as HTMLInputElement
         when (t.name) {
             UserVO.name.name -> {

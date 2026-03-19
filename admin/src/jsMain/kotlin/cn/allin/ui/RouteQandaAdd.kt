@@ -14,6 +14,7 @@ import cn.allin.utils.useInject
 import cn.allin.vo.QaTagVO
 import cn.allin.vo.QandaVO
 import js.objects.unsafeJso
+import kotlin.toString
 import mui.material.Card
 import mui.material.CardHeader
 import mui.material.Divider
@@ -28,6 +29,7 @@ import mui.material.TextField
 import mui.material.TextareaAutosize
 import mui.system.sx
 import react.FC
+import react.Key
 import react.Props
 import react.dom.aria.AriaRole
 import react.dom.html.ReactHTML.div
@@ -186,7 +188,7 @@ private val TagList = FC<TagListProps> { props ->
 
             props.data?.forEach { v ->
                 ListItemButton {
-                    key = v.id.toString()
+                    key = Key(v.id)
                     role = AriaRole.listitem
                     onClick = {
                         props.onItem(v)

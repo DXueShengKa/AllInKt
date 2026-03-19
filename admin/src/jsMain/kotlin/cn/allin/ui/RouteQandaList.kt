@@ -43,6 +43,7 @@ import muix.fileInput.MuiFileInputSingle
 import muix.icons.IconsDelete
 import muix.icons.IconsEdit
 import react.FC
+import react.Key
 import react.Props
 import react.create
 import react.useMemo
@@ -324,8 +325,8 @@ private val FilterTag: FC<FilterTagProps> = FC { props ->
             value = tagId
             label = reactNode("过滤标签")
             onChange = { e, r ->
-                val n: Any = e.target.value
-                tagId = n
+                val n: Int? = try { e.target.nodeValue!!.toInt() } catch (_: Error) { null }
+                tagId = e.target.nodeValue?:""
                 if (n is Int) {
                     props.onTagId(n)
                 } else {
@@ -338,7 +339,7 @@ private val FilterTag: FC<FilterTagProps> = FC { props ->
             }
             tags.data?.forEach {
                 MenuItem {
-                    key = it.id.toString()
+                    key = Key(it.id)
                     value = it.id
                     +it.tagName
                 }

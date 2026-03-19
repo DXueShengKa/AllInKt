@@ -1,5 +1,7 @@
+
 package cn.allin.utils
 
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.koin.core.Koin
 import org.koin.core.KoinApplication
 import org.koin.core.annotation.KoinInternalApi
@@ -10,13 +12,12 @@ import react.ChildrenBuilder
 import react.ReactDsl
 import react.createContext
 import react.use
-import react.useEffectWithCleanup
+import react.useEffect
 
 fun useKoinApplication(koinApplication: KoinApplication): Koin {
     val koin = useRefInit { koinApplication.koin }
-
-    useEffectWithCleanup(koinApplication) {
-        onCleanup {
+    useEffect {
+        suspendCancellableCoroutine {
             stopKoin()
         }
     }
@@ -25,30 +26,26 @@ fun useKoinApplication(koinApplication: KoinApplication): Koin {
 }
 
 fun useKoinScope(scope: Scope): Scope {
-    useEffectWithCleanup(scope) {
-        onCleanup {
-            if (!scope.isRoot && !scope.closed)
+    useEffect {
+        suspendCancellableCoroutine {
+            if (!scope.isRoot && !scope.closed) {
                 scope.close()
+            }
         }
     }
     return scope
 }
 
-inline fun <reified T : Any> useInject(): T {
-    return useRefInit { getKoin().get<T>() }
-}
-
+inline fun <reified T : Any> useInject(): T = useRefInit { getKoin().get<T>() }
 
 val KoinContext = createContext<Koin>()
 
 val KoinScopeContext = createContext<Scope>()
 
-
 fun getKoin(): Koin {
     val koin = use(KoinContext)
     return koin ?: KoinPlatformTools.defaultContext().get()
 }
-
 
 @OptIn(KoinInternalApi::class)
 fun currentKoinScope(): Scope {
@@ -59,8 +56,11 @@ fun currentKoinScope(): Scope {
     }
 }
 
-
-fun ChildrenBuilder.KoinFC(koin: Koin, scope: Scope, f: @ReactDsl ChildrenBuilder.() -> Unit) {
+fun ChildrenBuilder.KoinFC(
+    koin: Koin,
+    scope: Scope,
+    f: @ReactDsl ChildrenBuilder.() -> Unit,
+) {
     KoinContext.Provider {
         value = koin
         KoinScopeContext.Provider {
@@ -71,6 +71,9 @@ fun ChildrenBuilder.KoinFC(koin: Koin, scope: Scope, f: @ReactDsl ChildrenBuilde
 }
 
 @OptIn(KoinInternalApi::class)
-fun ChildrenBuilder.KoinFC(koin: Koin, f:@ReactDsl ChildrenBuilder.() -> Unit) {
+fun ChildrenBuilder.KoinFC(
+    koin: Koin,
+    f: @ReactDsl ChildrenBuilder.() -> Unit,
+) {
     KoinFC(koin, koin.scopeRegistry.rootScope, f)
 }

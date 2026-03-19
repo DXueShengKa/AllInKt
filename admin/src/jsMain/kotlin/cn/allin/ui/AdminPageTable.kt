@@ -10,6 +10,7 @@ import mui.material.TableHead
 import mui.material.TablePagination
 import mui.material.TableRow
 import react.FC
+import react.Key
 import react.Props
 import tanstack.react.table.renderCell
 import tanstack.react.table.renderHeader
@@ -41,10 +42,10 @@ val AdminPageTable = FC<AdminTableProps> { props ->
                 val headerGroups = props.table.getHeaderGroups()
                 for (group in headerGroups) {
                     TableRow {
-                        key = group.id
+                        key = Key(group.id)
                         for (header in group.headers) {
                             TableCell {
-                                key = header.id
+                                key = Key(header.id)
                                 +renderHeader(header)
                             }
                         }
@@ -56,10 +57,10 @@ val AdminPageTable = FC<AdminTableProps> { props ->
                 val bodyRows = props.table.getRowModel().rows
                 for (row in bodyRows) {
                     TableRow {
-                        key = row.id
+                        key = Key(row.id)
                         for (cell in row.getVisibleCells()) {
                             TableCell {
-                                key = cell.id
+                                key = Key(cell.id)
                                 +renderCell(cell)
                             }
                         }
