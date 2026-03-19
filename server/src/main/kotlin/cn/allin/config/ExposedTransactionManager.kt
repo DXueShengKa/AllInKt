@@ -1,7 +1,6 @@
 package cn.allin.config
 
 import io.r2dbc.spi.ConnectionFactory
-import java.time.Duration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactor.mono
 import org.jetbrains.exposed.v1.core.InternalApi
@@ -18,6 +17,7 @@ import org.springframework.transaction.reactive.GenericReactiveTransaction
 import org.springframework.transaction.reactive.TransactionSynchronizationManager
 import reactor.core.publisher.Mono
 import reactor.util.retry.Retry
+import java.time.Duration
 
 @OptIn(InternalApi::class)
 class ExposedTransactionManager(
@@ -82,9 +82,8 @@ class ExposedTransactionManager(
             transaction as R2dbcTransaction
             ThreadLocalTransactionsStack.popTransaction()
             synchronizationManager.unbindResource(this@ExposedTransactionManager)
-            transaction.currentStatement?.closeIfPossible()
             transaction.currentStatement = null
-            transaction.close()
+            transaction.clearExecutedStatements()
         }.error("doCleanupAfterCompletion")
 
     fun Mono<Unit>.error(tag: String): Mono<Void> =

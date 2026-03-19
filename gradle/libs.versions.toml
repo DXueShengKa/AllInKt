@@ -5,7 +5,7 @@ android-targetSdk = "36"
 android-gradle = "8.12.3"
 
 #https://github.com/JetBrains/kotlin
-kotlin = "2.3.0"
+kotlin = "2.3.10"
 #https://github.com/JetBrains/kotlin-wrappers
 kotlin-wrappers = "2026.1.4"
 #https://ant-design.antgroup.com/changelog-cn
@@ -22,11 +22,11 @@ emotionStyled = "11.14.0"
 #https://github.com/Kotlin/kotlinx.coroutines
 kotlinx-coroutines = "1.10.2"
 #https://github.com/Kotlin/kotlinx.serialization
-kotlinx-serialization = "1.9.0"
+kotlinx-serialization = "1.10.0"
 #https://github.com/Kotlin/kotlinx-datetime
 kotlinx-datetime = "0.7.1"
 #https://github.com/Kotlin/kotlinx-io
-kotlinx-io = "0.8.2"
+kotlinx-io = "0.9.0"
 #https://github.com/google/ksp
 ksp = "2.3.4"
 #https://github.com/square/kotlinpoet
@@ -34,13 +34,13 @@ kotlinpoet = "2.2.0"
 #https://github.com/Kotlin/dokka
 dokka = "2.1.0"
 #https://github.com/JetBrains/compose-multiplatform
-jetbrains-compose = "1.10.0"
+jetbrains-compose = "1.10.2"
 jetbrains-md3Adaptive = "1.3.0-alpha02"
 jetbrains-material3 = "1.10.0-alpha05"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/lifecycle/lifecycle-viewmodel-compose/
-jetbrains-lifecycle = "2.10.0-alpha06"
+jetbrains-lifecycle = "2.10.0-beta01"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/navigation/navigation-common/
-jetbrains-navigation = "2.9.1"
+jetbrains-navigation = "2.9.2"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/navigation3/navigation3-ui/
 jetbrains-navigation3 = "1.0.0-alpha06"
 #https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/androidx/core/core-bundle/
@@ -53,27 +53,27 @@ datastore = "1.2.0"
 #https://github.com/square/okhttp
 okhttp3 = "5.3.2"
 #https://github.com/ktorio/ktor
-ktor = "3.3.3"
+ktor = "3.4.1"
 #https://github.com/coil-kt/coil
-coil3 = "3.3.0"
+coil3 = "3.4.0"
 #https://github.com/InsertKoinIO/koin
-koin = "4.1.1"
+koin = "4.2.0"
 #https://github.com/InsertKoinIO/koin-annotations
 koin-annotations = "2.3.1"
 #https://github.com/oleksandrbalan/lazytable
 lazytable = "1.10.0"
 #https://github.com/spring-projects/spring-boot
-spring-boot = "4.0.1"
+spring-boot = "4.0.3"
 #https://docs.spring.io/dependency-management-plugin/docs/current/reference/html/#introduction
 spring-dependencyManagement = "1.1.7"
 #https://github.com/JetBrains/Exposed
-exposed = "1.0.0-rc-4"
+exposed = "1.1.1"
 #https://github.com/turansky/seskar
-seskar = "4.32.0"
+seskar = "4.34.0"
 #https://github.com/babyfish-ct/jimmer
 jimmer = "0.9.116"
 #https://developer.android.google.cn/jetpack/androidx/releases/activity?hl=zh-cn
-activity = "1.12.2"
+activity = "1.12.4"
 #https://developer.android.google.cn/jetpack/androidx/releases/paging?hl=zh-cn
 paging = "3.4.0-rc01"
 
@@ -85,14 +85,14 @@ caffeine = "3.2.3"
 #https://github.com/Guardsquare/proguard
 proguard = "7.6.0"
 #https://github.com/aallam/openai-kotlin
-openai = "4.0.1"
+openai = "4.1.0"
 #https://docs.koog.ai/
-koog = "0.6.0"
+koog = "0.6.4"
 
 #https://detekt.dev/
-detekt = "2.0.0-alpha.1"
+detekt = "2.0.0-alpha.2"
 #https://github.com/mrmans0n/compose-rules/releases
-compose-rules= "0.5.3"
+compose-rules= "0.5.6"
 #https://github.com/jlleitschuh/ktlint-gradle
 ktlint-gradle = "14.0.1"
 
@@ -101,13 +101,13 @@ junit = "4.13.2"
 jsoup = "1.22.1"
 jspecify = "1.0.0"
 #https://github.com/arrow-kt/arrow
-arrow = "2.2.1.1"
+arrow = "2.2.2"
 #https://github.com/Reedyuk/blue-falcon
-bluefalcon = "2.4.0"
+bluefalcon = "2.5.4"
 #https://github.com/apache/poi
 apache-poi = "5.5.1"
 #https://github.com/aws/aws-sdk-java-v2
-awssdk = "2.41.7"
+awssdk = "2.42.13"
 
 [plugins]
 
