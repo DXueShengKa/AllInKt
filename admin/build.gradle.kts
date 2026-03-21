@@ -41,13 +41,12 @@ kotlin {
     sourceSets {
 
         jsMain.dependencies {
-            implementation(project.dependencies.platform(libs.kotlin.wrappers.bom))
-            implementation(libs.kotlin.wrappers.emotion.react)
-            implementation(libs.kotlin.wrappers.react)
-            implementation(libs.kotlin.wrappers.react.dom)
-            implementation(libs.kotlin.wrappers.mui.material)
-            implementation(libs.kotlin.wrappers.muix.treeView)
-            implementation(libs.kotlin.wrappers.tanstack.table)
+            implementation(kotlinWrappers.emotion.react)
+            implementation(kotlinWrappers.react)
+            implementation(kotlinWrappers.reactDom)
+            implementation(kotlinWrappers.mui.material)
+            implementation(kotlinWrappers.muix.treeView)
+            implementation(kotlinWrappers.tanstack.tableCore)
             implementation(npm("@mui/x-date-pickers", ""))
 
             implementation(
