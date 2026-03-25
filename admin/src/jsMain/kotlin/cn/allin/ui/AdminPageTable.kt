@@ -1,5 +1,7 @@
 package cn.allin.ui
 
+import js.objects.unsafeJso
+import mui.material.Button
 import mui.material.Paper
 import mui.material.Table
 import mui.material.TableBody
@@ -12,9 +14,8 @@ import mui.material.TableRow
 import react.FC
 import react.Key
 import react.Props
-import tanstack.react.table.renderCell
-import tanstack.react.table.renderHeader
 import tanstack.table.core.Table
+import web.cssom.px
 
 
 data class PageParams(
@@ -54,6 +55,13 @@ val AdminPageTable = FC<AdminTableProps> { props ->
             }
 
             TableBody {
+                Button {
+                    sx = unsafeJso {
+                        width = 100.px
+                    }
+
+                }
+
                 val bodyRows = props.table.getRowModel().rows
                 for (row in bodyRows) {
                     TableRow {

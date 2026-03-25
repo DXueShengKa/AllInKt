@@ -21,7 +21,6 @@ import muix.icons.IconsEdit
 import react.FC
 import react.useMemo
 import react.useState
-import tanstack.react.table.useReactTable
 import tanstack.table.core.ColumnDef
 import tanstack.table.core.StringOrTemplateHeader
 import tanstack.table.core.TableOptions
