@@ -1,22 +1,26 @@
-
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.internal.platform.wasm.WasmPlatforms.wasmJs
 
 plugins {
     id("com.android.kotlin.multiplatform.library")
     kotlin("multiplatform")
 }
 
-
-@OptIn(ExperimentalKotlinGradlePluginApi::class,ExperimentalWasmDsl::class)
+@OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 kotlin {
     applyHierarchyTemplate(hierarchyTemplateAndroidKmp)
 
     val libs: VersionCatalog = versionCatalogs.named("libs")
 
-    androidLibrary {
+    android {
         compileSdk = 36
-        compileSdk = libs.findVersion("android-compileSdk").get().requiredVersion.toInt()
+        compileSdk =
+            libs
+                .findVersion("android-compileSdk")
+                .get()
+                .requiredVersion
+                .toInt()
     }
 
     jvm()
@@ -38,7 +42,4 @@ kotlin {
     }
 
     jvmToolchain(21)
-
-
 }
-

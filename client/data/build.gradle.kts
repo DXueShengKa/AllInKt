@@ -4,7 +4,7 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "cn.allin.data"
     }
     sourceSets {
@@ -25,6 +25,3 @@ ksp {
     arg("KOIN_DEFAULT_MODULE", "false")
 }
 
-dependencies {
-    kspAll(libs.koin.compiler)
-}

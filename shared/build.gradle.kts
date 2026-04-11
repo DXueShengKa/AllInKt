@@ -9,7 +9,7 @@ plugins {
 val isTest: String by project
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "cn.allin.shared"
     }
     sourceSets {

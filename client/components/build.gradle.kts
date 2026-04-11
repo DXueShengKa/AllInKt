@@ -7,10 +7,10 @@ plugins {
 kotlin {
 
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.androidx.activity.compose)
-            api(libs.kotlinx.coroutines.android)
-        }
+//        androidMain.dependencies {
+//            implementation(libs.androidx.activity.compose)
+//            api(libs.kotlinx.coroutines.android)
+//        }
 
         jvmMain.dependencies {
             implementation(libs.jsoup)
@@ -28,6 +28,6 @@ kotlin {
     }
 }
 
-android {
-    namespace = "com.compose.components"
-}
+//android {
+//    namespace = "com.compose.components"
+//}

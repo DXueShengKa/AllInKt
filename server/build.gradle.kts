@@ -1,3 +1,4 @@
+import org.gradle.internal.execution.caching.CachingState.enabled
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -71,6 +72,9 @@ dependencies {
     implementation(libs.spring.starter.data.r2dbc)
     implementation(libs.spring.session.data.redis)
     implementation(libs.spring.session.core)
+
+//    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui")
+
 
     developmentOnly(libs.spring.devtools)
     implementation(libs.exposed.kotlinDatetime)

@@ -1,20 +1,39 @@
+import gradle.kotlin.dsl.accessors._d072288452034cc26d6adec105f80767.android
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.internal.platform.wasm.WasmPlatforms.wasmJs
 
 plugins {
-    id("com.android.library")
     kotlin("multiplatform")
 }
 
 plugins.apply("org.jetbrains.kotlin.plugin.compose")
 plugins.apply("org.jetbrains.compose")
+plugins.apply("com.android.kotlin.multiplatform.library")
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 kotlin {
 
+    val libs: VersionCatalog = versionCatalogs.named("libs")
+
     applyHierarchyTemplate(hierarchyTemplate)
 
-    androidTarget()
+    android {
+
+        compileSdk =
+            libs
+                .findVersion("android-compileSdk")
+                .get()
+                .requiredVersion
+                .toInt()
+
+        minSdk =
+            libs
+                .findVersion("android-minSdk")
+                .get()
+                .requiredVersion
+                .toInt()
+    }
 
     jvm()
 
@@ -40,43 +59,42 @@ kotlin {
     }
 }
 
-
-android {
-    val libs: VersionCatalog = versionCatalogs.named("libs")
-
-    compileSdk =
-        libs
-            .findVersion("android-compileSdk")
-            .get()
-            .requiredVersion
-            .toInt()
-
-    defaultConfig {
-        minSdk =
-            libs
-                .findVersion("android-minSdk")
-                .get()
-                .requiredVersion
-                .toInt()
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    sourceSets["main"].apply {
-        manifest.srcFile("src/androidMain/AndroidManifest.xml")
-        res.srcDirs("src/androidMain/res")
-    }
-
-    buildTypes {
-        release {
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-            )
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
-}
+//
+// android {
+//
+//    compileSdk =
+//        libs
+//            .findVersion("android-compileSdk")
+//            .get()
+//            .requiredVersion
+//            .toInt()
+//
+//    defaultConfig {
+//        minSdk =
+//            libs
+//                .findVersion("android-minSdk")
+//                .get()
+//                .requiredVersion
+//                .toInt()
+//        consumerProguardFiles("consumer-rules.pro")
+//    }
+//
+//    sourceSets["main"].apply {
+//        manifest.srcFile("src/androidMain/AndroidManifest.xml")
+//        res.srcDirs("src/androidMain/res")
+//    }
+//
+//    buildTypes {
+//        release {
+//            proguardFiles(
+//                getDefaultProguardFile("proguard-android-optimize.txt"),
+//                "proguard-rules.pro",
+//            )
+//        }
+//    }
+//
+//    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_21
+//        targetCompatibility = JavaVersion.VERSION_21
+//    }
+// }

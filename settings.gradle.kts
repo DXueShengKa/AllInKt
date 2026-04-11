@@ -29,7 +29,7 @@ dependencyResolutionManagement {
 }
 
 include(
-    ":composeApp",
+//    ":composeApp",
     ":server",
     ":shared",
     ":admin",
@@ -40,7 +40,6 @@ include(
     ":ksp:composeApp",
     ":client:net",
     ":client:data",
-    ":client:ui",
-    ":client:components",
-//    ":client:navigation-react",
+//    ":client:ui",
+//    ":client:components",
 )
