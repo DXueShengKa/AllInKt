@@ -3,6 +3,7 @@ package cn.allin.config.security
 import cn.allin.config.CacheConfig
 import cn.allin.utils.UserAuthenticationToken
 import org.springframework.cache.CacheManager
+import org.springframework.cache.get
 import org.springframework.http.HttpHeaders
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.web.server.ServerWebExchange
@@ -37,23 +38,28 @@ class AuthorizationFilter(
         exchange: ServerWebExchange,
         chain: WebFilterChain,
     ): Mono<Void> {
-        val filter = chain.filter(exchange)
         val token = exchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION)
 
-        return filter.contextWrite {
-//            val c = ReactiveSecurityContextHolder.getContext()
+        return chain.filter(exchange).contextWrite { context ->
             if (!token.isNullOrEmpty()) {
-                val key = JwtUtil.extractLong(token)
-                cacheManager.getCache(CacheConfig.AUTH)?.also { auth ->
-                    val authentication = auth.get(key, UserAuthenticationToken::class.java)
-                    if (authentication != null) {
-                        return@contextWrite ReactiveSecurityContextHolder.withAuthentication(
-                            authentication,
-                        )
+                try {
+                    // 验证 Token 并提取用户ID
+                    if (JwtUtil.validateToken(token)) {
+                        val userId = JwtUtil.extractUserId(token)
+
+                        // 从缓存中获取用户认证信息
+                        cacheManager.getCache(CacheConfig.AUTH)?.also { auth ->
+                            val authentication = auth.get<UserAuthenticationToken>(userId)
+                            if (authentication != null) {
+                                return@contextWrite ReactiveSecurityContextHolder.withAuthentication(authentication)
+                            }
+                        }
                     }
+                } catch (e: Exception) {
+                    // Token 无效或过期，继续执行但不设置认证信息
                 }
             }
-            it
+            context
         }
     }
 }

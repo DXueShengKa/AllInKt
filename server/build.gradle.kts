@@ -1,3 +1,4 @@
+import org.gradle.internal.execution.caching.CachingState.enabled
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -90,6 +91,7 @@ dependencies {
 
     implementation(libs.apache.poi.ooxml)
     implementation(libs.awssdk.s3)
+    implementation(libs.jjwt)
 
     testImplementation(libs.kotlin.test.junit5)
     testImplementation(libs.reactor.test)

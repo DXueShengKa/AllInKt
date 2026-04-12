@@ -1,7 +1,6 @@
 package cn.allin.config
 
 import cn.allin.utils.UserAuthenticationToken
-import java.net.URI
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.protobuf.ProtoBuf
 import org.springframework.beans.factory.annotation.Value
@@ -23,6 +22,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3AsyncClient
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
+import java.net.URI
 
 @OptIn(ExperimentalSerializationApi::class)
 @Configuration

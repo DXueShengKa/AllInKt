@@ -88,9 +88,9 @@ class UserAuthenticationToken(
         isAuthenticated = true
     }
 
-    override fun getPrincipal(): Any? = id
+    override fun getPrincipal(): Any = id
 
-    override fun getCredentials(): Any? = username
+    override fun getCredentials(): Any = username
 }
 
 fun createTriggerUpdateTimestamp(tableName: String) =

@@ -5,6 +5,7 @@ import kotlinx.coroutines.future.await
 import org.springframework.http.MediaTypeFactory
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.s3.S3AsyncClient
+import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest
 import java.time.Duration
