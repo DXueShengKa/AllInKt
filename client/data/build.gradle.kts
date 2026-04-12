@@ -1,6 +1,7 @@
 plugins {
     id("shared-kmp")
     alias(libs.plugins.ksp)
+    alias(libs.plugins.koin)
 }
 
 kotlin {
@@ -21,7 +22,4 @@ kotlin {
     }
 }
 
-ksp {
-    arg("KOIN_DEFAULT_MODULE", "false")
-}
 

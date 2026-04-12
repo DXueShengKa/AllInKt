@@ -5,7 +5,9 @@ import kotlin.jvm.JvmStatic
 
 interface ApiRegion {
     suspend fun getAllProvince(): List<RegionVO>
+
     suspend fun getCity(provinceId: Int): List<RegionVO>
+
     suspend fun getCounty(cityId: Int): List<RegionVO>
 
     companion object {

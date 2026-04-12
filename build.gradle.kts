@@ -1,3 +1,4 @@
+import org.gradle.internal.impldep.org.apache.commons.compress.harmony.pack200.PackingUtils.config
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJsCompilation
@@ -5,7 +6,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false
     alias(libs.plugins.android.library.kmp) apply false
     alias(libs.plugins.jetbrains.compose) apply false
     alias(libs.plugins.kotlin.composeCompiler) apply false
@@ -13,8 +13,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.kotlin.spring) apply false
     alias(libs.plugins.kotlin.serialization) apply false
-    alias(libs.plugins.spring) apply false
-    alias(libs.plugins.srpingDependencyManagement) apply false
+    alias(libs.plugins.koin) apply false
 
     alias(libs.plugins.detekt.dev)
     alias(libs.plugins.ktlint)

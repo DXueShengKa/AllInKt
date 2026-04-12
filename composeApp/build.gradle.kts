@@ -1,14 +1,12 @@
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
+@file:OptIn(ExperimentalWasmDsl::class)
 
-import org.gradle.declarative.dsl.schema.FqName.Empty.packageName
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-//    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library.kmp)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kotlin.composeCompiler)
     alias(libs.plugins.ksp)
@@ -22,7 +20,19 @@ kotlin {
 
     jvmToolchain(21)
 
-//    androidTarget()
+    android {
+        namespace = "cn.allin.composeApp"
+
+        compileSdk =
+            libs.versions.android.compileSdk
+                .get()
+                .toInt()
+
+        minSdk =
+            libs.versions.android.minSdk
+                .get()
+                .toInt()
+    }
 
     jvm {
         compilerOptions {
@@ -54,9 +64,9 @@ kotlin {
 
     sourceSets {
 
-//        androidMain.dependencies {
-//            implementation(libs.androidx.activity.compose)
-//        }
+        androidMain.dependencies {
+            implementation(libs.androidx.activity.compose)
+        }
 
         commonMain.dependencies {
             implementation(libs.jetbrains.material3)
@@ -84,60 +94,13 @@ kotlin {
 
         jvmMain.dependencies {
             implementation(libs.slf4j.simple)
-            implementation(compose.desktop.currentOs){
-                exclude("org.jetbrains.compose.material","material-desktop")
+            implementation(compose.desktop.currentOs) {
+                exclude("org.jetbrains.compose.material", "material-desktop")
             }
             implementation(libs.jspecify)
         }
     }
 }
-
-//android {
-//    namespace = "cn.allin"
-//    compileSdk =
-//        libs.versions.android.compileSdk
-//            .get()
-//            .toInt()
-//    sourceSets["main"].apply {
-//        manifest.srcFile("src/androidMain/AndroidManifest.xml")
-//        res.srcDirs("src/androidMain/res")
-//        resources.srcDirs("src/commonMain/resources")
-//    }
-//
-//    defaultConfig {
-//        applicationId = "cn.allin"
-//        minSdk =
-//            libs.versions.android.minSdk
-//                .get()
-//                .toInt()
-//        targetSdk =
-//            libs.versions.android.targetSdk
-//                .get()
-//                .toInt()
-//        versionCode = 1
-//        versionName = "1.0"
-//    }
-//
-//    packaging {
-//        resources {
-//            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-//        }
-//    }
-//
-//    buildTypes {
-//        release {
-//        }
-//    }
-//
-//    compileOptions {
-//        sourceCompatibility = JavaVersion.VERSION_21
-//        targetCompatibility = JavaVersion.VERSION_21
-//    }
-//
-//    buildFeatures {
-//        compose = true
-//    }
-//}
 
 compose.resources {
     packageOfResClass = "cn.allin.res"
@@ -168,7 +131,7 @@ compose.desktop {
 // }
 
 fun DependencyHandler.kspAll(dependencyNotation: Any) {
-//    add("kspAndroid", dependencyNotation)
+    add("kspAndroid", dependencyNotation)
     add("kspJvm", dependencyNotation)
     add("kspWasmJs", dependencyNotation)
     if (isMacOS) {

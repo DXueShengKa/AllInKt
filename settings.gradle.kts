@@ -29,7 +29,7 @@ dependencyResolutionManagement {
 }
 
 include(
-//    ":composeApp",
+    ":composeApp",
     ":server",
     ":shared",
     ":admin",

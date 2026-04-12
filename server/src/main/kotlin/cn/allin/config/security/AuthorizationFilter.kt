@@ -14,9 +14,7 @@ class AuthorizationFilter(
     private val cacheManager: CacheManager,
 //    private val serverSecurityContextRepository: ServerSecurityContextRepository
 ) : WebFilter {
-
-
-//    override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain) {
+    //    override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain) {
 //        if (request is HttpServletRequest) {
 //
 //            val token: String? = request.getHeader(HttpHeaders.AUTHORIZATION)
@@ -35,7 +33,10 @@ class AuthorizationFilter(
 //        chain.doFilter(request, response)
 //    }
 
-    override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+    override fun filter(
+        exchange: ServerWebExchange,
+        chain: WebFilterChain,
+    ): Mono<Void> {
         val filter = chain.filter(exchange)
         val token = exchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION)
 
@@ -45,15 +46,14 @@ class AuthorizationFilter(
                 val key = JwtUtil.extractLong(token)
                 cacheManager.getCache(CacheConfig.AUTH)?.also { auth ->
                     val authentication = auth.get(key, UserAuthenticationToken::class.java)
-                    if (authentication != null)
+                    if (authentication != null) {
                         return@contextWrite ReactiveSecurityContextHolder.withAuthentication(
-                            authentication
+                            authentication,
                         )
+                    }
                 }
             }
             it
         }
-
     }
-
 }

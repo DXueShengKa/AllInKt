@@ -9,6 +9,7 @@ import cn.allin.utils.UserAuthenticationToken
 import cn.allin.vo.PageVO
 import cn.allin.vo.UserVO
 import kotlinx.coroutines.reactive.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -44,7 +45,7 @@ class UserController(
 
     @GetMapping
     override suspend fun get(): UserVO? {
-        val token = ReactiveSecurityContextHolder.getContext().awaitSingle().authentication as UserAuthenticationToken
+        val token = ReactiveSecurityContextHolder.getContext().awaitSingleOrNull()?.authentication as? UserAuthenticationToken?:return null
         return userRepository.findById(token.id)
     }
 
