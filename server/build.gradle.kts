@@ -1,6 +1,3 @@
-import org.gradle.internal.execution.caching.CachingState.enabled
-import org.gradle.kotlin.dsl.annotationProcessor
-import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -78,10 +75,8 @@ dependencies {
     implementation(libs.spring.session.core)
 
     implementation(libs.springdoc.openapi.starter.webflux.ui)
-    kapt("com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0")
-    implementation("com.github.therapi:therapi-runtime-javadoc:0.15.0")
-
-
+    kapt(libs.therapi.javadoc.scribe)
+    implementation(libs.therapi.javadoc)
 
     developmentOnly(libs.spring.devtools)
     implementation(libs.exposed.kotlinDatetime)

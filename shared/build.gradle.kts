@@ -51,5 +51,5 @@ tasks.withType<KotlinCompilationTask<*>>().all {
 dependencies {
     kspCommonMainMetadata(projects.ksp.shared)
 
-    kapt("com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0")
+    kapt(libs.therapi.javadoc.scribe)
 }
