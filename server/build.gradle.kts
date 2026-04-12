@@ -1,4 +1,6 @@
 import org.gradle.internal.execution.caching.CachingState.enabled
+import org.gradle.kotlin.dsl.annotationProcessor
+import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -8,6 +10,7 @@ plugins {
     alias(libs.plugins.spring)
     alias(libs.plugins.srpingDependencyManagement)
     alias(libs.plugins.ksp)
+    kotlin("kapt")
     application
 }
 
@@ -21,6 +24,7 @@ kotlin {
     jvmToolchain(21)
 
     compilerOptions {
+        javaParameters = true
         jvmTarget = JvmTarget.JVM_21
         freeCompilerArgs.addAll("-Xjsr305=strict")
     }
@@ -73,7 +77,10 @@ dependencies {
     implementation(libs.spring.session.data.redis)
     implementation(libs.spring.session.core)
 
-//    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui")
+    implementation(libs.springdoc.openapi.starter.webflux.ui)
+    kapt("com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0")
+    implementation("com.github.therapi:therapi-runtime-javadoc:0.15.0")
+
 
 
     developmentOnly(libs.spring.devtools)

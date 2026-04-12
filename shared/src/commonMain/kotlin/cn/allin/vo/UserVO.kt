@@ -20,23 +20,21 @@ import kotlin.jvm.JvmStatic
 import kotlin.time.Clock
 
 /**
- * 系统用户
+ * 用户信息
  *
- * @param id 用户id
- * @param name 名字
- * @param email 电子邮箱
- * @param password 密码
- * @param birthday 生日
- * @param role 权限
- * @param address 地址
- * @param gender 性别
  */
 @Serializable
 data class UserVO(
+    /**
+     * id
+     */
     val id: Long = 0,
     val name: String? = null,
     val email: String? = null,
     val password: String? = null,
+    /**
+     * 生日
+     */
     val birthday: LocalDate? = null,
     val role: String? = null,
     val address: String? = null,

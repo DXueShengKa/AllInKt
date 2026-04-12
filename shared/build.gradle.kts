@@ -4,6 +4,7 @@ plugins {
     id("shared-kmp")
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    kotlin("kapt")
 }
 
 val isTest: String by project
@@ -31,6 +32,8 @@ kotlin {
         jsMain.dependencies {
             implementation(npm("@js-joda/timezone", "2.3.0"))
         }
+        jvmMain.dependencies {
+        }
     }
 }
 
@@ -47,4 +50,6 @@ tasks.withType<KotlinCompilationTask<*>>().all {
 
 dependencies {
     kspCommonMainMetadata(projects.ksp.shared)
+
+    kapt("com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0")
 }

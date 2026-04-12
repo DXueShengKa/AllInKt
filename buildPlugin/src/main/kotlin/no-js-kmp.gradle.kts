@@ -10,7 +10,7 @@ plugins {
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class,ExperimentalWasmDsl::class)
 kotlin {
-    applyHierarchyTemplate(hierarchyTemplateAndroidKmp)
+    applyHierarchyTemplate(hierarchyTemplate)
 
     val libs: VersionCatalog = versionCatalogs.named("libs")
 

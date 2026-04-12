@@ -106,6 +106,7 @@ bluefalcon = "2.5.4"
 apache-poi = "5.5.1"
 #https://github.com/aws/aws-sdk-java-v2
 awssdk = "2.42.13"
+springdocOpenapiStarterWebfluxUi = "3.0.2"
 
 [plugins]
 
@@ -229,6 +230,7 @@ spring-session-data-redis = { module = "org.springframework.session:spring-sessi
 
 spring-integration-mqtt = { module = "org.springframework.integration:spring-integration-mqtt" }
 spring-integration-ip = { module = "org.springframework.integration:spring-integration-ip" }
+springdoc-openapi-starter-webflux-ui = { module = "org.springdoc:springdoc-openapi-starter-webflux-ui", version.ref = "springdocOpenapiStarterWebfluxUi" }
 
 exposed-spring = { group = "org.jetbrains.exposed", name = "exposed-spring-boot-starter", version.ref = "exposed" }
 exposed-migration-r2dbc = { group = "org.jetbrains.exposed", name = "exposed-migration-r2dbc", version.ref = "exposed" }

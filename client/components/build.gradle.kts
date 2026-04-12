@@ -5,6 +5,10 @@ plugins {
 
 
 kotlin {
+    android {
+        namespace = "com.compose.components"
+    }
+
 
     sourceSets {
 //        androidMain.dependencies {
@@ -28,6 +32,3 @@ kotlin {
     }
 }
 
-//android {
-//    namespace = "com.compose.components"
-//}

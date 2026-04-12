@@ -14,14 +14,25 @@ spring:
     main:
         web-application-type: reactive
 
-jimmer:
-    language: kotlin
-    default-enum-strategy: ORDINAL
-    dialect: org.babyfish.jimmer.sql.dialect.PostgresDialect
-    show-sql: true
-    pretty-sql: true
-    database-validation-mode: error
+#jimmer:
+#    language: kotlin
+#    default-enum-strategy: ORDINAL
+#    dialect: org.babyfish.jimmer.sql.dialect.PostgresDialect
+#    show-sql: true
+#    pretty-sql: true
+#    database-validation-mode: error
 
 logging:
     level:
       org.springframework.boot.autoconfigure: error
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+  enable-javadoc: true
+  packages-to-scan: [
+      "cn.allin.controller",
+      "cn.allin.handler"
+  ]

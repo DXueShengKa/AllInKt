@@ -40,6 +40,6 @@ include(
     ":ksp:composeApp",
     ":client:net",
     ":client:data",
-//    ":client:ui",
-//    ":client:components",
+    ":client:ui",
+    ":client:components",
 )

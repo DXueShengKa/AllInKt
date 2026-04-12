@@ -3,6 +3,11 @@ plugins {
 }
 
 kotlin {
+
+    android {
+        namespace = "cn.allin.ui"
+    }
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
@@ -38,10 +43,7 @@ compose.resources {
     packageOfResClass = "cn.allin.ui"
 }
 
-android {
-    namespace = "cn.allin.ui"
-}
 
 dependencies {
-    debugImplementation(libs.jetbrains.ui.tooling)
+//    debugImplementation(libs.jetbrains.ui.tooling)
 }
