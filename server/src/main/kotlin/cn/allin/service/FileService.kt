@@ -1,5 +1,8 @@
 package cn.allin.service
 
+import cn.allin.repository.FileObjectRepository
+import cn.allin.repository.FilePathRepository
+import cn.allin.table.FilePath
 import cn.allin.vo.FilePathVO
 import kotlinx.coroutines.future.await
 import org.springframework.http.MediaTypeFactory
@@ -16,18 +19,25 @@ import kotlin.jvm.optionals.getOrNull
 class FileService(
     private val s3Client: S3AsyncClient,
     private val s3PreSigner: S3Presigner,
-//    private val objectRepository: FileObjectRepository,
-//    private val pathRepository: FilePathRepository
+    private val filePathRepository: FilePathRepository,
+    private val fileObjectRepository: FileObjectRepository,
 ) {
-    suspend fun listDir(pathId: Int?): FilePathVO {
-        TODO()
+    suspend fun listDir(pathId: Int?): List<FilePathVO> {
+        val filePaths = filePathRepository.findByParentId(pathId)
+        return filePaths.map {
+            FilePathVO(
+                id = it.id ?: 0,
+                path = it.path,
+            )
+        }
     }
 
-    fun addPath(
+    suspend fun addPath(
         parentId: Int,
         path: String,
     ): Int {
-        TODO()
+        val filePath = FilePath(parentId = parentId, path = path)
+        return filePathRepository.save(filePath).id!!
     }
 
     suspend fun listDir(
@@ -121,5 +131,9 @@ class FileService(
                 metadata.metadata()
                 metadata.contentType()
             }.await()
+    }
+
+    suspend fun deleteAndChildren(pathId: Int): Int {
+        return filePathRepository.deletePathAndChildren(pathId)
     }
 }

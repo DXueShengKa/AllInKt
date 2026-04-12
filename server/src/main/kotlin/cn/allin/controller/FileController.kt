@@ -8,6 +8,7 @@ import cn.allin.api.ApiFile
 import cn.allin.service.FileService
 import cn.allin.vo.FilePathVO
 import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -39,10 +40,17 @@ class FileController(
     @GetMapping(value = [ApiFile.LIST + "/{pathId}", ApiFile.LIST])
     override suspend fun list(
         @PathVariable(required = false) pathId: Int?,
-    ): FilePathVO = fileService.listDir(pathId)
+    ): List<FilePathVO> = fileService.listDir(pathId)
 
-    override suspend fun delete(pathId: Int) {
-        TODO("Not yet implemented")
+    @DeleteMapping(value = ["/{pathId}"])
+    override suspend fun delete(
+        @PathVariable(required = true) pathId: Int,
+    ) = either {
+        try {
+            fileService.deleteAndChildren(pathId)
+        } catch (e: Exception) {
+            raise(e.message)
+        }
     }
 
     @PostMapping(ApiFile.NEW_DIR)

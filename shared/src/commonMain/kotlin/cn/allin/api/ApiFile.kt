@@ -7,9 +7,9 @@ import kotlin.jvm.JvmStatic
 interface ApiFile {
     suspend fun uploadUrl(filePath: String): Either<String, String>
 
-    suspend fun list(pathId: Int?): FilePathVO
+    suspend fun list(pathId: Int?): List<FilePathVO>
 
-    suspend fun delete(pathId: Int)
+    suspend fun delete(pathId: Int): Either<String?, Int>
 
     suspend fun newDir(pathVO: FilePathVO): Either<String, Int>
 
