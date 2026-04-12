@@ -8,7 +8,7 @@ import kotlin.js.ExperimentalJsStatic
 
 class ValidatorError(
     val validatorMessage: VoValidatorMessage,
-) : Exception(validatorMessage.code + validatorMessage.message)
+) : Exception("${validatorMessage.code}: ${validatorMessage.message}")
 
 /**
  * 邮箱
@@ -17,15 +17,15 @@ val RegexValidatorEmail = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}".toRe
 
 @Serializable
 class VoValidatorMessage(
-    val field: String,
     val code: String,
     val message: String,
+    val field: String? = null,
 ) {
-    constructor(field: VoField, code: String) : this(field.name, code, field.display)
+    constructor(field: VoField, code: String) : this(code, field.display, field.name)
 
     @OptIn(ExperimentalJsStatic::class)
     companion object : VoValidator<Any> {
-        const val CodeNotNull = "不能为空"
+        const val CodeNotNull = "error.notNul"
         const val CodeOutOfRange = "超出范围"
 
         override fun validator(obj: Any): VoValidatorMessage? =

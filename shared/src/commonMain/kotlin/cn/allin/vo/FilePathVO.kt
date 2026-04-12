@@ -8,7 +8,6 @@ import cn.allin.path
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
-
 /**
  *
  * @param path 路径
@@ -25,11 +24,12 @@ data class FilePathVO(
     val createTime: LocalDateTime? = null,
 ) {
     companion object {
-        fun valid(vo: FilePathVO): Either<VoValidatorMessage, FilePathVO> = either {
-            ensure(vo.path.isNotEmpty()) {
-                VoValidatorMessage(path, VoValidatorMessage.CodeNotNull)
+        fun valid(vo: FilePathVO): Either<VoValidatorMessage, FilePathVO> =
+            either {
+                ensure(vo.path.isNotEmpty()) {
+                    VoValidatorMessage(path, VoValidatorMessage.CodeNotNull)
+                }
+                vo
             }
-            vo
-        }
     }
 }

@@ -4,7 +4,10 @@ spring:
     threads:
         virtual:
             enabled: true
-#    sql:
+    messages:
+      encoding: UTF-8
+      basename: messages
+  #    sql:
 #        init:
 #            schema-locations:
 #                - classpath:db.sql
